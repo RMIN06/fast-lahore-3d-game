@@ -1,0 +1,15 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+coverage/
+*.local
+.env
+.env.*
+!.env.example
+/reference/*
+!/reference/maps/
+/reference/maps/*
+!/reference/maps/student-map.png
+/data/campus.json.backup
+/data/campus.json.tmp
