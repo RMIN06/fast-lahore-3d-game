@@ -1,0 +1,169 @@
+.tracer-app {
+  height: 100vh;
+  min-width: 1000px;
+  min-height: 620px;
+  display: flex;
+  flex-direction: column;
+  background: #111a20;
+}
+.tracer-toolbar {
+  padding: 18px 24px;
+  border-bottom: 1px solid #4c636f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+.tracer-toolbar h1 {
+  font-size: 21px;
+  margin: 4px 0 0;
+}
+.tracer-toolbar nav,
+.tracer-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.tracer-app button,
+.tracer-app a {
+  color: #ecf2f5;
+  border: 1px solid #4c636f;
+  background: #1d2b33;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.tracer-app button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.tracer-app button[aria-pressed='true'] {
+  border-color: #82bbec;
+  background: #253d4c;
+}
+.tracer-app :focus-visible {
+  outline: 2px solid #e5c373;
+  outline-offset: 3px;
+}
+.tracer-layout {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  overflow: hidden;
+  flex: 1;
+}
+.tracer-controls {
+  padding: 18px;
+  overflow: auto;
+  border-right: 1px solid #4c636f;
+}
+.tracer-controls section + section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #4c636f;
+}
+.tracer-app h2 {
+  font-size: 14px;
+  margin: 0 0 12px;
+}
+.tracer-controls label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  margin: 12px 0;
+}
+.tracer-controls input:not([type='checkbox']),
+.tracer-controls select {
+  width: 100%;
+  min-width: 0;
+  background: #17232b;
+  color: #ecf2f5;
+  border: 1px solid #4c636f;
+  border-radius: 3px;
+  padding: 7px;
+}
+.tracer-controls .tracer-check {
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.tracer-controls button {
+  margin: 4px 0;
+}
+.tracer-controls ol {
+  padding-left: 22px;
+  color: #b6c6cc;
+  font-size: 12px;
+}
+.tracer-controls p {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.tracer-workspace {
+  overflow: auto;
+  padding: 18px;
+}
+.tracer-status {
+  border-left: 2px solid #e5c373;
+  background: #1b2a32;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.tracer-view-label {
+  margin: 16px 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #b6c6cc;
+}
+.tracer-surface {
+  display: block;
+  width: 100%;
+  min-height: 400px;
+  max-height: 65vh;
+  border: 1px solid #4c636f;
+  background: #17232b;
+  touch-action: none;
+  user-select: none;
+}
+.tracer-view-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+.tracer-surface text {
+  fill: #ecf2f5;
+  text-anchor: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #17232b;
+  stroke-width: 0.4;
+}
+.tracer-validation {
+  padding: 18px 0;
+}
+.tracer-validation p {
+  font-size: 12px;
+}
+.tracer-validation ul {
+  font:
+    11px/1.6 ui-monospace,
+    monospace;
+  max-height: 250px;
+  overflow: auto;
+}
+.tracer-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  margin: 12px 0;
+}
+.tracer-app summary {
+  cursor: pointer;
+  font-size: 12px;
+}
