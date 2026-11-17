@@ -1,0 +1,1906 @@
+{
+  "meta": {
+    "name": "FAST NUCES Lahore",
+    "origin": "G5",
+    "schematicMap": {
+      "file": "reference/maps/student-map.png",
+      "sizePx": [
+        1320,
+        891
+      ],
+      "northDirection": "map top = SOUTH (cricket ground is in the south of the real campus); assumed 180-degree rotation, not a mirror, so map left = east and map right = west. Verify against satellite imagery in M2.",
+      "author": "Abdul Moiez (FAST CS'22)",
+      "notToScale": true
+    },
+    "defaults": {
+      "floorHeight": 3.6,
+      "basementHeight": 3.4,
+      "wallThickness": 0.25,
+      "corridorWidth": 2.4,
+      "doorWidth": 1.0,
+      "doorHeight": 2.1
+    },
+    "officialAreaAcres": 12.5,
+    "notes": "schematicBoxPx values are [x,y,w,h] pixel estimates (about +/-10 px) on the 1320x891 student map; use for relative layout and labels only. Left/right notes in room lists are relative to an unconfirmed frame.",
+    "mapToWorld": {
+      "originPx": [
+        775,
+        752
+      ],
+      "originGate": "G5",
+      "formula": "X_east = (775 - px_x) * m_per_px ; Z_south = (752 - px_y) * m_per_px",
+      "assumption": "180-degree rotation",
+      "status": "unverified"
+    }
+  },
+  "boundary": {
+    "polygon": null,
+    "confidence": "placeholder"
+  },
+  "gates": [
+    {
+      "id": "G3",
+      "label": "Gate-3",
+      "position": null,
+      "schematicPx": [
+        215,
+        360
+      ],
+      "notes": "map note: students arriving by bike/car enter here",
+      "confidence": "estimated"
+    },
+    {
+      "id": "G5",
+      "label": "Gate-5",
+      "position": [
+        0,
+        0
+      ],
+      "schematicPx": [
+        775,
+        752
+      ],
+      "notes": "next to Fresh Friez; coordinate origin",
+      "confidence": "estimated"
+    },
+    {
+      "id": "G-MASJID",
+      "label": "Masjid-side gate",
+      "position": null,
+      "schematicPx": [
+        490,
+        752
+      ],
+      "opens": {
+        "days": [
+          "Fri"
+        ],
+        "fromTime": "12:45",
+        "toTime": "14:00"
+      },
+      "notes": "map note: opens only at the time of Jummah",
+      "confidence": "estimated"
+    },
+    {
+      "id": "G2",
+      "label": "Campus Gate 2",
+      "position": null,
+      "confidence": "estimated",
+      "source": "tour",
+      "notes": "Tour scene panorama_08304C62_13DE_37F4_41B1_0273D3A1D9E6. Named gate only; location, heading, relation to map gates and access policy unconfirmed."
+    }
+  ],
+  "buildings": [
+    {
+      "id": "A",
+      "label": "Admin Block",
+      "aliases": [
+        "A-Block",
+        "Admin"
+      ],
+      "footprint": null,
+      "schematicBoxPx": [
+        545,
+        545,
+        440,
+        110
+      ],
+      "entries": [],
+      "floors": [
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "A-G-CSLAB1",
+              "name": "CS Lab 1",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-1"
+            },
+            {
+              "id": "A-G-CSLAB2",
+              "name": "CS Lab 2",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-2"
+            },
+            {
+              "id": "A-G-CSLAB3",
+              "name": "CS Lab 3",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-3"
+            },
+            {
+              "id": "A-G-CSLAB4",
+              "name": "CS Lab 4",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-4"
+            },
+            {
+              "id": "A-G-ENGLAB",
+              "name": "Eng Lab",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map"
+            },
+            {
+              "id": "A-G-STUDENTCENTRE",
+              "name": "Student Centre",
+              "kind": "student_centre",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-G",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "G"
+              ]
+            }
+          ]
+        }
+      ],
+      "confidence": "estimated",
+      "roomCodePrefix": "CS LAB",
+      "features": [
+        "brick_facade"
+      ],
+      "notes": "map note: all listed rooms are on the ground floor; upper floors unknown"
+    },
+    {
+      "id": "B",
+      "label": "Civil Dept",
+      "aliases": [
+        "B-Block",
+        "Civil"
+      ],
+      "footprint": null,
+      "schematicBoxPx": [
+        278,
+        612,
+        187,
+        133
+      ],
+      "entries": [],
+      "floors": [
+        {
+          "id": "B1",
+          "level": -1,
+          "label": "Basement",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "B-B1-CE1",
+              "name": "CE-1",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-1",
+              "order": 0
+            },
+            {
+              "id": "B-B1-CE2",
+              "name": "CE-2",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-2",
+              "order": 1
+            },
+            {
+              "id": "B-B1-CE3",
+              "name": "CE-3",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-3",
+              "order": 2
+            },
+            {
+              "id": "B-B1-CE4",
+              "name": "CE-4",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-4",
+              "order": 3
+            },
+            {
+              "id": "B-B1-CE5",
+              "name": "CE-5",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-5",
+              "order": 4
+            },
+            {
+              "id": "B-B1-CIVILLABS",
+              "name": "Civil Labs",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-B1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "B1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "B-G-GIRLSCOMMON",
+              "name": "Girls Common Room",
+              "kind": "common_room",
+              "confidence": "estimated",
+              "source": "student_map"
+            },
+            {
+              "id": "B-G-ENGLAB1",
+              "name": "Eng Lab 1",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "ENG LAB-1",
+              "notes": "near Girls Washroom"
+            },
+            {
+              "id": "B-G-ENGLAB2",
+              "name": "Eng Lab 2",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "ENG LAB-2",
+              "notes": "near Girls Washroom"
+            },
+            {
+              "id": "B-G-ENGLAB3",
+              "name": "Eng Lab 3",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "ENG LAB-3",
+              "notes": "opposite Boys Washroom"
+            },
+            {
+              "id": "B-G-CSLAB9",
+              "name": "CS Lab 9",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-9"
+            },
+            {
+              "id": "B-G-GIRLSWASH",
+              "name": "Girls Washroom",
+              "kind": "washroom",
+              "confidence": "placeholder",
+              "source": "student_map",
+              "notes": "existence from map note; exact position unknown"
+            },
+            {
+              "id": "B-G-BOYSWASH",
+              "name": "Boys Washroom",
+              "kind": "washroom",
+              "confidence": "placeholder",
+              "source": "student_map",
+              "notes": "existence from map note; exact position unknown"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-G",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "G"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "level": 1,
+          "label": "1st Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "B-1-CE6",
+              "name": "CE-6",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-6",
+              "order": 0
+            },
+            {
+              "id": "B-1-CE7",
+              "name": "CE-7",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-7",
+              "order": 1
+            },
+            {
+              "id": "B-1-CE8",
+              "name": "CE-8",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-8",
+              "order": 2
+            },
+            {
+              "id": "B-1-CE9",
+              "name": "CE-9",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-9",
+              "order": 3
+            },
+            {
+              "id": "B-1-CE10",
+              "name": "CE-10",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-10",
+              "order": 4
+            },
+            {
+              "id": "B-1-DRAWINGLABS",
+              "name": "Drawing Labs",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "level": 2,
+          "label": "2nd Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "B-2-CE11",
+              "name": "CE-11",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-11",
+              "order": 0
+            },
+            {
+              "id": "B-2-CE12",
+              "name": "CE-12",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-12",
+              "order": 1
+            },
+            {
+              "id": "B-2-CE13",
+              "name": "CE-13",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CE-13",
+              "order": 2
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-2",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "2"
+              ]
+            }
+          ]
+        }
+      ],
+      "confidence": "estimated",
+      "roomCodePrefix": "CE",
+      "features": [
+        "brick_facade"
+      ],
+      "notes": "classes mentioned as CE / B-01"
+    },
+    {
+      "id": "C",
+      "label": "CS Dept",
+      "aliases": [
+        "C-Block",
+        "CS Dept"
+      ],
+      "footprint": null,
+      "schematicBoxPx": [
+        943,
+        440,
+        67,
+        180
+      ],
+      "entries": [],
+      "floors": [
+        {
+          "id": "B1",
+          "level": -1,
+          "label": "Basement",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "C-B1-TABLETENNIS",
+              "name": "Table Tennis Area",
+              "kind": "recreation",
+              "confidence": "estimated",
+              "source": "student_map",
+              "notes": "map note: take the left on arrival; CS-15/16 are to the right after the table tennis table"
+            },
+            {
+              "id": "C-B1-CS15",
+              "name": "CS-15",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-15"
+            },
+            {
+              "id": "C-B1-CS16",
+              "name": "CS-16",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-16"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-B1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "B1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "C-G-AUDITORIUM",
+              "name": "Auditorium",
+              "kind": "auditorium",
+              "confidence": "estimated",
+              "source": "student_map"
+            },
+            {
+              "id": "C-G-MEDICAL",
+              "name": "Medical Centre",
+              "kind": "medical",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-G",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "G"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "level": 1,
+          "label": "1st Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "C-1-CS1",
+              "name": "CS-1",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-1",
+              "side": "front",
+              "order": 0
+            },
+            {
+              "id": "C-1-CS2",
+              "name": "CS-2",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-2",
+              "side": "front",
+              "order": 1
+            },
+            {
+              "id": "C-1-CS3",
+              "name": "CS-3",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-3",
+              "side": "front",
+              "order": 2
+            },
+            {
+              "id": "C-1-CS4",
+              "name": "CS-4",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-4",
+              "side": "front",
+              "order": 3
+            },
+            {
+              "id": "C-1-CS5",
+              "name": "CS-5",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-5",
+              "side": "front",
+              "order": 4
+            },
+            {
+              "id": "C-1-CS6",
+              "name": "CS-6",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-6",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "C-1-CS7",
+              "name": "CS-7",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-7",
+              "side": "left",
+              "order": 1
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "level": 2,
+          "label": "2nd Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "C-2-CS8",
+              "name": "CS-8",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-8",
+              "side": "front",
+              "order": 0
+            },
+            {
+              "id": "C-2-CS9",
+              "name": "CS-9",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-9",
+              "side": "front",
+              "order": 1
+            },
+            {
+              "id": "C-2-CS10",
+              "name": "CS-10",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-10",
+              "side": "front",
+              "order": 2
+            },
+            {
+              "id": "C-2-CS11",
+              "name": "CS-11",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-11",
+              "side": "front",
+              "order": 3
+            },
+            {
+              "id": "C-2-CS12",
+              "name": "CS-12",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-12",
+              "side": "front",
+              "order": 4
+            },
+            {
+              "id": "C-2-CS13",
+              "name": "CS-13",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-13",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "C-2-CS14",
+              "name": "CS-14",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS-14",
+              "side": "left",
+              "order": 1
+            },
+            {
+              "id": "C-2-SEMINARHALL",
+              "name": "Seminar Hall",
+              "kind": "seminar_hall",
+              "confidence": "estimated",
+              "source": "student_map",
+              "notes": "reached by stairs from the C block entrance near the badminton court (map arrow)"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-2",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "2"
+              ]
+            }
+          ]
+        }
+      ],
+      "confidence": "estimated",
+      "roomCodePrefix": "CS",
+      "features": [
+        "brick_facade"
+      ],
+      "notes": "classes mentioned as CS / C-01"
+    },
+    {
+      "id": "D",
+      "label": "Electrical & Management Dept",
+      "aliases": [
+        "D-Block",
+        "Electrical N Management"
+      ],
+      "footprint": null,
+      "schematicBoxPx": [
+        595,
+        368,
+        410,
+        98
+      ],
+      "entries": [],
+      "floors": [
+        {
+          "id": "B1",
+          "level": -1,
+          "label": "Basement",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "D-B1-MICROLAB",
+              "name": "Micro Lab",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "side": "right"
+            },
+            {
+              "id": "D-B1-CSLAB5",
+              "name": "CS Lab 5",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-5",
+              "side": "right"
+            },
+            {
+              "id": "D-B1-EM1",
+              "name": "E&M-1",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-1",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "D-B1-EM2",
+              "name": "E&M-2",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-2",
+              "side": "left",
+              "order": 1
+            },
+            {
+              "id": "D-B1-EM3",
+              "name": "E&M-3",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-3",
+              "side": "left",
+              "order": 2
+            },
+            {
+              "id": "D-B1-EM4",
+              "name": "E&M-4",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-4",
+              "side": "left",
+              "order": 3
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-B1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "B1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground Floor",
+          "layout": "open_hall",
+          "spaces": [
+            {
+              "id": "D-G-BENCHES",
+              "name": "Open seating (benches only)",
+              "kind": "open_seating",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-G",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "G"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "level": 1,
+          "label": "1st Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "D-1-CSLAB6",
+              "name": "CS LAB-6",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-6",
+              "side": "right",
+              "order": 0
+            },
+            {
+              "id": "D-1-CSLAB7",
+              "name": "CS LAB-7",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-7",
+              "side": "right",
+              "order": 1
+            },
+            {
+              "id": "D-1-CSLAB8",
+              "name": "CS LAB-8",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-8",
+              "side": "right",
+              "order": 2
+            },
+            {
+              "id": "D-1-PHYSICSLAB",
+              "name": "Physics Lab",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "side": "right"
+            },
+            {
+              "id": "D-1-EMBEDDEDLAB",
+              "name": "Embedded Lab",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "side": "right"
+            },
+            {
+              "id": "D-1-EM5",
+              "name": "E&M-5",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-5",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "D-1-EM6",
+              "name": "E&M-6",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-6",
+              "side": "left",
+              "order": 1
+            },
+            {
+              "id": "D-1-EM7",
+              "name": "E&M-7",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-7",
+              "side": "left",
+              "order": 2
+            },
+            {
+              "id": "D-1-EM8",
+              "name": "E&M-8",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-8",
+              "side": "left",
+              "order": 3
+            },
+            {
+              "id": "D-1-EM9",
+              "name": "E&M-9",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-9",
+              "side": "left",
+              "order": 4
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "level": 2,
+          "label": "2nd Floor (Management Floor)",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "D-2-EM10",
+              "name": "E&M-10",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-10",
+              "side": "right",
+              "order": 0
+            },
+            {
+              "id": "D-2-EM11",
+              "name": "E&M-11",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-11",
+              "side": "right",
+              "order": 1
+            },
+            {
+              "id": "D-2-EM12",
+              "name": "E&M-12",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-12",
+              "side": "right",
+              "order": 2
+            },
+            {
+              "id": "D-2-EM13",
+              "name": "E&M-13",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-13",
+              "side": "right",
+              "order": 3
+            },
+            {
+              "id": "D-2-EM14",
+              "name": "E&M-14",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-14",
+              "side": "right",
+              "order": 4
+            },
+            {
+              "id": "D-2-EM15",
+              "name": "E&M-15",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "E&M-15",
+              "side": "right",
+              "order": 5
+            },
+            {
+              "id": "D-2-CSLAB10",
+              "name": "CS LAB-10",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-10",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "D-2-CSLAB11",
+              "name": "CS LAB-11",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-11",
+              "side": "left",
+              "order": 1
+            },
+            {
+              "id": "D-2-CSLAB12",
+              "name": "CS LAB-12",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-12",
+              "side": "left",
+              "order": 2
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-2",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "2"
+              ]
+            }
+          ]
+        }
+      ],
+      "confidence": "estimated",
+      "roomCodePrefix": "E&M",
+      "features": [
+        "brick_facade"
+      ],
+      "notes": "classes mentioned as E&M / D-01; small box at top-right corner unlabeled"
+    },
+    {
+      "id": "E",
+      "label": "Library",
+      "aliases": [
+        "E-Block",
+        "Library"
+      ],
+      "footprint": null,
+      "schematicBoxPx": [
+        285,
+        468,
+        183,
+        132
+      ],
+      "entries": [],
+      "floors": [
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Library (floors unknown)",
+          "layout": "custom",
+          "spaces": [
+            {
+              "id": "E-G-LIBRARY",
+              "name": "Library",
+              "kind": "library",
+              "confidence": "placeholder",
+              "source": "student_map",
+              "notes": "floors/layout unknown; placeholder single hall"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-G",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "G"
+              ]
+            }
+          ]
+        }
+      ],
+      "confidence": "placeholder",
+      "features": [
+        "brick_facade"
+      ],
+      "notes": "unlabeled orange/grey structure directly north of it at [280,412,185,56]"
+    },
+    {
+      "id": "F",
+      "label": "New Building",
+      "aliases": [
+        "F-Block",
+        "NB",
+        "New Building"
+      ],
+      "footprint": null,
+      "schematicBoxPx": [
+        295,
+        118,
+        305,
+        207
+      ],
+      "entries": [],
+      "floors": [
+        {
+          "id": "B2",
+          "level": -2,
+          "label": "Basement 2",
+          "layout": "parking",
+          "spaces": [
+            {
+              "id": "F-B2-STUDENTPARK",
+              "name": "Car Parking (Students)",
+              "kind": "parking",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-B2",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "B2"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B1",
+          "level": -1,
+          "label": "Basement 1",
+          "layout": "parking",
+          "spaces": [
+            {
+              "id": "F-B1-FACULTYPARK",
+              "name": "Parking (Faculty)",
+              "kind": "parking",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-B1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "B1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground Floor",
+          "layout": "open_hall",
+          "spaces": [
+            {
+              "id": "F-G-CAFE",
+              "name": "Cafe",
+              "kind": "cafe",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-G",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "G"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "level": 1,
+          "label": "1st Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "F-1-FACULTYOFFICES",
+              "name": "Faculty Offices",
+              "kind": "office",
+              "confidence": "estimated",
+              "source": "student_map"
+            },
+            {
+              "id": "F-1-ACADEMICOFFICE",
+              "name": "Academic Office",
+              "kind": "office",
+              "confidence": "estimated",
+              "source": "student_map"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-1",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "level": 2,
+          "label": "2nd Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "F-2-NB201",
+              "name": "NB-201",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-201",
+              "side": "right",
+              "order": 0
+            },
+            {
+              "id": "F-2-NB202",
+              "name": "NB-202",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-202",
+              "side": "right",
+              "order": 1
+            },
+            {
+              "id": "F-2-NB203",
+              "name": "NB-203",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-203",
+              "side": "right",
+              "order": 2
+            },
+            {
+              "id": "F-2-NB204",
+              "name": "NB-204",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-204",
+              "side": "right",
+              "order": 3
+            },
+            {
+              "id": "F-2-NB205",
+              "name": "NB-205",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-205",
+              "side": "right",
+              "order": 4
+            },
+            {
+              "id": "F-2-NB206",
+              "name": "NB-206",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-206",
+              "side": "right",
+              "order": 5
+            },
+            {
+              "id": "F-2-NB207",
+              "name": "NB-207",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-207",
+              "side": "middle",
+              "order": 0
+            },
+            {
+              "id": "F-2-NB208",
+              "name": "NB-208",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-208",
+              "side": "middle",
+              "order": 1
+            },
+            {
+              "id": "F-2-NB209",
+              "name": "NB-209",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-209",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "F-2-NB210",
+              "name": "NB-210",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-210",
+              "side": "left",
+              "order": 1
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-2",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "2"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "level": 3,
+          "label": "3rd Floor",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "F-3-NB301",
+              "name": "NB-301",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-301",
+              "side": "right",
+              "order": 0
+            },
+            {
+              "id": "F-3-NB302",
+              "name": "NB-302",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-302",
+              "side": "right",
+              "order": 1
+            },
+            {
+              "id": "F-3-NB303",
+              "name": "NB-303",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-303",
+              "side": "right",
+              "order": 2
+            },
+            {
+              "id": "F-3-NB304",
+              "name": "NB-304",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-304",
+              "side": "right",
+              "order": 3
+            },
+            {
+              "id": "F-3-NB305",
+              "name": "NB-305",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-305",
+              "side": "right",
+              "order": 4
+            },
+            {
+              "id": "F-3-NB306",
+              "name": "NB-306",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-306",
+              "side": "right",
+              "order": 5
+            },
+            {
+              "id": "F-3-NB307",
+              "name": "NB-307",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-307",
+              "side": "middle",
+              "order": 0
+            },
+            {
+              "id": "F-3-NB308",
+              "name": "NB-308",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-308",
+              "side": "middle",
+              "order": 1
+            },
+            {
+              "id": "F-3-CSLAB13",
+              "name": "CS LAB-13",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-13",
+              "side": "left",
+              "order": 0
+            },
+            {
+              "id": "F-3-CSLAB14",
+              "name": "CS LAB-14",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-14",
+              "side": "left",
+              "order": 1
+            },
+            {
+              "id": "F-3-CSLAB15",
+              "name": "CS LAB-15",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-15",
+              "side": "left",
+              "order": 2
+            },
+            {
+              "id": "F-3-CSLAB16",
+              "name": "CS LAB-16",
+              "kind": "lab",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "CS LAB-16",
+              "side": "left",
+              "order": 3
+            },
+            {
+              "id": "F-3-NB309",
+              "name": "NB-309",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-309",
+              "side": "left",
+              "order": 4
+            },
+            {
+              "id": "F-3-NB310",
+              "name": "NB-310",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-310",
+              "side": "left",
+              "order": 5
+            },
+            {
+              "id": "F-3-NB311",
+              "name": "NB-311",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-311",
+              "side": "left",
+              "order": 6
+            },
+            {
+              "id": "F-3-NB312",
+              "name": "NB-312",
+              "kind": "classroom",
+              "confidence": "estimated",
+              "source": "student_map",
+              "code": "NB-312",
+              "side": "left",
+              "order": 7
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs-3",
+              "kind": "stairs",
+              "position": null,
+              "connects": [
+                "3"
+              ]
+            }
+          ]
+        }
+      ],
+      "confidence": "estimated",
+      "roomCodePrefix": "NB",
+      "features": [
+        "modern_facade"
+      ],
+      "notes": "classes mentioned as NB / F-01"
+    }
+  ],
+  "areas": [
+    {
+      "id": "highway",
+      "label": "Highway",
+      "kind": "path",
+      "polygon": null,
+      "schematicBoxPx": [
+        468,
+        360,
+        47,
+        390
+      ],
+      "confidence": "estimated",
+      "surface": "paving",
+      "notes": "central north-south pedestrian path; vehicle use unknown"
+    },
+    {
+      "id": "gate3-path",
+      "label": "Gate-3 path",
+      "kind": "path",
+      "polygon": null,
+      "schematicBoxPx": [
+        225,
+        348,
+        250,
+        28
+      ],
+      "confidence": "estimated",
+      "surface": "paving",
+      "notes": "connects Gate-3 to the Highway"
+    },
+    {
+      "id": "cricket-ground",
+      "label": "Cricket Ground",
+      "kind": "ground",
+      "polygon": null,
+      "schematicBoxPx": [
+        712,
+        178,
+        323,
+        127
+      ],
+      "confidence": "estimated",
+      "surface": "turf"
+    },
+    {
+      "id": "futsal",
+      "label": "Futsal court",
+      "kind": "court",
+      "polygon": null,
+      "schematicBoxPx": [
+        918,
+        128,
+        117,
+        47
+      ],
+      "confidence": "estimated",
+      "surface": "turf",
+      "notes": "used for the football mini-game"
+    },
+    {
+      "id": "basketball",
+      "label": "Basketball court",
+      "kind": "court",
+      "polygon": null,
+      "schematicBoxPx": [
+        868,
+        128,
+        47,
+        47
+      ],
+      "confidence": "estimated",
+      "surface": "concrete"
+    },
+    {
+      "id": "bike-parking",
+      "label": "Bike Parking",
+      "kind": "parking",
+      "polygon": null,
+      "schematicBoxPx": [
+        712,
+        115,
+        146,
+        57
+      ],
+      "confidence": "estimated",
+      "surface": "concrete"
+    },
+    {
+      "id": "car-parking",
+      "label": "Car Parking (surface)",
+      "kind": "parking",
+      "polygon": null,
+      "schematicBoxPx": [
+        625,
+        138,
+        43,
+        160
+      ],
+      "confidence": "placeholder",
+      "surface": "asphalt",
+      "notes": "two light-green boxes beside the label; exact extent unknown"
+    },
+    {
+      "id": "badminton",
+      "label": "Badminton Court",
+      "kind": "court",
+      "polygon": null,
+      "schematicBoxPx": [
+        995,
+        632,
+        65,
+        55
+      ],
+      "confidence": "estimated",
+      "surface": "concrete"
+    },
+    {
+      "id": "new-cafe",
+      "label": "New (Open) Cafe",
+      "kind": "cafe",
+      "polygon": null,
+      "schematicBoxPx": [
+        1043,
+        688,
+        40,
+        70
+      ],
+      "confidence": "estimated"
+    },
+    {
+      "id": "fresh-friez",
+      "label": "Fresh Friez",
+      "kind": "shop",
+      "polygon": null,
+      "schematicBoxPx": [
+        757,
+        783,
+        40,
+        18
+      ],
+      "confidence": "estimated",
+      "notes": "food outlet beside Gate-5"
+    },
+    {
+      "id": "book-photocopy",
+      "label": "Book PhotoCopy",
+      "kind": "shop",
+      "polygon": null,
+      "schematicBoxPx": [
+        215,
+        215,
+        73,
+        107
+      ],
+      "confidence": "estimated",
+      "notes": "next to F Block; two adjoining boxes on the map"
+    },
+    {
+      "id": "masjid",
+      "label": "Masjid",
+      "kind": "masjid",
+      "polygon": null,
+      "schematicBoxPx": [
+        296,
+        765,
+        145,
+        38
+      ],
+      "confidence": "estimated",
+      "notes": "Jummah at 13:10 per map"
+    },
+    {
+      "id": "lawns-central",
+      "label": "Central lawns (between A, C, D)",
+      "kind": "lawn",
+      "polygon": null,
+      "schematicBoxPx": [
+        600,
+        465,
+        345,
+        80
+      ],
+      "confidence": "estimated",
+      "surface": "grass"
+    },
+    {
+      "id": "lawns-south",
+      "label": "South lawns (below Block A)",
+      "kind": "lawn",
+      "polygon": null,
+      "schematicBoxPx": [
+        545,
+        655,
+        440,
+        85
+      ],
+      "confidence": "estimated",
+      "surface": "grass"
+    },
+    {
+      "id": "fountain-1",
+      "label": "Unlabeled blue square (north)",
+      "kind": "water_feature",
+      "polygon": null,
+      "schematicBoxPx": [
+        775,
+        510,
+        16,
+        16
+      ],
+      "confidence": "placeholder",
+      "notes": "unknown; possibly fountain"
+    },
+    {
+      "id": "fountain-2",
+      "label": "Unlabeled blue square (south)",
+      "kind": "water_feature",
+      "polygon": null,
+      "schematicBoxPx": [
+        775,
+        690,
+        16,
+        16
+      ],
+      "confidence": "placeholder",
+      "notes": "unknown; possibly fountain"
+    }
+  ],
+  "props": [],
+  "departments": [
+    {
+      "id": "cs",
+      "name": "Computer Science",
+      "buildingIds": [
+        "C",
+        "A",
+        "F"
+      ],
+      "spawnAnchor": "spawn.cs",
+      "aliases": [
+        "CS",
+        "SE",
+        "AI",
+        "DS",
+        "Cyber Security"
+      ],
+      "notes": "mapping of related programs to blocks unconfirmed"
+    },
+    {
+      "id": "civil",
+      "name": "Civil Engineering",
+      "buildingIds": [
+        "B"
+      ],
+      "spawnAnchor": "spawn.civil",
+      "aliases": [
+        "CE",
+        "Civil"
+      ]
+    },
+    {
+      "id": "ee",
+      "name": "Electrical Engineering",
+      "buildingIds": [
+        "D"
+      ],
+      "spawnAnchor": "spawn.ee",
+      "aliases": [
+        "EE",
+        "Electrical",
+        "E&M"
+      ]
+    },
+    {
+      "id": "mgmt",
+      "name": "Management",
+      "buildingIds": [
+        "D"
+      ],
+      "spawnAnchor": "spawn.mgmt",
+      "aliases": [
+        "BBA",
+        "Management"
+      ],
+      "notes": "Management floor is D Block 2nd floor"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "spawn.cs",
+      "kind": "spawn",
+      "position": null,
+      "refs": [
+        "C"
+      ]
+    },
+    {
+      "id": "spawn.civil",
+      "kind": "spawn",
+      "position": null,
+      "refs": [
+        "B"
+      ]
+    },
+    {
+      "id": "spawn.ee",
+      "kind": "spawn",
+      "position": null,
+      "refs": [
+        "D"
+      ]
+    },
+    {
+      "id": "spawn.mgmt",
+      "kind": "spawn",
+      "position": null,
+      "refs": [
+        "D"
+      ]
+    }
+  ],
+  "mapNotes": {
+    "benches": "dark-green markers scattered on lawns and near the New Cafe",
+    "entryPoints": "yellow boxes with purple border on the map mark doors; extract positions from the image during M2",
+    "roomBlockClassNames": {
+      "A": "A-01",
+      "B": "CE / B-01",
+      "C": "CS / C-01",
+      "D": "E&M / D-01",
+      "F": "NB / F-01"
+    }
+  }
+}
