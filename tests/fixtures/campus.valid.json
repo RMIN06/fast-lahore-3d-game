@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "name": "Synthetic validation fixture — not campus geometry",
+    "origin": "G5",
+    "defaults": {
+      "floorHeight": 3.6,
+      "basementHeight": 3.4,
+      "wallThickness": 0.25,
+      "corridorWidth": 2.4,
+      "doorWidth": 1,
+      "doorHeight": 2.1
+    },
+    "schematicMap": { "file": "unused-test-input", "sizePx": [1, 1] }
+  },
+  "boundary": {
+    "polygon": [
+      [0, 0],
+      [253, 0],
+      [253, 200],
+      [0, 200]
+    ],
+    "confidence": "measured"
+  },
+  "gates": [
+    {
+      "id": "G5",
+      "label": "Synthetic gate",
+      "position": [0, 0],
+      "heading": 0,
+      "confidence": "measured"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "A",
+      "label": "Synthetic A",
+      "aliases": [],
+      "footprint": [
+        [10, 10],
+        [30, 10],
+        [30, 30],
+        [10, 30]
+      ],
+      "confidence": "measured",
+      "entries": [
+        { "id": "main", "position": [10, 20], "floor": "G", "kind": "main" }
+      ],
+      "floors": [
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground",
+          "layout": "corridor_spine",
+          "spaces": [
+            {
+              "id": "A-G-TEST",
+              "name": "Synthetic room",
+              "kind": "classroom",
+              "polygon": [
+                [12, 12],
+                [18, 12],
+                [18, 18],
+                [12, 18]
+              ],
+              "confidence": "measured"
+            }
+          ],
+          "connectors": [
+            {
+              "id": "stairs",
+              "kind": "stairs",
+              "position": [20, 20],
+              "connects": ["G", "1"]
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "level": 1,
+          "label": "First",
+          "layout": "corridor_spine",
+          "spaces": [],
+          "connectors": [
+            {
+              "id": "stairs",
+              "kind": "stairs",
+              "position": [20, 20],
+              "connects": ["G", "1"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Synthetic B",
+      "aliases": [],
+      "footprint": [
+        [50, 10],
+        [70, 10],
+        [70, 30],
+        [50, 30]
+      ],
+      "confidence": "measured",
+      "entries": [],
+      "floors": [
+        {
+          "id": "G",
+          "level": 0,
+          "label": "Ground",
+          "layout": "open_hall",
+          "spaces": [],
+          "connectors": []
+        }
+      ]
+    }
+  ],
+  "areas": [
+    {
+      "id": "lawn",
+      "label": "Synthetic lawn",
+      "kind": "lawn",
+      "polygon": [
+        [80, 10],
+        [90, 10],
+        [90, 20],
+        [80, 20]
+      ],
+      "confidence": "measured"
+    }
+  ],
+  "props": [],
+  "departments": [
+    {
+      "id": "test",
+      "name": "Synthetic department",
+      "buildingIds": ["A"],
+      "spawnAnchor": "spawn.test",
+      "aliases": []
+    }
+  ],
+  "anchors": [
+    {
+      "id": "spawn.test",
+      "kind": "spawn",
+      "position": [10, 0, 20],
+      "refs": ["A"]
+    }
+  ]
+}
