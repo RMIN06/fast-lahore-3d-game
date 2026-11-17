@@ -1,0 +1,83 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #ecf2f5;
+  background: #111a20;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+main {
+  height: 100vh;
+  min-height: 480px;
+}
+header {
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  left: 28px;
+  pointer-events: none;
+}
+h1 {
+  margin: 8px 0;
+  font-size: 26px;
+}
+p {
+  margin: 6px 0;
+  color: #b6c6cc;
+  font-size: 13px;
+}
+footer {
+  position: absolute;
+  bottom: 20px;
+  left: 28px;
+  color: #b6c6cc;
+  font-size: 12px;
+}
+.dev-overlay {
+  pointer-events: auto;
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 230px;
+  padding: 16px;
+  background: #10181ef2;
+  border: 1px solid #4c636f;
+  border-radius: 8px;
+  font:
+    12px ui-monospace,
+    monospace;
+}
+.dev-overlay h2 {
+  font-size: 14px;
+  margin: 0 0 12px;
+}
+.dev-overlay dl {
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+.dev-overlay dd {
+  margin: 0;
+}
+.dev-overlay label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.campus-data {
+  max-height: 40vh;
+  overflow: auto;
+  margin-top: 12px;
+}
+.campus-data ul {
+  padding-left: 16px;
+}
+.campus-data li {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
