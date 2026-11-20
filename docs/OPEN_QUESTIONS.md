@@ -67,3 +67,8 @@ Items 1, 2 and 28–30 are now answered by imagery: orientation is a 180° rotat
 ## M4 player — 2026-11-20
 
 39. **Block entrances.** Each block has one placeholder main entrance: A on its south side (courtyard), B west (Highway), C east (courtyard), D north (courtyard), E west (Highway) and F north (Gate-3 path), at the midpoint of the longest facade on that side. Where are the actual main and side doors of each block?
+
+## M5 time and lighting — 2026-11-20
+
+40. **Lamp posts and outdoor lights.** About 20 placeholder lamps are placed procedurally: outside each entrance, inside each gate, and every 22 m along the Highway and Gate-3 path. Where are the real lamp posts and wall lights? What time do they switch on?
+41. **Campus hours.** Do gates open and close at fixed times, and is the campus open at night or on Sundays? Right now, only the Masjid-side gate has a schedule (Friday Jummah).

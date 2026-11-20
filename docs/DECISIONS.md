@@ -85,3 +85,19 @@
   - While sprinting the capsule settles up to about 7 cm into the ground slab, then recovers. Tests allow 10 cm; falling through would be metres.
 - **Placeholder block entrances.** One `main` entrance per block, on the side the student map marks with entry points, at the midpoint of the longest facade there, marked `confidence: "placeholder"`. Entries gained optional `confidence` and `notes` fields.
 - **The camera starts in first person.** The M3 orbit overview stays available as the dev overlay's "Free camera".
+
+## M5 — 2026-11-20
+
+- **Clock rate:** one game minute per real second at ×1 (24 real minutes per day, GAMEPLAY_SPEC §4).
+  - Monday 08:30 is the start for new players until the owner answers OPEN_QUESTIONS #20.
+  - A single shared clock is advanced in the render loop and published to React 4 times a second.
+- **Simplified sun path:** rises at 06:00 due east, sets at 18:30 due west, with a 58° noon elevation (equinox at Lahore).
+  - Seasonal variation is a stretch goal in the spec.
+  - The moon is simply opposite the sun.
+- **Gates follow campus data.** A gate with an `opens` rule is open only in that window: the Masjid-side gate, Fri 12:45–14:00. While open, its leaf hides and its collider is disabled. Gates without a rule stay closed (no off-campus areas).
+- **Lamp posts are procedural placeholders** placed from campus data (entrances, gates, path edges), because no lamp positions exist and the PropGroup format is still undefined (OPEN_QUESTIONS #26, #40).
+  - Lamp light is faked with additive ground pools rather than many real point lights, to keep within the frame budget.
+- **Window bands are procedural** (one band per floor, panes 3 m apart) until the M13 realism pass. Shared walls get no windows.
+- **One sun shadow map** (2048², an 80 m box following the player) rather than two cascades. It is simpler, and it holds the budget at about 40 draw calls. Cascades can be added in M14 if needed.
+- **Night readability** comes from a moonlit blue ambient light, moonlight, lit windows and lamp pools. An e2e test checks that the night frame is darker than noon but not black.
+- **Overlay checkboxes no longer swallow game keys.** Keyboard input is ignored only in text-entry fields.
