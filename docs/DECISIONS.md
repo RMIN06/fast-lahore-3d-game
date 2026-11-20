@@ -117,3 +117,23 @@
   - Skin tone, hair, and outfit options are a small placeholder set until the M8 character models.
   - Hair is stored but not yet visible.
 - **Department list** is limited to the four departments in campus data (OPEN_QUESTIONS #7).
+
+## M7 — 2026-11-20
+
+- **Interiors are generated at load time from campus data, not stored.** No real floor plans exist.
+  - Writing generated room polygons and stair positions into `data/campus.json` would make it look curated when it isn't. So the generator (`src/systems/interior.ts`) runs from the floor and room lists, footprint and entrance.
+  - Its output is treated as **placeholder layout** everywhere: debug tint, docs and HUD context.
+- **Layout recipe:** the largest building-aligned rectangle inside the footprint; a vestibule from the main door; an entrance hall with the stair shaft; and a corridor spine with rooms in strips on both sides (one side when narrow).
+  - "left" and "right" from the map notes choose the strip, with `order` running along it.
+  - "front", "middle" or no side are balanced across strips: the reference frame for those notes is unknown (OPEN_QUESTIONS #9).
+  - Open-hall, parking and custom floors become one open room.
+- **Stairs are stacked straight ramps (about 30°) in one shaft per block, with rails.** No stair positions exist in the data, and ramps are robust with the M4 kinematic controller (steps up to 0.3 m, slopes up to 40°). Real stair geometry, and lifts if any, can replace them once plans or photos arrive (OPEN_QUESTIONS #10).
+- **Basements need the ground to have holes.** The ground collider becomes a triangle mesh with holes under each interior rectangle. The facade collider gets a 3 m × 2.7 m opening at the main door; the rest of each block stays solid.
+- **Door plates are a canvas texture atlas, one per block.** This avoids runtime font downloads and costs one draw call per block.
+- **Interior rendering streams in** within 25 m of the door or while inside, and out beyond 60 m. Physics for all interiors stays loaded, because the colliders are cheap.
+- **Entry transition:** a 0.45 s fade, hiding the block's exterior shell, and indoor ambient light.
+- **Delivery order F, D, C, B, A, E** is enforced with `INTERIOR_BLOCKS` in `src/world/interiors.ts`, one commit per block. Blocks not yet listed stay solid.
+- **Library (E):** its floors and layout are unknown (OPEN_QUESTIONS #5, #11, #23), so it gets the same placeholder treatment as an open hall. The "hero treatment" (real reading halls, shelves, issue desk) waits for owner input and the M13 realism pass.
+- **Test tooling:**
+  - The Vite dev server ignores `test-results/`, `playwright-report/`, `reference/` and `docs/`. A mid-run reload sent a long e2e test back to the title screen.
+  - Interior e2e tests run on the Low preset in an 800 × 450 viewport, because headless software rendering is fill-rate bound.

@@ -76,3 +76,8 @@ Items 1, 2 and 28–30 are now answered by imagery: orientation is a 180° rotat
 ## M6 registration — 2026-11-20
 
 42. **Avatar options.** The placeholder avatar offers 4 skin tones, 4 hair styles (short, long, tied, covered) and 6 outfit colours. Which options should the M8 characters support, for example uniforms or hijab and cap variants?
+
+## M7 interiors — 2026-11-20
+
+43. **Floor plans.** Every interior is a generated placeholder: corridor spines, room sizes, one stair ramp shaft per block, and no lifts. Plans, fire-exit maps or photos of any floor (especially stairs, washrooms and corridor directions) would replace the guesses. Which blocks have lifts?
+44. **Block entrances inside.** Each block is entered only through its one placeholder main door. Which side doors exist, and does the vestibule/hall arrangement match the real entrance halls?
