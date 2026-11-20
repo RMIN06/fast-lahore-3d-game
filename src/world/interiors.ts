@@ -8,7 +8,7 @@ import { campusPhysicsInput } from '../systems/interior';
  * Blocks with walkable interiors, in the M7 delivery order
  * (F, D, C, B, A, E — Library last). Blocks not listed stay solid.
  */
-export const INTERIOR_BLOCKS: readonly string[] = ['F', 'D', 'C', 'B'];
+export const INTERIOR_BLOCKS: readonly string[] = ['F', 'D', 'C', 'B', 'A'];
 
 const cache = new WeakMap<Campus, InteriorLayout[]>();
 
