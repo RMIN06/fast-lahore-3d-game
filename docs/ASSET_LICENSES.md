@@ -3,6 +3,7 @@
 | Asset                                                                           | File path                                            | Source URL         | License  | Attribution text                     | Date added |
 | ------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------ | -------- | ------------------------------------ | ---------- |
 | Procedural campus greybox (ground, surfaces, extruded blocks, wall, gate posts) | src/game/CampusScene.tsx, src/world/campus-meshes.ts | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
+| Player capsule placeholder (until M8 characters)                                | src/game/PlayerRig.tsx                               | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
 
 The M0 test ground and cube (own work, 2026-10-25) were removed in M3. No external models, textures, audio, fonts, or files ship in `public/`. The private student map is not loaded by the app.
 

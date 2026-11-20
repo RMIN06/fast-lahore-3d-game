@@ -20,6 +20,7 @@ import {
   wallGeometry,
 } from '../world/campus-meshes';
 import { useDebugStore } from '../state/debug-store';
+import { usePlayerStore } from '../state/player-store';
 import type { Campus, Confidence } from '../types/campus';
 
 // M3 exterior greybox. Thin component: geometry comes from campus data via
@@ -73,6 +74,8 @@ export function CampusScene() {
   const confidenceColors = useDebugStore((s) => s.confidenceColors);
   const labels = useDebugStore((s) => s.labels);
   const colliders = useDebugStore((s) => s.colliders);
+  // The orbit view is the M3 overview, kept as a free debug camera from M4.
+  const freeCamera = usePlayerStore((s) => s.mode === 'free');
   const { center, size } = useMemo(() => campusBounds(campus), [campus]);
 
   const masses = useMemo(() => buildingMasses(campus), [campus]);
@@ -166,13 +169,15 @@ export function CampusScene() {
         position={[center[0] + size * 0.6, size, center[1] - size * 0.4]}
         intensity={2.2}
       />
-      <OrbitControls
-        makeDefault
-        target={[center[0], 0, center[1]]}
-        maxPolarAngle={Math.PI / 2.05}
-        minDistance={20}
-        maxDistance={size * 3}
-      />
+      {freeCamera && (
+        <OrbitControls
+          makeDefault
+          target={[center[0], 0, center[1]]}
+          maxPolarAngle={Math.PI / 2.05}
+          minDistance={20}
+          maxDistance={size * 3}
+        />
+      )}
       <mesh geometry={geometry.outside} material={material('#36443a')} />
       {geometry.campusGround && (
         <mesh

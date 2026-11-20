@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDebugStore } from '../state/debug-store';
 import type { DebugToggle } from '../state/debug-store';
 import { useMetricsStore } from './metrics-store';
+import { usePlayerStore } from '../state/player-store';
 import { loadedCampus } from '../world/campus';
 
 const TOGGLES: [DebugToggle, string][] = [
@@ -19,6 +20,7 @@ const LEGEND: [string, string][] = [
 export default function DevOverlay() {
   const debug = useDebugStore();
   const metrics = useMetricsStore();
+  const player = usePlayerStore();
   const [showCampusData, setShowCampusData] = useState(false);
   const { campus, warnings } = loadedCampus;
 
@@ -58,6 +60,33 @@ export default function DevOverlay() {
         <dd data-testid="triangles">{metrics.triangles}</dd>
       </dl>
       <p>Budget: 60 FPS · ≤400 calls · ≤1.5M triangles</p>
+      <label>
+        <input
+          type="checkbox"
+          checked={player.mode === 'free'}
+          disabled={!player.ready}
+          onChange={(event) =>
+            player.setMode(event.target.checked ? 'free' : 'first')
+          }
+        />
+        Free camera (orbit)
+      </label>
+      <dl aria-label="Player state">
+        <dt>Camera</dt>
+        <dd data-testid="player-mode">
+          {player.ready ? player.mode : 'loading'}
+        </dd>
+        <dt>Position</dt>
+        <dd>
+          <span data-testid="player-x">{player.position[0].toFixed(2)}</span>,{' '}
+          <span data-testid="player-y">{player.position[1].toFixed(2)}</span>,{' '}
+          <span data-testid="player-z">{player.position[2].toFixed(2)}</span>
+        </dd>
+        <dt>Grounded</dt>
+        <dd data-testid="player-grounded">{String(player.grounded)}</dd>
+        <dt>Sprinting</dt>
+        <dd data-testid="player-sprinting">{String(player.sprinting)}</dd>
+      </dl>
       <label>
         <input
           type="checkbox"

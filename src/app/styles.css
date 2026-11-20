@@ -107,3 +107,15 @@ footer {
   margin: 8px 0;
   overflow-wrap: anywhere;
 }
+.crosshair {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #ffffffcc;
+  pointer-events: none;
+  z-index: 5;
+}

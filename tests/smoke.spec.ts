@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('renders the M3 campus greybox within budget without browser errors', async ({
+test('renders the M3 campus greybox overview within budget without browser errors', async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -10,10 +10,14 @@ test('renders the M3 campus greybox within budget without browser errors', async
   });
   await page.goto('/');
   await expect(
-    page.getByRole('heading', { name: 'M3 · Exterior greybox' }),
+    page.getByRole('heading', { name: 'M4 · Player controller' }),
   ).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();
+  // The M3 overview is the free debug camera from M4 onwards.
+  await expect(page.getByTestId('player-mode')).toHaveText('first');
+  await page.getByRole('checkbox', { name: 'Free camera (orbit)' }).check();
+  await expect(page.getByTestId('player-mode')).toHaveText('free');
   await expect(
     page.getByRole('complementary', { name: 'Development overlay' }),
   ).toBeVisible();
