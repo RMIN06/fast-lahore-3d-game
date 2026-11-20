@@ -49,7 +49,7 @@ Gameplay data (`tasks.json`, `npcs.json`, `dialogue/`) references campus IDs (an
 - **Interior streaming:** interiors are separate chunks. Load a building's interior when the player is within 25 m of an entry or inside; unload when 60 m away. Only the player's building (and the floor above/below) is fully active.
 - **Props:** benches, trees, lamp posts, bike racks, signage via instanced meshes from a placement list in the spec.
 - **Collision:** simplified static colliders generated from footprints, walls and room partitions (never from render meshes). Trimesh only for hero models and only when necessary.
-- **Navmesh:** built offline by `scripts/build-navmesh.ts` from collider geometry, one navmesh for outdoors and one per building floor, linked at doors and stairs via off-mesh connections.
+- **Navmesh:** built offline by `scripts/build-navmesh.ts` from collider geometry, as one multi-level navmesh: floors connect through the walkable stair ramps and doorways, with no off-mesh links (DECISIONS M9). The output is `public/navmesh/campus.bin`, checked against an input hash by a unit test.
 
 ## 5. Rendering and lighting
 - Day/night: `timeOfDay` (0-24) drives sun/moon angle and color, sky shader, fog, exposure, street/interior lights, window emissives.

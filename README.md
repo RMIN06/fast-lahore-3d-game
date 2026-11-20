@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M8 accepted: animated characters)
+## Run the app (M9 accepted: navmesh and NPCs)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -29,6 +29,11 @@ windows, stars and moon follow the time of day.
 - **Esc** opens the pause menu (save, settings, time controls, exit to title). **P**
   opens the phone (map and stubs) and **M** the full campus map. The game
   autosaves every minute and when you leave.
+- Students, faculty, guards, cafe and library staff and shopkeepers follow daily
+  schedules: arriving through the gates, classes in their department's block,
+  lunch queues at the cafe, the library, Jummah on Fridays, and leaving in the
+  evening. The campus is busy at midday and empty except for the guards at night.
+  Their numbers and hours are placeholders.
 - **T** opens the time panel: pause, speed (×0.5–×4), and set the day and time.
   At ×1, one real minute is one game hour.
 - Buildings, the boundary wall and the closed gates block you.
@@ -37,7 +42,8 @@ The development overlay shows FPS, draw calls and triangles, plus the player's
 camera mode, position and grounded state. It has toggles for **Confidence
 colors** (placeholders show in red), **Labels**, **Collision shapes** and **Free
 camera (orbit)**, which gives the M3 overview. Enable **Campus data** to list
-the validation warnings. See [M8 verification](docs/M8_VERIFICATION.md),
+the validation warnings. See [M9 verification](docs/M9_VERIFICATION.md),
+[M8 verification](docs/M8_VERIFICATION.md),
 [M7 verification](docs/M7_VERIFICATION.md),
 [M6 verification](docs/M6_VERIFICATION.md),
 [M5 verification](docs/M5_VERIFICATION.md),
@@ -55,6 +61,7 @@ npm run typecheck
 npm run lint
 npm test
 npm run validate:campus
+npm run build:navmesh   # after any campus or interior change
 npm run test:e2e
 npm run build
 npm run preview
@@ -66,6 +73,8 @@ The browser tests cover:
 - the M3 overview (draw-call and triangle budgets, floor counts, debug toggles,
   orbiting);
 - the M4 player (walk, sprint, jump, the V camera switch, and the closed gate);
+- M9 NPCs (lunch-peak budget in the cafe, at most 60 agents, guards only at
+  night, the navmesh viewer);
 - M8 characters (every animation for both avatars, LODs, in-game states);
 - M7 interiors (teleport to every room and check its label, interior budget,
   placeholder flag);
@@ -75,7 +84,7 @@ The browser tests cover:
   and the budget with shadows);
 - the tracer.
 
-Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png`, `m6-*.png`, `m7-*.png` and `m8-*.png`.
+Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png`, `m6-*.png`, `m7-*.png`, `m8-*.png` and `m9-*.png`.
 
 `validate:campus` runs Zod, ID/reference, polygon, containment, connector and area
 checks. The supplied seed allows explicit warnings for unfinished geometry and

@@ -85,3 +85,9 @@ Items 1, 2 and 28–30 are now answered by imagery: orientation is a 180° rotat
 ## M8 characters — 2026-11-20
 
 45. **Character models.** The characters are procedural placeholders (own work). Will the owner supply male and female glTF models with a shared skeleton (ASSET_PIPELINE §5), or approve a specific CC0 source (for example MakeHuman exports or Quaternius) for download? Real clips would replace the procedural idle, walk, run, jump, sit, kick and swing.
+
+## M9 NPCs — 2026-11-20
+
+46. **Daily life on campus.** The NPC numbers and hours are placeholders: about 110 students on campus at once on a weekday, 8 faculty, the cafe open 07:30–21:00, the library 08:00–20:00, the medical room 08:00–17:00, and shops 08:00–20:00 (closed Sunday). What are the real opening hours of the cafe, library, medical room and shops, the class timings (slots, lunch break), and roughly how busy is the campus at different times? Is Saturday a teaching day?
+47. **Staff and guards.** One guard is placed inside each gate around the clock. Where do guards actually stand (gate cabins?), and are there more posts? Fresh Friez is modelled as a street-side shop outside the wall near Gate-5. Is that correct, and are there more shops or kiosks?
+

@@ -148,3 +148,20 @@
 - **One merged SkinnedMesh per LOD (one draw call),** sharing one skeleton, so NPC crowds in M9 stay within the draw-call budget.
 - **First person uses the hidden-body policy.** First-person arms would need hand animation that real models will provide.
 - **Sit, kick and swing are triggered from the dev overlay** until seats (M10) and mini-games (M11) exist.
+
+## M9 — 2026-11-20
+
+- **One multi-level navmesh, not outdoors plus one per floor with off-mesh links** (as MILESTONES and ARCHITECTURE suggested).
+  - The M7 stair ramps are real walkable slopes in the collider geometry, so Recast connects every floor and basement through the ramps and doorways by itself. No hand-placed links can drift out of date.
+  - A single `NavMeshQuery` and `Crowd` serve the whole campus, so a path from a gate to a third-floor room is one query.
+  - Tests prove every one of the 106 rooms is reachable from Gate-5.
+- **The bake uses the physics colliders as input** (`campusPhysics`), so the walls NPCs avoid are the walls the player collides with. The committed bake is checked against a hash of its input.
+- **Agent radius 0.3 m with 0.15 m cells.** Coarser cells or a wider radius eroded the generated doorways shut (60 of 106 rooms became unreachable).
+- **Crowd agents only near the player (≤ 60 within 90 m); everyone else is abstract,** moving along the same navmesh path at walking speed. Promotion and demotion keep position and goal, so nothing pops or teleports.
+- **Jams are solved by yielding.** An agent blocked for 4 s walks abstractly along its path for 3 s and then rejoins the crowd. Head-on meetings on ramp landings otherwise deadlocked DetourCrowd. "Stuck" means no movement for 20 s, and the 24 h test requires 0.
+- **Schedules run on game time; walking runs on real time.** People walk at a believable 1.3 m/s at any clock speed. At high speeds they may arrive late, but the schedule never waits on them.
+- **Warm start:** an NPC spawning more than 15 game minutes late (a loaded save or a time jump) is placed straight into its current activity.
+- **Queues fold into rows of 8**, and service takes 0.5 game minutes per person. A straight line of 40+ lunch-goers otherwise ran out of building F.
+- **Random spots in a room stay inside the building footprint** (with a 1 m margin). The generated room rectangles can extend past the irregular footprint of F.
+- **Shared NPC geometry:** one LOD set per look (body, skin, hair, outfit) and one material for all NPCs. Only LOD0 casts shadows. Seated NPCs get a plain instanced stool until furniture exists.
+- **Opening hours, population and staff counts are placeholders** (OPEN_QUESTIONS #46): students 110, faculty 8, cafe 07:30–21:00 (second server 08:00–18:00), library 08:00–20:00, medical 08:00–17:00 on weekdays, shops 08:00–20:00 except Sunday.
