@@ -29,7 +29,7 @@ const rotation = (rotationY: number, tiltZ = 0) => {
 type Prism = Extract<StaticCollider, { kind: 'prism' }>;
 
 /** Vertical side walls of a footprint prism, leaving door openings. */
-function prismSides(prism: Prism) {
+export function prismSides(prism: Prism) {
   const vertices: number[] = [];
   const indices: number[] = [];
   const quad = (a: Vec2, b: Vec2, y0: number, y1: number) => {
