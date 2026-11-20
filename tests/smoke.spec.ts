@@ -12,9 +12,7 @@ test('renders the M3 campus greybox overview within budget without browser error
   await startNewGame(page);
   // Outdoors, away from any streamed interior (this test is the M3 overview).
   await teleport(page, 'gate:origin');
-  await expect(
-    page.getByRole('heading', { name: 'M8 · Characters' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'M9 · NPCs' })).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();
   // The M3 overview is the free debug camera from M4 onwards.

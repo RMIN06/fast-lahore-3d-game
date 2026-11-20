@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { CampusScene } from '../game/CampusScene';
 import { PlayerRig } from '../game/PlayerRig';
+import { Npcs } from '../game/Npcs';
 import { Environment } from '../game/Environment';
 import { Interiors } from '../game/Interiors';
 import { EntryFade } from '../ui/EntryFade';
@@ -56,7 +57,7 @@ function GameScreen() {
     <main>
       <header>
         <p>FAST LAHORE / DEVELOPMENT</p>
-        <h1>M8 · Characters</h1>
+        <h1>M9 · NPCs</h1>
         <p data-testid="controls-hint">
           {mode === 'free'
             ? 'Free camera: drag to orbit · scroll to zoom · right-drag to pan'
@@ -73,6 +74,7 @@ function GameScreen() {
         <CampusScene />
         <Interiors />
         <PlayerRig />
+        <Npcs />
         {MetricsSampler && (
           <Suspense fallback={null}>
             <MetricsSampler />

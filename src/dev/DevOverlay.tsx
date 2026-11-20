@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDebugStore } from '../state/debug-store';
 import type { DebugToggle } from '../state/debug-store';
 import { useMetricsStore } from './metrics-store';
+import { useNpcStore } from '../state/npc-store';
 import { usePlayerStore } from '../state/player-store';
 import { useClockStore } from '../state/clock-store';
 import { loadedCampus } from '../world/campus';
@@ -12,6 +13,7 @@ const TOGGLES: [DebugToggle, string][] = [
   ['confidenceColors', 'Confidence colors'],
   ['labels', 'Labels'],
   ['colliders', 'Collision shapes'],
+  ['navmesh', 'Navmesh'],
 ];
 const LEGEND: [string, string][] = [
   ['measured', '#7fd6ab'],
@@ -23,6 +25,7 @@ const LEGEND: [string, string][] = [
 export default function DevOverlay() {
   const debug = useDebugStore();
   const metrics = useMetricsStore();
+  const npcs = useNpcStore();
   const player = usePlayerStore();
   const gatesOpen = useClockStore((s) => s.gatesOpen);
   const openGates = Object.entries(gatesOpen)
@@ -172,6 +175,14 @@ export default function DevOverlay() {
         <dd data-testid="player-sprinting">{String(player.sprinting)}</dd>
         <dt>Animation</dt>
         <dd data-testid="player-animation">{player.animation}</dd>
+        <dt>NPCs</dt>
+        <dd>
+          <span data-testid="npc-status">{npcs.status}</span> · present{' '}
+          <span data-testid="npc-present">{npcs.present}</span> · active{' '}
+          <span data-testid="npc-active">{npcs.active}</span> · drawn{' '}
+          <span data-testid="npc-rendered">{npcs.rendered}</span> · stuck{' '}
+          <span data-testid="npc-stuck">{npcs.stuck}</span>
+        </dd>
         <dt>Open gates</dt>
         <dd data-testid="gates-open">
           {openGates.length ? openGates.join(', ') : 'none'}

@@ -22,6 +22,17 @@ import type { Avatar } from '../systems/save';
 // M8 procedural character (own work): a skeleton with rigidly skinned
 // primitive parts, merged into ONE skinned mesh per level of detail.
 
+/** What a character looks like: a player avatar, or an NPC in a uniform colour. */
+export type Look = Omit<Avatar, 'outfitColor' | 'body'> & {
+  outfitColor: string;
+};
+
+/** Pre-built LOD geometries and a material shared by many rigs (NPCs). */
+export interface SharedCharacter {
+  geometries: readonly [BufferGeometry, BufferGeometry, BufferGeometry];
+  material: MeshStandardMaterial;
+}
+
 type Category = 'skin' | 'top' | 'bottom' | 'shoes' | 'hair' | 'eyes';
 const FIXED: Record<Exclude<Category, 'skin' | 'top'>, string> = {
   bottom: '#2f3540',
@@ -100,7 +111,7 @@ interface Part {
 /** Character geometry for one level of detail, with skin attributes. */
 export function characterGeometry(
   body: Body,
-  avatar: Avatar,
+  avatar: Look,
   level: 0 | 1 | 2,
 ): BufferGeometry {
   const p = proportions(body);
@@ -327,21 +338,27 @@ export function characterGeometry(
 export const triangleCount = (g: BufferGeometry) =>
   g.index ? g.index.count / 3 : g.getAttribute('position').count / 3;
 
+/** The vertex-coloured character material. */
+export const characterMaterial = () =>
+  new MeshStandardMaterial({ vertexColors: true, roughness: 0.75 });
+
 /** A posable character: bones + three skinned LOD meshes sharing a skeleton. */
 export class CharacterRig {
   readonly group = new Group();
   readonly bones = new Map<BoneName, Bone>();
   readonly lod = new LOD();
   readonly levels: SkinnedMesh[] = [];
-  private readonly material = new MeshStandardMaterial({
-    vertexColors: true,
-    roughness: 0.75,
-  });
+  private readonly material: MeshStandardMaterial;
+  private readonly owned: boolean;
 
+  /** With `shared`, geometry and material are borrowed (not disposed here). */
   constructor(
     readonly body: Body,
-    avatar: Avatar,
+    avatar: Look,
+    shared?: SharedCharacter,
   ) {
+    this.owned = !shared;
+    this.material = shared?.material ?? characterMaterial();
     const p = proportions(body);
     for (const b of BONES) {
       const bone = new Bone();
@@ -354,7 +371,7 @@ export class CharacterRig {
     const skeleton = new Skeleton(BONES.map((b) => this.bones.get(b.name)!));
     ([0, 1, 2] as const).forEach((level) => {
       const mesh = new SkinnedMesh(
-        characterGeometry(body, avatar, level),
+        shared?.geometries[level] ?? characterGeometry(body, avatar, level),
         this.material,
       );
       mesh.frustumCulled = false;
@@ -379,6 +396,7 @@ export class CharacterRig {
   }
 
   dispose(): void {
+    if (!this.owned) return;
     this.levels.forEach((m) => m.geometry.dispose());
     this.material.dispose();
   }
