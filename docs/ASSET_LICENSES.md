@@ -5,3 +5,12 @@
 | Procedural test ground and cube | src/game/ScaffoldScene.tsx | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-10-25 |
 
 M0 ships no external models, textures, audio, fonts, or files in `public/`. The private student map is not loaded by the app.
+
+## Data sources (not yet shipped)
+
+`data/campus.json` (M2 site plan) contains geometry derived from the sources below. The app does not load it yet; M3 will be the first milestone to ship it. **Review these terms before any public release** (OPEN_QUESTIONS #36).
+
+| Data                                                                                            | File path        | Source URL                                                                                            | License / terms                                                                          | Attribution text                                                       | Date added |
+| ----------------------------------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------- |
+| Boundary; A, B and E outlines; badminton; Masjid; C/D outline (split); Highway centreline guide | data/campus.json | https://www.openstreetmap.org/ (ways 323166057, 841040144–841040147, 841040150, 561233052, 561233053) | ODbL 1.0 (attribution and share-alike for derived databases)                             | © OpenStreetMap contributors                                           | 2026-11-20 |
+| F outline, grounds, courts, parking, lawns, paths, gates (traced positions)                     | data/campus.json | https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer                          | Esri World Imagery terms of use; licence review required for tracing in a public release | Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community | 2026-11-20 |
