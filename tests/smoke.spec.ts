@@ -10,7 +10,7 @@ test('renders the M3 campus greybox overview within budget without browser error
   });
   await page.goto('/');
   await expect(
-    page.getByRole('heading', { name: 'M4 · Player controller' }),
+    page.getByRole('heading', { name: 'M5 · Time, sky and lighting' }),
   ).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();

@@ -15,12 +15,14 @@ import {
   buildingGeometry,
   centroid,
   colliderLineGeometry,
+  gateLeafGeometry,
   gatePostGeometry,
   surfaceGeometry,
   wallGeometry,
 } from '../world/campus-meshes';
 import { useDebugStore } from '../state/debug-store';
 import { usePlayerStore } from '../state/player-store';
+import { useClockStore } from '../state/clock-store';
 import type { Campus, Confidence } from '../types/campus';
 
 // M3 exterior greybox. Thin component: geometry comes from campus data via
@@ -76,6 +78,7 @@ export function CampusScene() {
   const colliders = useDebugStore((s) => s.colliders);
   // The orbit view is the M3 overview, kept as a free debug camera from M4.
   const freeCamera = usePlayerStore((s) => s.mode === 'free');
+  const gatesOpen = useClockStore((s) => s.gatesOpen);
   const { center, size } = useMemo(() => campusBounds(campus), [campus]);
 
   const masses = useMemo(() => buildingMasses(campus), [campus]);
@@ -119,6 +122,14 @@ export function CampusScene() {
       gatePosts: gatePostGeometry(campus),
       colliders: colliderLineGeometry(staticColliders(campus)),
       entryMarker: new ConeGeometry(0.6, 1.6, 8),
+      gateLeaves: campus.gates.flatMap((gate) => {
+        const leaf = gateLeafGeometry(
+          gate,
+          d.gateWidth ?? 0,
+          d.boundaryWallHeight ?? 0,
+        );
+        return leaf ? [{ id: gate.id, geometry: leaf }] : [];
+      }),
     };
   }, [campus, masses, center, size]);
 
@@ -133,6 +144,7 @@ export function CampusScene() {
         geometry.entryMarker,
         ...geometry.areas.map((a) => a.geometry),
         ...geometry.buildings.map((b) => b.geometry),
+        ...geometry.gateLeaves.map((g) => g.geometry),
       ];
       all.forEach((g) => g?.dispose());
     },
@@ -163,12 +175,6 @@ export function CampusScene() {
 
   return (
     <>
-      <color attach="background" args={['#18232a']} />
-      <hemisphereLight args={['#e4f1ff', '#3d4a3a', 1.6]} />
-      <directionalLight
-        position={[center[0] + size * 0.6, size, center[1] - size * 0.4]}
-        intensity={2.2}
-      />
       {freeCamera && (
         <OrbitControls
           makeDefault
@@ -178,11 +184,16 @@ export function CampusScene() {
           maxDistance={size * 3}
         />
       )}
-      <mesh geometry={geometry.outside} material={material('#36443a')} />
+      <mesh
+        geometry={geometry.outside}
+        material={material('#36443a')}
+        receiveShadow
+      />
       {geometry.campusGround && (
         <mesh
           geometry={geometry.campusGround}
           material={material('#7d7a72', true)}
+          receiveShadow
         />
       )}
       {geometry.areas.map(({ area, geometry: g }) => (
@@ -191,6 +202,7 @@ export function CampusScene() {
           name={`area:${area.id}`}
           geometry={g}
           material={material(areaColor(area), true)}
+          receiveShadow
         />
       ))}
       {geometry.buildings.map(({ mass, geometry: g }) => (
@@ -205,14 +217,31 @@ export function CampusScene() {
                 ]
               : BUILDING_COLOR,
           )}
+          castShadow
+          receiveShadow
         />
       ))}
       {geometry.wall && (
-        <mesh geometry={geometry.wall} material={material(WALL_COLOR)} />
+        <mesh
+          geometry={geometry.wall}
+          material={material(WALL_COLOR)}
+          castShadow
+          receiveShadow
+        />
       )}
       {geometry.gatePosts && (
         <mesh geometry={geometry.gatePosts} material={material('#f0d58c')} />
       )}
+      {geometry.gateLeaves.map(({ id, geometry: g }) => (
+        <mesh
+          key={id}
+          name={`gate-leaf:${id}`}
+          geometry={g}
+          material={material('#6b5a3c')}
+          visible={!gatesOpen[id]}
+          castShadow
+        />
+      ))}
       {campus.buildings.flatMap((building) =>
         building.entries.flatMap((entry) =>
           entry.position

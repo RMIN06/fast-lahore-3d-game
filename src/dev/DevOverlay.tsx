@@ -3,6 +3,7 @@ import { useDebugStore } from '../state/debug-store';
 import type { DebugToggle } from '../state/debug-store';
 import { useMetricsStore } from './metrics-store';
 import { usePlayerStore } from '../state/player-store';
+import { useClockStore } from '../state/clock-store';
 import { loadedCampus } from '../world/campus';
 
 const TOGGLES: [DebugToggle, string][] = [
@@ -21,6 +22,10 @@ export default function DevOverlay() {
   const debug = useDebugStore();
   const metrics = useMetricsStore();
   const player = usePlayerStore();
+  const gatesOpen = useClockStore((s) => s.gatesOpen);
+  const openGates = Object.entries(gatesOpen)
+    .filter(([, open]) => open)
+    .map(([id]) => id);
   const [showCampusData, setShowCampusData] = useState(false);
   const { campus, warnings } = loadedCampus;
 
@@ -86,6 +91,10 @@ export default function DevOverlay() {
         <dd data-testid="player-grounded">{String(player.grounded)}</dd>
         <dt>Sprinting</dt>
         <dd data-testid="player-sprinting">{String(player.sprinting)}</dd>
+        <dt>Open gates</dt>
+        <dd data-testid="gates-open">
+          {openGates.length ? openGates.join(', ') : 'none'}
+        </dd>
       </dl>
       <label>
         <input

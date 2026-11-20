@@ -57,7 +57,8 @@ export const INPUT_MAP: Record<InputContext, Record<string, InputAction>> = {
     Mouse2: 'secondary',
     Escape: 'pause',
   },
-  menu: { ...choices, Escape: 'pause' },
+  // KeyT closes the time panel it opened.
+  menu: { ...choices, KeyT: 'timePanel', Escape: 'pause' },
 };
 
 /** Map a physical input to an action in the active context, or undefined. */

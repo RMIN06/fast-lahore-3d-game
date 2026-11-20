@@ -19,6 +19,8 @@ import {
 import type { Vec3 } from '../systems/player-controller';
 import { InputState } from '../systems/input-map';
 import { toggledMode, usePlayerStore } from '../state/player-store';
+import { useClockStore } from '../state/clock-store';
+import type RAPIER from '@dimforge/rapier3d-compat';
 
 // M4 player: Rapier kinematic capsule, pointer-lock mouse look, first/third
 // person (V). Logic lives in src/systems; this component only wires it up.
@@ -34,7 +36,16 @@ interface Sim {
   R: Rapier;
   world: World;
   player: PlayerController;
+  colliders: Map<string, RAPIER.Collider>;
 }
+
+const applyGates = (
+  colliders: Map<string, RAPIER.Collider>,
+  open: Record<string, boolean>,
+) => {
+  for (const [id, isOpen] of Object.entries(open))
+    colliders.get(`gate:${id}`)?.setEnabled(!isOpen);
+};
 
 export function PlayerRig() {
   const { camera, gl } = useThree();
@@ -46,6 +57,20 @@ export function PlayerRig() {
   const capsule = useRef<Mesh>(null);
   const publishTimer = useRef(0);
   const mode = usePlayerStore((s) => s.mode);
+  const panelOpen = useClockStore((s) => s.panelOpen);
+  const gatesOpen = useClockStore((s) => s.gatesOpen);
+
+  // Scheduled gates (e.g. Masjid-side at Jummah) stop blocking while open.
+  useEffect(() => {
+    if (sim.current) applyGates(sim.current.colliders, gatesOpen);
+  }, [gatesOpen]);
+
+  // The time panel takes the mouse and switches input to the menu layer.
+  useEffect(() => {
+    input.setContext(panelOpen ? 'menu' : 'explore');
+    if (panelOpen && document.pointerLockElement)
+      void document.exitPointerLock();
+  }, [input, panelOpen]);
 
   // Build the physics world from campus data once Rapier's WASM is loaded.
   useEffect(() => {
@@ -54,10 +79,16 @@ export function PlayerRig() {
     void initRapier().then((R) => {
       if (disposed) return;
       const bounds = campusBounds(campus);
-      const world = createPhysicsWorld(R, staticColliders(campus), {
-        groundCenter: bounds.center,
-        groundHalfSize: bounds.size,
-      });
+      const colliders = new Map<string, RAPIER.Collider>();
+      const world = createPhysicsWorld(
+        R,
+        staticColliders(campus),
+        {
+          groundCenter: bounds.center,
+          groundHalfSize: bounds.size,
+        },
+        colliders,
+      );
       const spawn = gateSpawn(campus);
       const player = new PlayerController(R, world, [
         spawn.position[0],
@@ -65,7 +96,8 @@ export function PlayerRig() {
         spawn.position[1],
       ]);
       look.current = { yaw: spawn.yaw, pitch: 0 };
-      sim.current = { R, world, player };
+      sim.current = { R, world, player, colliders };
+      applyGates(colliders, useClockStore.getState().gatesOpen);
       usePlayerStore.getState().setReady(true);
     });
     return () => {
@@ -79,9 +111,22 @@ export function PlayerRig() {
   // Keyboard through the layered input map; mouse look under pointer lock.
   useEffect(() => {
     const canvas = gl.domElement;
-    const typing = (event: Event) =>
-      event.target instanceof HTMLInputElement ||
-      event.target instanceof HTMLTextAreaElement;
+    // Ignore keys only while typing into a text-like field; a focused
+    // checkbox or button must not swallow game controls.
+    const typing = (event: Event) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement
+      )
+        return true;
+      return (
+        target instanceof HTMLInputElement &&
+        !['checkbox', 'radio', 'button', 'submit', 'range'].includes(
+          target.type,
+        )
+      );
+    };
     const down = (event: KeyboardEvent) => {
       if (typing(event)) return;
       const action = input.down(event.code);
@@ -90,7 +135,10 @@ export function PlayerRig() {
     const up = (event: KeyboardEvent) => input.up(event.code);
     const blur = () => input.clear();
     const click = () => {
-      if (usePlayerStore.getState().mode !== 'free')
+      if (
+        usePlayerStore.getState().mode !== 'free' &&
+        !useClockStore.getState().panelOpen
+      )
         void canvas.requestPointerLock?.();
     };
     const move = (event: MouseEvent) => {
@@ -138,6 +186,10 @@ export function PlayerRig() {
     if (!s) return;
     const state = usePlayerStore.getState();
     if (input.consume('toggleCamera')) state.setMode(toggledMode(state.mode));
+    const clock = useClockStore.getState();
+    if (input.consume('timePanel')) clock.setPanelOpen(!clock.panelOpen);
+    else if (clock.panelOpen && input.consume('pause'))
+      clock.setPanelOpen(false);
     const current = usePlayerStore.getState().mode;
 
     const steps = stepper.advance(Math.min(delta, 0.25));

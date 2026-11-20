@@ -45,10 +45,15 @@ export interface PhysicsWorldOptions {
   groundHalfSize: number;
 }
 
+/**
+ * Build the world. `registry`, when given, receives each static collider by id
+ * (e.g. `gate:G-MASJID`) so gameplay can enable or disable it later.
+ */
 export function createPhysicsWorld(
   R: Rapier,
   colliders: StaticCollider[],
   { groundCenter, groundHalfSize }: PhysicsWorldOptions,
+  registry?: Map<string, RAPIER.Collider>,
 ): World {
   const world = new R.World({ x: 0, y: -9.81, z: 0 });
   const fixed = world.createRigidBody(R.RigidBodyDesc.fixed());
@@ -64,19 +69,23 @@ export function createPhysicsWorld(
   for (const collider of colliders) {
     if (collider.kind === 'box') {
       const [hx, hy, hz] = collider.halfExtents;
-      world.createCollider(
+      const created = world.createCollider(
         R.ColliderDesc.cuboid(hx, hy, hz)
           .setTranslation(...collider.center)
           .setRotation(yawQuaternion(collider.rotationY)),
         fixed,
       );
+      registry?.set(collider.id, created);
     } else {
       const { vertices, indices } = prismSides(
         collider.polygon,
         collider.minY,
         collider.maxY,
       );
-      world.createCollider(R.ColliderDesc.trimesh(vertices, indices), fixed);
+      registry?.set(
+        collider.id,
+        world.createCollider(R.ColliderDesc.trimesh(vertices, indices), fixed),
+      );
     }
   }
   return world;

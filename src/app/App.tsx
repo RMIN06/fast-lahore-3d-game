@@ -2,6 +2,9 @@ import { lazy, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { CampusScene } from '../game/CampusScene';
 import { PlayerRig } from '../game/PlayerRig';
+import { Environment } from '../game/Environment';
+import { Hud } from '../ui/Hud';
+import { TimePanel } from '../ui/TimePanel';
 import { usePlayerStore } from '../state/player-store';
 import { loadedCampus } from '../world/campus';
 import { campusCamera } from '../systems/campus-geometry';
@@ -30,14 +33,20 @@ export function App() {
     <main>
       <header>
         <p>FAST LAHORE / DEVELOPMENT</p>
-        <h1>M4 · Player controller</h1>
+        <h1>M5 · Time, sky and lighting</h1>
         <p data-testid="controls-hint">
           {mode === 'free'
             ? 'Free camera: drag to orbit · scroll to zoom · right-drag to pan'
-            : 'Click to look around · WASD move · Shift sprint · Space jump · V first/third person · Esc releases the mouse'}
+            : 'Click to look around · WASD move · Shift sprint · Space jump · V first/third person · T time panel · Esc releases the mouse'}
         </p>
       </header>
-      <Canvas camera={camera} dpr={[1, 1.5]} aria-label="3D campus greybox">
+      <Canvas
+        camera={camera}
+        dpr={[1, 1.5]}
+        aria-label="3D campus greybox"
+        shadows
+      >
+        <Environment />
         <CampusScene />
         <PlayerRig />
         {MetricsSampler && (
@@ -47,6 +56,8 @@ export function App() {
         )}
       </Canvas>
       {mode === 'first' && <div className="crosshair" aria-hidden />}
+      <Hud />
+      <TimePanel />
       {DevOverlay && (
         <Suspense fallback={null}>
           <DevOverlay />
