@@ -1,5 +1,5 @@
-import seed from '../../data/campus.seed.json';
+import campusData from '../../data/campus.json';
 import { loadCampus } from './campus-loader';
 
-// M1 loads the supplied inventory; M2 will supply curated geometry in campus.json.
-export const loadedCampus = loadCampus(seed, { mode: 'seed' });
+// M3 renders the accepted M2 site plan. Validation runs at load and fails loudly.
+export const loadedCampus = loadCampus(campusData, { mode: 'site-plan' });

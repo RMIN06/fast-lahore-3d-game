@@ -69,6 +69,32 @@ footer {
   gap: 8px;
   align-items: center;
 }
+.dev-overlay {
+  z-index: 20;
+}
+.confidence-legend {
+  font-size: 11px;
+}
+.world-label {
+  pointer-events: none;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: #10181ed9;
+  border: 1px solid #4c636f;
+  color: #ecf2f5;
+  font:
+    11px system-ui,
+    sans-serif;
+  text-align: center;
+}
+.world-label--building strong,
+.world-label--building span {
+  display: block;
+}
+.world-label--gate {
+  color: #f0d58c;
+}
 .campus-data {
   max-height: 40vh;
   overflow: auto;

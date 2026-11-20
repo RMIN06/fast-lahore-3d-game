@@ -1,14 +1,14 @@
 # Asset licenses
 
-| Asset                           | File path                  | Source URL         | License  | Attribution text                     | Date added |
-| ------------------------------- | -------------------------- | ------------------ | -------- | ------------------------------------ | ---------- |
-| Procedural test ground and cube | src/game/ScaffoldScene.tsx | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-10-25 |
+| Asset                                                                           | File path                                            | Source URL         | License  | Attribution text                     | Date added |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------ | -------- | ------------------------------------ | ---------- |
+| Procedural campus greybox (ground, surfaces, extruded blocks, wall, gate posts) | src/game/CampusScene.tsx, src/world/campus-meshes.ts | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
 
-M0 ships no external models, textures, audio, fonts, or files in `public/`. The private student map is not loaded by the app.
+The M0 test ground and cube (own work, 2026-10-25) were removed in M3. No external models, textures, audio, fonts, or files ship in `public/`. The private student map is not loaded by the app.
 
-## Data sources (not yet shipped)
+## Data sources (shipped from M3)
 
-`data/campus.json` (M2 site plan) contains geometry derived from the sources below. The app does not load it yet; M3 will be the first milestone to ship it. **Review these terms before any public release** (OPEN_QUESTIONS #36).
+`data/campus.json` (the M2 site plan) contains geometry derived from the sources below. Since M3 the app bundles it and renders it. The scene footer shows the attribution. **Review these terms before any public release** (OPEN_QUESTIONS #36).
 
 | Data                                                                                            | File path        | Source URL                                                                                            | License / terms                                                                          | Attribution text                                                       | Date added |
 | ----------------------------------------------------------------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------- |

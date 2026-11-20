@@ -1,13 +1,26 @@
 import { useState } from 'react';
 import { useDebugStore } from '../state/debug-store';
+import type { DebugToggle } from '../state/debug-store';
 import { useMetricsStore } from './metrics-store';
 import { loadedCampus } from '../world/campus';
 
+const TOGGLES: [DebugToggle, string][] = [
+  ['confidenceColors', 'Confidence colors'],
+  ['labels', 'Labels'],
+  ['colliders', 'Collision shapes'],
+];
+const LEGEND: [string, string][] = [
+  ['measured', '#7fd6ab'],
+  ['traced', '#82bbec'],
+  ['estimated', '#e5c373'],
+  ['placeholder', '#ee6f6f'],
+];
+
 export default function DevOverlay() {
-  const spinCube = useDebugStore((state) => state.spinCube);
-  const setSpinCube = useDebugStore((state) => state.setSpinCube);
+  const debug = useDebugStore();
   const metrics = useMetricsStore();
   const [showCampusData, setShowCampusData] = useState(false);
+  const { campus, warnings } = loadedCampus;
 
   return (
     <aside className="dev-overlay" aria-label="Development overlay">
@@ -17,14 +30,25 @@ export default function DevOverlay() {
           Open site-plan tracer
         </a>
       </p>
-      <label>
-        <input
-          type="checkbox"
-          checked={spinCube}
-          onChange={(event) => setSpinCube(event.target.checked)}
-        />
-        Spin cube
-      </label>
+      {TOGGLES.map(([key, label]) => (
+        <label key={key}>
+          <input
+            type="checkbox"
+            checked={debug[key]}
+            onChange={(event) => debug.setToggle(key, event.target.checked)}
+          />
+          {label}
+        </label>
+      ))}
+      {debug.confidenceColors && (
+        <p className="confidence-legend">
+          {LEGEND.map(([name, color]) => (
+            <span key={name} style={{ color }}>
+              ■ {name}{' '}
+            </span>
+          ))}
+        </p>
+      )}
       <dl>
         <dt>FPS</dt>
         <dd data-testid="fps">{metrics.fps}</dd>
@@ -45,15 +69,15 @@ export default function DevOverlay() {
       {showCampusData && (
         <section aria-label="Campus data validation" className="campus-data">
           <p data-testid="campus-validation-status">
-            Seed loaded · {loadedCampus.campus.buildings.length} blocks ·{' '}
-            {loadedCampus.campus.gates.length} gates ·{' '}
-            {loadedCampus.warnings.length} warnings
+            Site plan loaded · {campus.buildings.length} blocks ·{' '}
+            {campus.gates.length} gates · {campus.areas.length} areas ·{' '}
+            {warnings.length} warnings
           </p>
-          <p>Inventory only. Unresolved geometry is not rendered.</p>
+          <p>Interior geometry and entrances are later milestones.</p>
           <details>
             <summary>Validation warnings</summary>
             <ul>
-              {loadedCampus.warnings.map((warning, index) => (
+              {warnings.map((warning, index) => (
                 <li key={index}>
                   {warning.path}: {warning.message}
                 </li>

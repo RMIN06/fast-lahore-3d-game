@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { ScaffoldScene } from '../game/ScaffoldScene';
+import { CampusScene } from '../game/CampusScene';
+import { loadedCampus } from '../world/campus';
+import { campusCamera } from '../systems/campus-geometry';
 
 const DevOverlay = import.meta.env.DEV
   ? lazy(() => import('../dev/DevOverlay'))
@@ -11,6 +13,8 @@ const MetricsSampler = import.meta.env.DEV
 const Tracer = import.meta.env.DEV
   ? lazy(() => import('../dev/tracer/Tracer'))
   : null;
+
+const camera = campusCamera(loadedCampus.campus);
 
 export function App() {
   if (Tracer && window.location.pathname === '/dev/tracer')
@@ -23,15 +27,11 @@ export function App() {
     <main>
       <header>
         <p>FAST LAHORE / DEVELOPMENT</p>
-        <h1>M0 · Scene scaffold</h1>
-        <p>Ground and spinning cube · technical test scene</p>
+        <h1>M3 · Exterior greybox</h1>
+        <p>Drag to orbit · scroll to zoom · right-drag to pan</p>
       </header>
-      <Canvas
-        camera={{ position: [6, 5, 8], fov: 50 }}
-        dpr={[1, 1.5]}
-        aria-label="3D scaffold scene"
-      >
-        <ScaffoldScene />
+      <Canvas camera={camera} dpr={[1, 1.5]} aria-label="3D campus greybox">
+        <CampusScene />
         {MetricsSampler && (
           <Suspense fallback={null}>
             <MetricsSampler />
@@ -43,7 +43,11 @@ export function App() {
           <DevOverlay />
         </Suspense>
       )}
-      <footer>Scaffold geometry only. No campus layout is represented.</footer>
+      <footer>
+        Greybox from data/campus.json (M2 site plan). Not to final appearance;
+        colors show data confidence. Map data © OpenStreetMap contributors;
+        imagery-traced geometry: Esri World Imagery.
+      </footer>
     </main>
   );
 }
