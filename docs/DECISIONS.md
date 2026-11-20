@@ -101,3 +101,19 @@
 - **One sun shadow map** (2048², an 80 m box following the player) rather than two cascades. It is simpler, and it holds the budget at about 40 draw calls. Cascades can be added in M14 if needed.
 - **Night readability** comes from a moonlit blue ambient light, moonlight, lit windows and lamp pools. An e2e test checks that the night frame is darker than noon but not black.
 - **Overlay checkboxes no longer swallow game keys.** Keyboard input is ignored only in text-entry fields.
+
+## M6 — 2026-11-20
+
+- **Spawn anchors** are derived from data: 3 m outside each department block's main entrance, facing it, with `confidence: "placeholder"`, because the entrances are placeholders. Anchors gained optional `confidence` and `notes` fields. Department-to-block mapping follows the seed: CS uses C, Civil uses B, EE and Management use D.
+- **Save versions.** v1 is the shape ARCHITECTURE §6 describes (`timeOfDay` only). v2 (current) stores the weekday and minutes that M5 introduced, plus camera yaw and `savedAt`.
+  - The key is versioned (`fast-lahore.save.v2`). Legacy keys are migrated forward and removed.
+  - Unknown, future or corrupt saves never crash: the title screen reports them, and New game still works.
+- **Autosave** runs every 60 s, when the page is hidden or closed, and on Exit to title, so "reload + Continue" works even without a manual save.
+- **Settings** are stored separately (`fast-lahore.settings.v1`) and also inside each save.
+  - Graphics presets change resolution and sun shadows only, for now.
+  - Volume is stored ahead of M12 audio.
+- **Overlays** (pause, settings, time, phone, map) share one state. Any open overlay switches input to the menu layer and releases the mouse. The pause menu and Settings also pause game time; the time panel, phone and map don't.
+- **Avatar heights:** eye height comes from GAMEPLAY_SPEC (1.65 m male, 1.58 m female), and the capsule is 0.10 m taller than the eyes.
+  - Skin tone, hair, and outfit options are a small placeholder set until the M8 character models.
+  - Hair is stored but not yet visible.
+- **Department list** is limited to the four departments in campus data (OPEN_QUESTIONS #7).

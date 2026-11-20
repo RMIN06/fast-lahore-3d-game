@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M5 accepted: day/night cycle, sky and lighting)
+## Run the app (M6 accepted: registration, save/continue, HUD and menus)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -10,14 +10,19 @@ npx playwright install chromium
 npm run dev
 ```
 
-Open the local URL printed by Vite. You start just inside Gate-5 as a placeholder
-capsule player in the exterior greybox of the campus, built from `data/campus.json`.
+Open the local URL printed by Vite. The title screen offers **New game**, where you
+register with a roll number, a department and a placeholder avatar, and
+**Continue** for your local save. A new game starts outside your
+department's block as a placeholder capsule player in the exterior greybox of the campus, built from `data/campus.json`.
 The clock starts on Monday at 08:30. The sun, sky, shadows, fog, lamps, lit
 windows, stars and moon follow the time of day.
 
 - Click the view to look around with the mouse.
 - **WASD** moves, **Shift** sprints and **Space** jumps.
 - **V** switches between first and third person, and **Esc** releases the mouse.
+- **Esc** opens the pause menu (save, settings, time controls, exit to title). **P**
+  opens the phone (map and stubs) and **M** the full campus map. The game
+  autosaves every minute and when you leave.
 - **T** opens the time panel: pause, speed (×0.5–×4), and set the day and time.
   At ×1, one real minute is one game hour.
 - Buildings, the boundary wall and the closed gates block you.
@@ -26,7 +31,8 @@ The development overlay shows FPS, draw calls and triangles, plus the player's
 camera mode, position and grounded state. It has toggles for **Confidence
 colors** (placeholders show in red), **Labels**, **Collision shapes** and **Free
 camera (orbit)**, which gives the M3 overview. Enable **Campus data** to list
-the validation warnings. See [M5 verification](docs/M5_VERIFICATION.md),
+the validation warnings. See [M6 verification](docs/M6_VERIFICATION.md),
+[M5 verification](docs/M5_VERIFICATION.md),
 [M4 verification](docs/M4_VERIFICATION.md) and
 [M3 verification](docs/M3_VERIFICATION.md).
 
@@ -52,11 +58,13 @@ The browser tests cover:
 - the M3 overview (draw-call and triangle budgets, floor counts, debug toggles,
   orbiting);
 - the M4 player (walk, sprint, jump, the V camera switch, and the closed gate);
+- M6 registration (roll warning, every department spawn, save/reload/Continue,
+  menus);
 - M5 time (clock rate, pause/speed/set-time, the Jummah gate, night readability,
   and the budget with shadows);
 - the tracer.
 
-Screenshots are saved to `test-results/m3-*.png`, `m4-*.png` and `m5-*.png`.
+Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png` and `m6-*.png`.
 
 `validate:campus` runs Zod, ID/reference, polygon, containment, connector and area
 checks. The supplied seed allows explicit warnings for unfinished geometry and

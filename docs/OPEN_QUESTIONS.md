@@ -72,3 +72,7 @@ Items 1, 2 and 28–30 are now answered by imagery: orientation is a 180° rotat
 
 40. **Lamp posts and outdoor lights.** About 20 placeholder lamps are placed procedurally: outside each entrance, inside each gate, and every 22 m along the Highway and Gate-3 path. Where are the real lamp posts and wall lights? What time do they switch on?
 41. **Campus hours.** Do gates open and close at fixed times, and is the campus open at night or on Sundays? Right now, only the Masjid-side gate has a schedule (Friday Jummah).
+
+## M6 registration — 2026-11-20
+
+42. **Avatar options.** The placeholder avatar offers 4 skin tones, 4 hair styles (short, long, tied, covered) and 6 outfit colours. Which options should the M8 characters support, for example uniforms or hijab and cap variants?
