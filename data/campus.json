@@ -35,7 +35,9 @@
       "wallThickness": 0.25,
       "corridorWidth": 2.4,
       "doorWidth": 1,
-      "doorHeight": 2.1
+      "doorHeight": 2.1,
+      "boundaryWallHeight": 2.5,
+      "gateWidth": 6
     },
     "schematicMap": {
       "file": "reference/maps/student-map.png",
@@ -45,7 +47,7 @@
       "notToScale": true
     },
     "officialAreaAcres": 12.5,
-    "notes": "schematicBoxPx values are [x,y,w,h] pixel estimates (about +/-10 px) on the 1320x891 student map; use for relative layout and labels only. Left/right notes in room lists are relative to an unconfirmed frame. M2 site plan traced 2026-11-20: the walled campus boundary measures about 42,484 m² (about 10.5 acres), below the published 12.5 acres (see OPEN_QUESTIONS #31).",
+    "notes": "schematicBoxPx values are [x,y,w,h] pixel estimates (about +/-10 px) on the 1320x891 student map; use for relative layout and labels only. Left/right notes in room lists are relative to an unconfirmed frame. M2 site plan traced 2026-11-20: the walled campus boundary measures about 42,484 m² (about 10.5 acres), below the published 12.5 acres (see OPEN_QUESTIONS #31). M3 defaults boundaryWallHeight (2.5 m) and gateWidth (6 m) are placeholders for rendering until measured (OPEN_QUESTIONS #38).",
     "mapToWorld": {
       "originPx": [775, 752],
       "originGate": "G5",
@@ -213,6 +215,7 @@
           ]
         }
       ],
+      "floorsConfidence": "placeholder",
       "roomCodePrefix": "CS LAB",
       "confidence": "traced",
       "source": "OpenStreetMap way 841040146 (© OpenStreetMap contributors, ODbL 1.0), checked against Esri World Imagery z19 (traced 2026-11-20)",
@@ -496,6 +499,7 @@
           ]
         }
       ],
+      "floorsConfidence": "estimated",
       "roomCodePrefix": "CE",
       "confidence": "traced",
       "source": "OpenStreetMap way 841040144 (© OpenStreetMap contributors, ODbL 1.0), checked against Esri World Imagery z19 (traced 2026-11-20)",
@@ -769,6 +773,7 @@
           ]
         }
       ],
+      "floorsConfidence": "estimated",
       "roomCodePrefix": "CS",
       "confidence": "estimated",
       "source": "OpenStreetMap way 841040147 (© OpenStreetMap contributors, ODbL 1.0), checked against Esri World Imagery z19 (traced 2026-11-20)",
@@ -1111,6 +1116,7 @@
           ]
         }
       ],
+      "floorsConfidence": "estimated",
       "roomCodePrefix": "E&M",
       "confidence": "estimated",
       "source": "OpenStreetMap way 841040147 (© OpenStreetMap contributors, ODbL 1.0), checked against Esri World Imagery z19 (traced 2026-11-20)",
@@ -1167,6 +1173,7 @@
           ]
         }
       ],
+      "floorsConfidence": "placeholder",
       "confidence": "traced",
       "source": "OpenStreetMap way 841040145 (© OpenStreetMap contributors, ODbL 1.0), checked against Esri World Imagery z19 (traced 2026-11-20)",
       "notes": "unlabeled orange/grey structure directly north of it at [280,412,185,56]"
@@ -1581,6 +1588,7 @@
           ]
         }
       ],
+      "floorsConfidence": "estimated",
       "roomCodePrefix": "NB",
       "confidence": "traced",
       "source": "Esri World Imagery z19 (traced 2026-11-20)",

@@ -26,7 +26,7 @@ interface Campus {
     name: string; origin: string;            // gate id
     geo?: { lat: number; lng: number; rotationDeg: number };
     calibration?: { method: string; metersPerPixel?: number; refs: string[]; residualPct?: number; date: string };
-    defaults: { floorHeight: number; basementHeight: number; wallThickness: number; corridorWidth: number; doorWidth: number; doorHeight: number };
+    defaults: { floorHeight: number; basementHeight: number; wallThickness: number; corridorWidth: number; doorWidth: number; doorHeight: number; boundaryWallHeight?: number; gateWidth?: number };
     schematicMap: { file: string; sizePx: [number, number]; northDirection?: string };
   };
   boundary: { polygon: Vec2[]; confidence: Confidence };
@@ -49,6 +49,7 @@ interface Building {
   features?: string[];        // "marble_dome", "brick_facade"
   entries: Entry[];
   floors: Floor[];
+  floorsConfidence?: Confidence; // confidence in the floor count itself (M3)
   roomCodePrefix?: string;    // e.g. "NB", "CE", "E&M", "CS"
   confidence: Confidence;
 }

@@ -88,6 +88,8 @@ export const buildingSchema = z.strictObject({
     }),
   ),
   floors: z.array(floorSchema).min(1),
+  // Confidence in the floor count itself (A and E upper floors are unknown).
+  floorsConfidence: confidenceSchema.optional(),
   roomCodePrefix: text.optional(),
   confidence: confidenceSchema,
   ...provenance,
@@ -126,6 +128,8 @@ export const campusSchema = z.strictObject({
       corridorWidth: positive,
       doorWidth: positive,
       doorHeight: positive,
+      boundaryWallHeight: positive.optional(),
+      gateWidth: positive.optional(),
     }),
     schematicMap: z.strictObject({
       file: text,
