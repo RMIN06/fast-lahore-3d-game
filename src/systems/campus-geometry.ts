@@ -173,14 +173,41 @@ export function boundaryWallSegments(
   return segments;
 }
 
+const wallBox = (
+  id: string,
+  from: Vec2,
+  to: Vec2,
+  height: number,
+  thickness: number,
+): StaticCollider => {
+  const dx = to[0] - from[0],
+    dz = to[1] - from[1];
+  return {
+    kind: 'box',
+    id,
+    center: [(from[0] + to[0]) / 2, height / 2, (from[1] + to[1]) / 2],
+    halfExtents: [Math.hypot(dx, dz) / 2, height / 2, thickness / 2],
+    // three.js Y rotation that maps local +X onto the segment direction.
+    rotationY: Math.atan2(-dz, dx),
+  };
+};
+
+/** Unit vector (x, z) a person faces walking into campus through a gate. */
+export const inwardOf = (headingDeg: number): Vec2 => {
+  const h = (headingDeg * Math.PI) / 180;
+  return [Math.sin(h), -Math.cos(h)];
+};
+
 /**
  * Simplified static colliders (never from render meshes): one prism per
- * building footprint above ground and one oriented box per wall segment.
- * Consumed by the physics world in M4.
+ * building footprint above ground, one oriented box per wall segment, and a
+ * closed barrier across each gate opening (no off-campus areas exist; PRD §2).
+ * Consumed by the physics world from M4.
  */
 export function staticColliders(campus: Campus): StaticCollider[] {
   const wallHeight = campus.meta.defaults.boundaryWallHeight ?? 0;
   const thickness = campus.meta.defaults.wallThickness;
+  const gateWidth = campus.meta.defaults.gateWidth ?? 0;
   const buildings: StaticCollider[] = buildingMasses(campus).map((mass) => ({
     kind: 'prism',
     id: `building:${mass.id}`,
@@ -188,30 +215,61 @@ export function staticColliders(campus: Campus): StaticCollider[] {
     minY: 0,
     maxY: mass.height,
   }));
-  const walls: StaticCollider[] =
-    wallHeight > 0
-      ? boundaryWallSegments(campus).map((segment, i) => {
-          const dx = segment.to[0] - segment.from[0],
-            dz = segment.to[1] - segment.from[1];
-          return {
-            kind: 'box',
-            id: `wall:${i}`,
-            center: [
-              (segment.from[0] + segment.to[0]) / 2,
-              wallHeight / 2,
-              (segment.from[1] + segment.to[1]) / 2,
-            ],
-            halfExtents: [
-              Math.hypot(dx, dz) / 2,
-              wallHeight / 2,
-              thickness / 2,
-            ],
-            // three.js Y rotation that maps local +X onto the segment direction.
-            rotationY: Math.atan2(-dz, dx),
-          };
-        })
-      : [];
-  return [...buildings, ...walls];
+  if (wallHeight <= 0) return buildings;
+  const walls = boundaryWallSegments(campus).map((segment, i) =>
+    wallBox(`wall:${i}`, segment.from, segment.to, wallHeight, thickness),
+  );
+  const gates = campus.gates.flatMap((gate) => {
+    if (!gate.position || gate.heading === undefined || gateWidth <= 0)
+      return [];
+    const [ix, iz] = inwardOf(gate.heading);
+    // The wall runs perpendicular to the inward direction.
+    const half: Vec2 = [(-iz * gateWidth) / 2, (ix * gateWidth) / 2];
+    return [
+      wallBox(
+        `gate:${gate.id}`,
+        [gate.position[0] - half[0], gate.position[1] - half[1]],
+        [gate.position[0] + half[0], gate.position[1] + half[1]],
+        wallHeight,
+        thickness,
+      ),
+    ];
+  });
+  return [...buildings, ...walls, ...gates];
+}
+
+/** Even-odd point-in-polygon test on [x, z] coordinates. */
+export function pointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, zi] = polygon[i]!,
+      [xj, zj] = polygon[j]!;
+    if (
+      zi > point[1] !== zj > point[1] &&
+      point[0] < ((xj - xi) * (point[1] - zi)) / (zj - zi) + xi
+    )
+      inside = !inside;
+  }
+  return inside;
+}
+
+/**
+ * Default spawn for M4: just inside the origin gate (Gate-5), facing inward.
+ * M6 replaces this with the department spawn anchor.
+ */
+export function gateSpawn(campus: Campus, distance = 4) {
+  const gate = campus.gates.find((g) => g.id === campus.meta.origin);
+  if (!gate?.position || gate.heading === undefined)
+    throw new Error('Origin gate needs a position and heading to spawn');
+  const [ix, iz] = inwardOf(gate.heading);
+  return {
+    position: [
+      gate.position[0] + ix * distance,
+      gate.position[1] + iz * distance,
+    ] as Vec2,
+    // Camera yaw (three.js, rotation about +Y; 0 looks toward -Z / north).
+    yaw: (-gate.heading * Math.PI) / 180,
+  };
 }
 
 /** Initial orbit camera that frames the whole campus from the south. */

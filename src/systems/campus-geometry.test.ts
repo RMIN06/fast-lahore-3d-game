@@ -73,7 +73,12 @@ test('boundary wall leaves a gate-width opening at every gate on the boundary', 
 test('static colliders: one prism per footprint, oriented boxes along walls', () => {
   const colliders = staticColliders(campus);
   const prisms = colliders.filter((c) => c.kind === 'prism');
-  const boxes = colliders.filter((c) => c.kind === 'box');
+  const boxes = colliders.filter(
+    (c) => c.kind === 'box' && c.id.startsWith('wall:'),
+  );
+  expect(
+    colliders.filter((c) => c.id.startsWith('gate:')).map((c) => c.id),
+  ).toEqual(['gate:G3', 'gate:G5', 'gate:G-MASJID', 'gate:G2']);
   expect(prisms.map((p) => p.id)).toEqual(
     ['A', 'B', 'C', 'D', 'E', 'F'].map((id) => `building:${id}`),
   );

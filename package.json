@@ -21,6 +21,7 @@
     "apply:site-plan": "tsx scripts/apply-site-plan.ts"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.21.0",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
     "polygon-clipping": "^0.15.7",
