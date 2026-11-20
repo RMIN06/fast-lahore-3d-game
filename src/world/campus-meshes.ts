@@ -1,6 +1,8 @@
 import {
   BoxGeometry,
   BufferGeometry,
+  DataTexture,
+  RepeatWrapping,
   ExtrudeGeometry,
   Float32BufferAttribute,
   Shape,
@@ -13,7 +15,9 @@ import type {
   BuildingMass,
   StaticCollider,
   WallSegment,
+  WindowBand,
 } from '../systems/campus-geometry';
+import { inwardOf } from '../systems/campus-geometry';
 
 // three.js builders for the M3 exterior greybox. Inputs come only from campus data.
 
@@ -151,3 +155,82 @@ export const centroid = (polygon: Vec2[]): Vec2 => [
   polygon.reduce((sum, p) => sum + p[0], 0) / polygon.length,
   polygon.reduce((sum, p) => sum + p[1], 0) / polygon.length,
 ];
+
+/** Horizontal spacing of the procedural window panes (m). */
+export const WINDOW_PITCH = 3;
+
+/** Window bands as one merged geometry; u counts panes along the facade. */
+export function windowBandGeometry(bands: WindowBand[]): BufferGeometry {
+  const positions: number[] = [];
+  const uvs: number[] = [];
+  const indices: number[] = [];
+  bands.forEach((band, i) => {
+    const off = 0.06;
+    const [ox, oz] = [band.outward[0] * off, band.outward[1] * off];
+    const panes =
+      Math.hypot(band.to[0] - band.from[0], band.to[1] - band.from[1]) /
+      WINDOW_PITCH;
+    const corners: [number, number, number, number, number][] = [
+      [band.from[0] + ox, band.base, band.from[1] + oz, 0, 0],
+      [band.to[0] + ox, band.base, band.to[1] + oz, panes, 0],
+      [band.to[0] + ox, band.top, band.to[1] + oz, panes, 1],
+      [band.from[0] + ox, band.top, band.from[1] + oz, 0, 1],
+    ];
+    for (const [x, y, z, u, v] of corners) {
+      positions.push(x, y, z);
+      uvs.push(u, v);
+    }
+    const k = i * 4;
+    // Both windings so the band shows whichever way the footprint runs.
+    indices.push(
+      k,
+      k + 1,
+      k + 2,
+      k,
+      k + 2,
+      k + 3,
+      k,
+      k + 2,
+      k + 1,
+      k,
+      k + 3,
+      k + 2,
+    );
+  });
+  const geometry = new BufferGeometry();
+  geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute('uv', new Float32BufferAttribute(uvs, 2));
+  geometry.setIndex(indices);
+  return geometry;
+}
+
+/** Alpha pattern of one window pane with a frame (repeats along u). */
+export function windowPaneTexture(): DataTexture {
+  const w = 16,
+    h = 8;
+  const data = new Uint8Array(w * h * 4);
+  for (let y = 0; y < h; y += 1)
+    for (let x = 0; x < w; x += 1) {
+      const pane = x >= 2 && x < w - 2 && y >= 1 && y < h - 1 ? 255 : 0;
+      data.set([pane, pane, pane, 255], (y * w + x) * 4);
+    }
+  const texture = new DataTexture(data, w, h);
+  texture.wrapS = RepeatWrapping;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+/** A closed gate leaf spanning the opening (hidden while the gate is open). */
+export function gateLeafGeometry(
+  gate: Campus['gates'][number],
+  width: number,
+  height: number,
+): BufferGeometry | null {
+  if (!gate.position || gate.heading === undefined || width <= 0) return null;
+  const [ix, iz] = inwardOf(gate.heading);
+  const leaf = new BoxGeometry(width, height, 0.12);
+  // Local +X along the wall, i.e. perpendicular to the inward direction.
+  leaf.rotateY(Math.atan2(-ix, -iz));
+  leaf.translate(gate.position[0], height / 2, gate.position[1]);
+  return leaf;
+}

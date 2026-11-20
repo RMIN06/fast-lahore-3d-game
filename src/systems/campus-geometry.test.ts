@@ -9,6 +9,9 @@ import {
   floorSummary,
   staticColliders,
   weakest,
+  lampPositions,
+  pointInPolygon,
+  windowBands,
 } from './campus-geometry';
 
 const campus = loadCampus(campusJson, { mode: 'site-plan' }).campus;
@@ -115,4 +118,41 @@ test('camera framing covers the whole boundary', () => {
   const { center, size } = campusBounds(campus);
   expect(size).toBeGreaterThan(300);
   expect(center[1]).toBeGreaterThan(0);
+});
+
+test('procedural lamps lie on campus, clear of buildings, along paths, entrances and gates', () => {
+  const lamps = lampPositions(campus);
+  expect(lamps.length).toBeGreaterThan(15);
+  for (const p of lamps) {
+    expect(pointInPolygon(p, campus.boundary.polygon!)).toBe(true);
+    for (const b of campus.buildings)
+      expect(pointInPolygon(p, b.footprint!)).toBe(false);
+  }
+  for (const b of campus.buildings) {
+    const entry = b.entries[0]!.position!;
+    expect(
+      Math.min(
+        ...lamps.map((p) => Math.hypot(p[0] - entry[0], p[1] - entry[1])),
+      ),
+    ).toBeLessThan(4);
+  }
+});
+
+test('window bands sit on facades, one band per floor, facing outward', () => {
+  const masses = buildingMasses(campus);
+  const bands = windowBands(masses);
+  const f = bands.filter((band) =>
+    campus.buildings
+      .find((b) => b.id === 'F')!
+      .footprint!.some((p) => p === band.from),
+  );
+  expect(f.length % 4).toBe(0); // F has 4 floors above ground
+  for (const band of bands.slice(0, 20)) {
+    const mid: [number, number] = [
+      (band.from[0] + band.to[0]) / 2 + band.outward[0] * 0.2,
+      (band.from[1] + band.to[1]) / 2 + band.outward[1] * 0.2,
+    ];
+    expect(masses.some((m) => pointInPolygon(mid, m.footprint))).toBe(false);
+    expect(band.top).toBeGreaterThan(band.base);
+  }
 });

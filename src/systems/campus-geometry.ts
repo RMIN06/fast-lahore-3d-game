@@ -302,3 +302,146 @@ export function campusBounds(campus: Campus) {
     size: Math.max(maxX - minX, maxZ - minZ),
   };
 }
+
+/** Outward unit normal (x, z) of polygon edge i -> i+1. */
+export function edgeOutward(polygon: Vec2[], i: number): Vec2 {
+  const a = polygon[i]!,
+    b = polygon[(i + 1) % polygon.length]!;
+  const length = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  let n: Vec2 = [(b[1] - a[1]) / length, -(b[0] - a[0]) / length];
+  const mid: Vec2 = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  if (pointInPolygon([mid[0] + n[0] * 0.01, mid[1] + n[1] * 0.01], polygon))
+    n = [-n[0], -n[1]];
+  return n;
+}
+
+const nearAnyFootprint = (campus: Campus, p: Vec2, margin: number) =>
+  campus.buildings.some((b) => {
+    const f = b.footprint;
+    if (!f) return false;
+    if (pointInPolygon(p, f)) return true;
+    return f.some((a, i) => {
+      const q = f[(i + 1) % f.length]!;
+      const dx = q[0] - a[0],
+        dz = q[1] - a[1];
+      const t = Math.max(
+        0,
+        Math.min(
+          1,
+          ((p[0] - a[0]) * dx + (p[1] - a[1]) * dz) / (dx * dx + dz * dz),
+        ),
+      );
+      return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dz) < margin;
+    });
+  });
+
+/**
+ * Procedural lamp-post layout (PLACEHOLDER: real lamp positions are unknown,
+ * OPEN_QUESTIONS #40). Derived only from campus data: outside each entrance, inside
+ * each gate, then along the edges of path areas every `spacing` m.
+ */
+export function lampPositions(campus: Campus, spacing = 22): Vec2[] {
+  const candidates: Vec2[] = [];
+  for (const building of campus.buildings) {
+    const fp = building.footprint;
+    if (!fp) continue;
+    for (const entry of building.entries) {
+      if (!entry.position) continue;
+      let best = 0,
+        bestDistance = Infinity;
+      fp.forEach((a, i) => {
+        const b = fp[(i + 1) % fp.length]!;
+        const mid: Vec2 = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+        const d = Math.hypot(
+          mid[0] - entry.position![0],
+          mid[1] - entry.position![1],
+        );
+        if (d < bestDistance) [best, bestDistance] = [i, d];
+      });
+      const n = edgeOutward(fp, best);
+      candidates.push([
+        entry.position[0] + n[0] * 3,
+        entry.position[1] + n[1] * 3,
+      ]);
+    }
+  }
+  for (const gate of campus.gates) {
+    if (!gate.position || gate.heading === undefined) continue;
+    const [ix, iz] = inwardOf(gate.heading);
+    for (const side of [-1, 1])
+      candidates.push([
+        gate.position[0] + ix * 3 - iz * side * 5,
+        gate.position[1] + iz * 3 + ix * side * 5,
+      ]);
+  }
+  for (const area of campus.areas) {
+    if (area.kind !== 'path' || !area.polygon) continue;
+    const poly = area.polygon;
+    let carry = spacing / 2;
+    poly.forEach((a, i) => {
+      const b = poly[(i + 1) % poly.length]!;
+      const length = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      const n = edgeOutward(poly, i);
+      for (let d = carry; d < length; d += spacing)
+        candidates.push([
+          a[0] + ((b[0] - a[0]) * d) / length + n[0] * 0.6,
+          a[1] + ((b[1] - a[1]) * d) / length + n[1] * 0.6,
+        ]);
+      carry = (((carry - length) % spacing) + spacing) % spacing;
+    });
+  }
+  const boundary = campus.boundary.polygon;
+  const lamps: Vec2[] = [];
+  for (const p of candidates) {
+    if (boundary && !pointInPolygon(p, boundary)) continue;
+    if (nearAnyFootprint(campus, p, 1)) continue;
+    if (lamps.some((q) => Math.hypot(q[0] - p[0], q[1] - p[1]) < 6)) continue;
+    lamps.push(p);
+  }
+  return lamps;
+}
+
+export interface WindowBand {
+  from: Vec2;
+  to: Vec2;
+  outward: Vec2;
+  base: number;
+  top: number;
+}
+
+/**
+ * Procedural window bands (one per facade edge per above-ground floor) for
+ * the greybox; real window rhythm comes with the M13 realism pass.
+ */
+export function windowBands(
+  masses: BuildingMass[],
+  minEdge = 2.5,
+): WindowBand[] {
+  const bands: WindowBand[] = [];
+  for (const mass of masses) {
+    const fp = mass.footprint;
+    fp.forEach((a, i) => {
+      const b = fp[(i + 1) % fp.length]!;
+      if (Math.hypot(b[0] - a[0], b[1] - a[1]) < minEdge) return;
+      const outward = edgeOutward(fp, i);
+      // No windows on a wall shared with another block (e.g. the C/D split).
+      const probe: Vec2 = [
+        (a[0] + b[0]) / 2 + outward[0] * 0.5,
+        (a[1] + b[1]) / 2 + outward[1] * 0.5,
+      ];
+      if (masses.some((m) => m !== mass && pointInPolygon(probe, m.footprint)))
+        return;
+      for (const floor of mass.floors.filter((f) => f.level >= 0)) {
+        const height = floor.top - floor.base;
+        bands.push({
+          from: a,
+          to: b,
+          outward,
+          base: floor.base + height * 0.3,
+          top: floor.base + height * 0.72,
+        });
+      }
+    });
+  }
+  return bands;
+}
