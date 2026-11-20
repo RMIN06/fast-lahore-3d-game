@@ -24,6 +24,9 @@ const MetricsSampler = import.meta.env.DEV
 const Tracer = import.meta.env.DEV
   ? lazy(() => import('../dev/tracer/Tracer'))
   : null;
+const CharacterPreview = import.meta.env.DEV
+  ? lazy(() => import('../dev/characters/CharacterPreview'))
+  : null;
 
 const camera = campusCamera(loadedCampus.campus);
 const AUTOSAVE_SECONDS = 60;
@@ -53,7 +56,7 @@ function GameScreen() {
     <main>
       <header>
         <p>FAST LAHORE / DEVELOPMENT</p>
-        <h1>M7 · Interiors</h1>
+        <h1>M8 · Characters</h1>
         <p data-testid="controls-hint">
           {mode === 'free'
             ? 'Free camera: drag to orbit · scroll to zoom · right-drag to pan'
@@ -104,6 +107,12 @@ export function App() {
     return (
       <Suspense fallback={<p>Loading tracer…</p>}>
         <Tracer />
+      </Suspense>
+    );
+  if (CharacterPreview && window.location.pathname === '/dev/characters')
+    return (
+      <Suspense fallback={<p>Loading characters…</p>}>
+        <CharacterPreview />
       </Suspense>
     );
   if (screen === 'title') return <TitleScreen />;

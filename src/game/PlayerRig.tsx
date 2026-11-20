@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import type { Group, PerspectiveCamera } from 'three';
+import type { PerspectiveCamera } from 'three';
+import { CharacterRig } from '../world/character-mesh';
+import { CharacterAnimator, proportions } from '../systems/character';
 import type RAPIER from '@dimforge/rapier3d-compat';
 import { loadedCampus } from '../world/campus';
 import {
@@ -67,13 +69,24 @@ export function PlayerRig() {
   // Up to 10 catch-up steps keeps the simulation real-time down to ~6 FPS.
   const stepper = useMemo(() => new FixedStepper(1 / 60, 10), []);
   const look = useRef({ yaw: 0, pitch: 0 });
-  const body = useRef<Group>(null);
+  const bodyYaw = useRef(0);
+  const lastFeet = useRef<Vec3>();
   const publishTimer = useRef(0);
   const intentionalUnlock = useRef(false);
   const pausedBefore = useRef<boolean>();
   const mode = usePlayerStore((s) => s.mode);
   const overlay = useAppStore((s) => s.overlay);
   const avatar = useAppStore((s) => s.profile?.avatar ?? DEFAULT_AVATAR);
+  // M8 procedural character (replaces the capsule) and its animator.
+  const character = useMemo(
+    () => new CharacterRig(avatar.body, avatar),
+    [avatar],
+  );
+  const animator = useMemo(
+    () => new CharacterAnimator(proportions(avatar.body)),
+    [avatar.body],
+  );
+  useEffect(() => () => character.dispose(), [character]);
   const config = useMemo(() => playerConfigFor(avatar.body), [avatar.body]);
   const gatesOpen = useClockStore((s) => s.gatesOpen);
 
@@ -260,11 +273,35 @@ export function PlayerRig() {
       }
 
     const feet = s.player.feet();
-    if (body.current) {
-      body.current.position.set(feet[0], feet[1], feet[2]);
-      body.current.rotation.y = look.current.yaw;
-      body.current.visible = current !== 'first';
-    }
+    // Animate from the distance actually moved (feet stay planted at any
+    // speed); turn the body toward its movement. Teleports are not motion.
+    const prev = lastFeet.current ?? feet;
+    const dx = feet[0] - prev[0],
+      dz = feet[2] - prev[2];
+    let moved = Math.hypot(dx, dz);
+    if (moved > 2) moved = 0;
+    lastFeet.current = feet;
+    if (moved / Math.max(delta, 1e-3) > 0.3) {
+      const target = Math.atan2(-dx, -dz);
+      const diff = Math.atan2(
+        Math.sin(target - bodyYaw.current),
+        Math.cos(target - bodyYaw.current),
+      );
+      bodyYaw.current += diff * Math.min(1, delta * 12);
+    } else if (current === 'first') bodyYaw.current = look.current.yaw;
+    const action = state.animAction;
+    if (action === 'kick' || action === 'swing') state.requestAction(undefined);
+    const pose = animator.update({
+      distance: moved,
+      dt: Math.min(delta, 0.1),
+      grounded: s.player.grounded,
+      ...(action ? { action } : {}),
+    });
+    character.applyPose(pose);
+    character.group.position.set(feet[0], feet[1], feet[2]);
+    character.group.rotation.y = bodyYaw.current;
+    // First person: hidden-body policy (no arms until real models).
+    character.group.visible = current !== 'first';
 
     if (current !== 'free') {
       const { yaw, pitch } = look.current;
@@ -316,29 +353,10 @@ export function PlayerRig() {
         yaw: look.current.yaw,
         grounded: s.player.grounded,
         sprinting: sprint && (forward !== 0 || right !== 0),
+        animation: animator.state,
       });
     }
   });
 
-  // Placeholder body until M8: capsule in the outfit colour at the avatar's
-  // real height, with a head sphere in the chosen skin tone.
-  return (
-    <group ref={body} name="player-body">
-      <mesh position={[0, (config.height - 0.24) / 2, 0]} castShadow>
-        <capsuleGeometry
-          args={[
-            config.radius,
-            config.height - 0.24 - config.radius * 2,
-            6,
-            12,
-          ]}
-        />
-        <meshStandardMaterial color={avatar.outfitColor} roughness={0.7} />
-      </mesh>
-      <mesh position={[0, config.height - 0.13, 0]} castShadow>
-        <sphereGeometry args={[0.13, 12, 10]} />
-        <meshStandardMaterial color={avatar.skinTone} roughness={0.6} />
-      </mesh>
-    </group>
-  );
+  return <primitive object={character.group} name="player-body" />;
 }

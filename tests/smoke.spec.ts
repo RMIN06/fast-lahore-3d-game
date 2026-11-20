@@ -13,7 +13,7 @@ test('renders the M3 campus greybox overview within budget without browser error
   // Outdoors, away from any streamed interior (this test is the M3 overview).
   await teleport(page, 'gate:origin');
   await expect(
-    page.getByRole('heading', { name: 'M7 · Interiors' }),
+    page.getByRole('heading', { name: 'M8 · Characters' }),
   ).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();

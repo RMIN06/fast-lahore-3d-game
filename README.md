@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M7 accepted: walkable interiors in all six blocks)
+## Run the app (M8 accepted: animated characters)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -23,6 +23,9 @@ windows, stars and moon follow the time of day.
 - Walk in through the dark doorway on each block. Inside are generated
   (placeholder) corridors, rooms with door plates, and ramps to every floor and
   basement. The HUD shows the block, floor and room.
+- In third person (**V**) you see your animated character, which walks, runs and
+  jumps. The dev overlay can make it sit, kick or swing, and `/dev/characters`
+  previews both avatars, every animation and each level of detail.
 - **Esc** opens the pause menu (save, settings, time controls, exit to title). **P**
   opens the phone (map and stubs) and **M** the full campus map. The game
   autosaves every minute and when you leave.
@@ -34,7 +37,8 @@ The development overlay shows FPS, draw calls and triangles, plus the player's
 camera mode, position and grounded state. It has toggles for **Confidence
 colors** (placeholders show in red), **Labels**, **Collision shapes** and **Free
 camera (orbit)**, which gives the M3 overview. Enable **Campus data** to list
-the validation warnings. See [M7 verification](docs/M7_VERIFICATION.md),
+the validation warnings. See [M8 verification](docs/M8_VERIFICATION.md),
+[M7 verification](docs/M7_VERIFICATION.md),
 [M6 verification](docs/M6_VERIFICATION.md),
 [M5 verification](docs/M5_VERIFICATION.md),
 [M4 verification](docs/M4_VERIFICATION.md) and
@@ -62,6 +66,7 @@ The browser tests cover:
 - the M3 overview (draw-call and triangle budgets, floor counts, debug toggles,
   orbiting);
 - the M4 player (walk, sprint, jump, the V camera switch, and the closed gate);
+- M8 characters (every animation for both avatars, LODs, in-game states);
 - M7 interiors (teleport to every room and check its label, interior budget,
   placeholder flag);
 - M6 registration (roll warning, every department spawn, save/reload/Continue,
@@ -70,7 +75,7 @@ The browser tests cover:
   and the budget with shadows);
 - the tracer.
 
-Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png`, `m6-*.png` and `m7-*.png`.
+Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png`, `m6-*.png`, `m7-*.png` and `m8-*.png`.
 
 `validate:campus` runs Zod, ID/reference, polygon, containment, connector and area
 checks. The supplied seed allows explicit warnings for unfinished geometry and

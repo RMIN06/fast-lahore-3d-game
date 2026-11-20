@@ -137,3 +137,14 @@
 - **Test tooling:**
   - The Vite dev server ignores `test-results/`, `playwright-report/`, `reference/` and `docs/`. A mid-run reload sent a long e2e test back to the title screen.
   - Interior e2e tests run on the Low preset in an 800 × 450 viewport, because headless software rendering is fill-rate bound.
+
+## M8 — 2026-11-20
+
+- **Procedural characters (own work) instead of waiting for owner models.**
+  - Third-party downloads need explicit approval of a specific source.
+  - A code-built skeleton with rigid-skinned primitives and procedural clips meets the acceptance checks, and owner glTF models can replace it in `CharacterRig` later (OPEN_QUESTIONS #45).
+- **Animation runs in pure TypeScript** (`src/systems/character.ts`), not three.js `AnimationMixer`. This keeps it unit-testable: the foot-sliding test runs forward kinematics headless.
+- **Walk and run use leg IK, with the phase driven by distance moved**, so feet stay planted at any speed. Gaits are sized to the leg's reach, including hip bounce.
+- **One merged SkinnedMesh per LOD (one draw call),** sharing one skeleton, so NPC crowds in M9 stay within the draw-call budget.
+- **First person uses the hidden-body policy.** First-person arms would need hand animation that real models will provide.
+- **Sit, kick and swing are triggered from the dev overlay** until seats (M10) and mini-games (M11) exist.

@@ -1,11 +1,11 @@
 # Asset licenses
 
-| Asset                                                                                 | File path                                            | Source URL         | License  | Attribution text                     | Date added |
-| ------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------ | -------- | ------------------------------------ | ---------- |
-| Procedural campus greybox (ground, surfaces, extruded blocks, wall, gate posts)       | src/game/CampusScene.tsx, src/world/campus-meshes.ts | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
-| Player capsule and head placeholder, avatar preview (until M8 characters)             | src/game/PlayerRig.tsx, src/ui/RegisterScreen.tsx    | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
-| Procedural lamp posts, window bands, moon (time-of-day lighting)                      | src/game/Environment.tsx, src/world/campus-meshes.ts | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
-| Generated interiors (walls, floors, stair ramps), door plates (canvas text), doorways | src/game/Interiors.tsx, src/world/interior-meshes.ts | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
+| Asset                                                                                                                                       | File path                                                                        | Source URL         | License  | Attribution text                     | Date added |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------ | -------- | ------------------------------------ | ---------- |
+| Procedural campus greybox (ground, surfaces, extruded blocks, wall, gate posts)                                                             | src/game/CampusScene.tsx, src/world/campus-meshes.ts                             | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
+| Procedural characters (skeleton, skinned meshes, 3 LODs, variants) and animations (idle, walk, run, jump, sit, kick, swing); avatar preview | src/systems/character.ts, src/world/character-mesh.ts, src/ui/RegisterScreen.tsx | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
+| Procedural lamp posts, window bands, moon (time-of-day lighting)                                                                            | src/game/Environment.tsx, src/world/campus-meshes.ts                             | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
+| Generated interiors (walls, floors, stair ramps), door plates (canvas text), doorways                                                       | src/game/Interiors.tsx, src/world/interior-meshes.ts                             | Local project code | Own work | FAST Lahore Campus Game contributors | 2026-11-20 |
 
 The M0 test ground and cube (own work, 2026-10-25) were removed in M3. No external models, textures, audio, fonts, or files ship in `public/`. The private student map is not loaded by the app.
 

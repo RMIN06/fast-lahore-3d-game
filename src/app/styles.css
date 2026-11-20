@@ -372,3 +372,17 @@ header h1 {
   display: block;
   color: #f0d58c;
 }
+.dev-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+  align-items: center;
+}
+.dev-actions button[aria-pressed='true'] {
+  background: #f0d58c;
+  color: #10181e;
+}
+.character-preview {
+  height: 100vh;
+}

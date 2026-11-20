@@ -138,6 +138,23 @@ export default function DevOverlay() {
       >
         Teleport
       </button>
+      <div className="dev-actions" role="group" aria-label="Animation actions">
+        <button
+          aria-pressed={player.animAction === 'sit'}
+          onClick={() =>
+            player.requestAction(
+              player.animAction === 'sit' ? undefined : 'sit',
+            )
+          }
+        >
+          Sit
+        </button>
+        <button onClick={() => player.requestAction('kick')}>Kick</button>
+        <button onClick={() => player.requestAction('swing')}>Swing</button>
+        <a href="/dev/characters" style={{ color: '#82bbec' }}>
+          Characters
+        </a>
+      </div>
       <dl aria-label="Player state">
         <dt>Camera</dt>
         <dd data-testid="player-mode">
@@ -153,6 +170,8 @@ export default function DevOverlay() {
         <dd data-testid="player-grounded">{String(player.grounded)}</dd>
         <dt>Sprinting</dt>
         <dd data-testid="player-sprinting">{String(player.sprinting)}</dd>
+        <dt>Animation</dt>
+        <dd data-testid="player-animation">{player.animation}</dd>
         <dt>Open gates</dt>
         <dd data-testid="gates-open">
           {openGates.length ? openGates.join(', ') : 'none'}
