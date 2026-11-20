@@ -23,6 +23,7 @@ import {
 import { useDebugStore } from '../state/debug-store';
 import { usePlayerStore } from '../state/player-store';
 import { useClockStore } from '../state/clock-store';
+import { useWorldStore } from '../state/world-store';
 import type { Campus, Confidence } from '../types/campus';
 
 // M3 exterior greybox. Thin component: geometry comes from campus data via
@@ -79,6 +80,8 @@ export function CampusScene() {
   // The orbit view is the M3 overview, kept as a free debug camera from M4.
   const freeCamera = usePlayerStore((s) => s.mode === 'free');
   const gatesOpen = useClockStore((s) => s.gatesOpen);
+  // Hide a block's exterior shell while the player is inside it (M7).
+  const insideBuilding = useWorldStore((s) => s.location.buildingId);
   const { center, size } = useMemo(() => campusBounds(campus), [campus]);
 
   const masses = useMemo(() => buildingMasses(campus), [campus]);
@@ -209,6 +212,7 @@ export function CampusScene() {
         <mesh
           key={mass.id}
           name={`building:${mass.id}`}
+          visible={insideBuilding !== mass.id}
           geometry={g}
           material={material(
             confidenceColors

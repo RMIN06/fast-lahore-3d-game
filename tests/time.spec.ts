@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
-import { startNewGame } from './helpers';
+import { startNewGame, teleport } from './helpers';
 
 const minutesOf = async (page: Page) => {
   const text = (await page.getByTestId('hud-clock').textContent()) ?? '';
@@ -50,6 +50,8 @@ test('time panel, day/night lighting, weekday gate schedule and budget', async (
     if (message.type() === 'error') errors.push(message.text());
   });
   await startNewGame(page);
+  // Outdoors, away from streamed interiors: this test is about outdoor light.
+  await teleport(page, 'gate:origin');
   await expect(page.getByTestId('hud-clock')).toHaveText(/^Mon 08:3\d$/);
 
   // ×1: one game minute per real second (a full day = 24 real minutes).

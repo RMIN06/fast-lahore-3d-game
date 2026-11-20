@@ -7,8 +7,8 @@ import {
   campusBounds,
   campusCamera,
   gateSpawn,
-  staticColliders,
 } from '../systems/campus-geometry';
+import { campusPhysics } from '../world/interiors';
 import { createPhysicsWorld, initRapier } from '../systems/physics';
 import type { Rapier, World } from '../systems/physics';
 import {
@@ -105,10 +105,16 @@ export function PlayerRig() {
       if (disposed) return;
       const bounds = campusBounds(campus);
       const colliders = new Map<string, RAPIER.Collider>();
+      // Buildings, walls, gates and walkable interiors (M7) with basement holes.
+      const physics = campusPhysics(campus);
       const world = createPhysicsWorld(
         R,
-        staticColliders(campus),
-        { groundCenter: bounds.center, groundHalfSize: bounds.size },
+        physics.colliders,
+        {
+          groundCenter: bounds.center,
+          groundHalfSize: bounds.size,
+          groundHoles: physics.groundHoles,
+        },
         colliders,
       );
       // Department spawn or saved position from the app; Gate-5 as a fallback.

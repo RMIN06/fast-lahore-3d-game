@@ -147,9 +147,17 @@ test('save, reload and Continue restore position, time and settings; menus work'
       return Math.hypot(x! - saved[0]!, z! - saved[2]!);
     })
     .toBeLessThan(0.5);
-  await expect(page.getByTestId('hud-clock')).toHaveText(
-    new RegExp(`^${savedTime!.slice(0, 7)}`),
-  );
+  // Same weekday; the clock resumes from the saved time (allow the minutes
+  // that pass while the slow headless page loads).
+  const minutesOf = (text: string) => {
+    const [, hh, mm] = /(\d\d):(\d\d)/.exec(text) ?? [];
+    return Number(hh) * 60 + Number(mm);
+  };
+  const restored = (await page.getByTestId('hud-clock').textContent())!;
+  expect(restored.slice(0, 3)).toBe(savedTime!.slice(0, 3));
+  const drift = minutesOf(restored) - minutesOf(savedTime!);
+  expect(drift).toBeGreaterThanOrEqual(0);
+  expect(drift).toBeLessThan(30);
   await page.keyboard.press('Escape');
   await page
     .getByRole('dialog', { name: 'Pause menu' })

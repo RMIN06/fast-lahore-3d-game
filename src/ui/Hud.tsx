@@ -1,6 +1,7 @@
 import { useClockStore } from '../state/clock-store';
 import { usePlayerStore } from '../state/player-store';
 import { useAppStore } from '../state/app-store';
+import { locationLabel, useWorldStore } from '../state/world-store';
 
 const DAY_TYPE = {
   weekday: 'classes',
@@ -19,6 +20,7 @@ export function Hud() {
   const yaw = usePlayerStore((s) => s.yaw);
   const profile = useAppStore((s) => s.profile);
   const bearing = bearingOf(yaw);
+  const location = useWorldStore((s) => s.location);
   return (
     <div className="hud-clock" aria-label="Game time">
       <strong data-testid="hud-clock">{label}</strong>
@@ -27,6 +29,9 @@ export function Hud() {
       </span>
       <span data-testid="hud-compass" className="hud-compass">
         {COMPASS[Math.round(bearing / 45) % 8]} {Math.round(bearing)}°
+      </span>
+      <span data-testid="hud-location" className="hud-location">
+        {locationLabel(location)}
       </span>
       <span className="hud-task">
         {profile?.displayName || profile?.rollNumber} · no active task

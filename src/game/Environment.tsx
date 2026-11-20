@@ -33,6 +33,7 @@ import type { Lighting } from '../systems/time';
 import { gameClock, useClockStore } from '../state/clock-store';
 import { usePlayerStore } from '../state/player-store';
 import { useAppStore } from '../state/app-store';
+import { useWorldStore } from '../state/world-store';
 
 // M5 time of day: sky, sun (with shadows), moon, stars, fog, exposure, lamp
 // posts and window glow, all driven by the game clock.
@@ -156,16 +157,22 @@ export function Environment() {
     }
 
     // Recompute lighting only when game time moves by a quarter minute.
-    const quarter = Math.floor(gameClock.minutes * 4);
+    const quarter =
+      Math.floor(gameClock.minutes * 4) +
+      (useWorldStore.getState().location.buildingId ? 0.5 : 0);
     if (quarter !== lastQuarter.current) {
       lastQuarter.current = quarter;
       lighting.current = lightingAt(gameClock.minutes);
       const l = lighting.current;
       const d = l.sun.direction;
       if (hemisphere.current) {
-        hemisphere.current.color.set(l.ambientColor);
-        hemisphere.current.groundColor.set(l.groundColor);
-        hemisphere.current.intensity = l.ambientIntensity;
+        // Interiors keep consistent artificial lighting (GAMEPLAY_SPEC §4).
+        const inside = Boolean(useWorldStore.getState().location.buildingId);
+        hemisphere.current.color.set(inside ? '#fff4e0' : l.ambientColor);
+        hemisphere.current.groundColor.set(inside ? '#cfc6b4' : l.groundColor);
+        hemisphere.current.intensity = inside
+          ? Math.max(1.5, l.ambientIntensity)
+          : l.ambientIntensity;
       }
       fog.color.set(l.fogColor);
       gl.toneMappingExposure = l.exposure;

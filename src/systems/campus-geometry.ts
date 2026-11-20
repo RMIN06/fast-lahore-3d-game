@@ -34,6 +34,13 @@ export type StaticCollider =
       polygon: Vec2[];
       minY: number;
       maxY: number;
+      /** Door openings in the facade (M7): edge index, centre, width, height. */
+      openings?: {
+        edge: number;
+        center: Vec2;
+        width: number;
+        height: number;
+      }[];
     }
   | {
       kind: 'box';
@@ -41,6 +48,8 @@ export type StaticCollider =
       center: [number, number, number];
       halfExtents: [number, number, number];
       rotationY: number;
+      /** Tilt about the box's local Z axis after yaw (stair ramps). */
+      tiltZ?: number;
     };
 
 const RANK: Record<Confidence, number> = {
@@ -204,7 +213,13 @@ export const inwardOf = (headingDeg: number): Vec2 => {
  * closed barrier across each gate opening (no off-campus areas exist; PRD §2).
  * Consumed by the physics world from M4.
  */
-export function staticColliders(campus: Campus): StaticCollider[] {
+export function staticColliders(
+  campus: Campus,
+  doors: Record<
+    string,
+    { edge: number; center: Vec2; width: number; height: number }
+  > = {},
+): StaticCollider[] {
   const wallHeight = campus.meta.defaults.boundaryWallHeight ?? 0;
   const thickness = campus.meta.defaults.wallThickness;
   const gateWidth = campus.meta.defaults.gateWidth ?? 0;
@@ -214,6 +229,7 @@ export function staticColliders(campus: Campus): StaticCollider[] {
     polygon: mass.footprint,
     minY: 0,
     maxY: mass.height,
+    ...(doors[mass.id] ? { openings: [doors[mass.id]!] } : {}),
   }));
   if (wallHeight <= 0) return buildings;
   const walls = boundaryWallSegments(campus).map((segment, i) =>

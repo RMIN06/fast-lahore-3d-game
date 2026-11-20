@@ -6,6 +6,7 @@ import { usePlayerStore } from '../state/player-store';
 import { useClockStore } from '../state/clock-store';
 import { loadedCampus } from '../world/campus';
 import { gateSpawn } from '../systems/campus-geometry';
+import { interiorLayouts } from '../world/interiors';
 
 const TOGGLES: [DebugToggle, string][] = [
   ['confidenceColors', 'Confidence colors'],
@@ -86,6 +87,15 @@ export default function DevOverlay() {
           aria-label="Teleport target"
         >
           <option value="gate:origin">Inside Gate-5 (origin)</option>
+          {interiorLayouts(loadedCampus.campus).flatMap((l) =>
+            l.floors.flatMap((f) =>
+              f.rooms.map((r) => (
+                <option key={r.spaceId} value={`room:${r.spaceId}`}>
+                  {r.spaceId}
+                </option>
+              )),
+            ),
+          )}
           {loadedCampus.campus.anchors.map((a) =>
             a.position ? (
               <option key={a.id} value={a.id}>
@@ -105,6 +115,17 @@ export default function DevOverlay() {
               position: [spawn.position[0], 0, spawn.position[1]],
               yaw: spawn.yaw,
             });
+            return;
+          }
+          if (target.startsWith('room:')) {
+            const room = interiorLayouts(campus)
+              .flatMap((l) => l.floors.flatMap((f) => f.rooms))
+              .find((r) => `room:${r.spaceId}` === target);
+            if (room)
+              player.requestTeleport({
+                position: room.anchor,
+                yaw: player.yaw,
+              });
             return;
           }
           const anchor = campus.anchors.find((a) => a.id === target);

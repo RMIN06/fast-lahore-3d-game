@@ -3,6 +3,8 @@ import { Canvas } from '@react-three/fiber';
 import { CampusScene } from '../game/CampusScene';
 import { PlayerRig } from '../game/PlayerRig';
 import { Environment } from '../game/Environment';
+import { Interiors } from '../game/Interiors';
+import { EntryFade } from '../ui/EntryFade';
 import { Hud } from '../ui/Hud';
 import { TimePanel } from '../ui/TimePanel';
 import { Overlays } from '../ui/Overlays';
@@ -51,7 +53,7 @@ function GameScreen() {
     <main>
       <header>
         <p>FAST LAHORE / DEVELOPMENT</p>
-        <h1>M6 · Registration, save and HUD</h1>
+        <h1>M7 · Interiors</h1>
         <p data-testid="controls-hint">
           {mode === 'free'
             ? 'Free camera: drag to orbit · scroll to zoom · right-drag to pan'
@@ -66,6 +68,7 @@ function GameScreen() {
       >
         <Environment />
         <CampusScene />
+        <Interiors />
         <PlayerRig />
         {MetricsSampler && (
           <Suspense fallback={null}>
@@ -76,6 +79,7 @@ function GameScreen() {
       {mode === 'first' && !overlay && (
         <div className="crosshair" aria-hidden />
       )}
+      <EntryFade />
       <Hud />
       <TimePanel />
       <Overlays />

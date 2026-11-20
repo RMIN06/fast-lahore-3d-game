@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { startNewGame } from './helpers';
+import { startNewGame, teleport } from './helpers';
 
 test('renders the M3 campus greybox overview within budget without browser errors', async ({
   page,
@@ -10,8 +10,10 @@ test('renders the M3 campus greybox overview within budget without browser error
     if (message.type() === 'error') errors.push(message.text());
   });
   await startNewGame(page);
+  // Outdoors, away from any streamed interior (this test is the M3 overview).
+  await teleport(page, 'gate:origin');
   await expect(
-    page.getByRole('heading', { name: 'M6 · Registration, save and HUD' }),
+    page.getByRole('heading', { name: 'M7 · Interiors' }),
   ).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();
