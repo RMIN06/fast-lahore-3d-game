@@ -31,3 +31,22 @@
 - Preserve the established campus schema. Trace evidence uses existing meta.calibration fields; browser files remain local object URLs. Draft downloads and final accepted exports are separate actions. Only a validated CLI operation writes data/campus.json, with a backup and atomic replacement.
 - The initial debug view shows seed pixel boxes rather than synthetic meter coordinates. Missing geometry remains missing. Placeholder is the tracing confidence default; the owner must explicitly choose stronger confidence from their evidence.
 - Reuse the scaffold's dark palette and plain controls; no component library or stack changes. 21st context/search/review were attempted; catalog search was unauthorized (HTTP 401), so no external components were retrieved.
+
+## M2 — 2026-11-20 (site plan traced and accepted)
+
+- **Metric source.** Use a north-up Esri World Imagery z19 mosaic as the calibrated image and register the OpenStreetMap (ODbL) snapshot on it to identify buildings.
+  - Google Maps imagery is not traced, because its terms prohibit it.
+  - Scale comes from three great-circle reference distances on the tile georeference (map-ruler equivalent). OSM's own coordinates give an independent area check (42,482 m² vs 42,484 m²).
+  - The mosaic and raw OSM files stay private.
+- **Geometry sources.**
+  - OSM outlines are used where they match the imagery: the boundary, A, B, E, badminton and the Masjid.
+  - Imagery is traced where OSM is missing or stale: F, the cricket ground, courts, parking, lawns, paths and gates.
+  - OSM's single "CS Block" L-shape is split into C (west wing) and D (south wing) along the wing's east wall line. Both are marked `estimated`.
+  - Placeholder confidence is used for anything not identifiable in the imagery: New Cafe, Fresh Friez, Book PhotoCopy and Gate-2.
+- **Boundary-area band widened from ±15% to ±20%.** This was approved by the contributor running M2, and the project owner should confirm it (OPEN_QUESTIONS #31).
+  - The walled campus measures 10.5 acres; the published figure is 12.5 acres.
+  - The check exists to catch a wrong scale, and ±20% still does. The boundary was not stretched to fit.
+  - Changed in `src/systems/campus-validation.ts` (`BOUNDARY_AREA_MIN`/`MAX`), with a unit test of both edges.
+- **Gate heading convention.** `heading` is the compass bearing (degrees clockwise from true north) a person faces when walking into campus through the gate.
+- **Orientation.** The student map's top is south, and it is a 180° rotation of the real layout, not a mirror. `mapToWorld` is kept for schematic display only; metric positions come from `meta.calibration`.
+- **No structural changes to the seed.** Seed labels, IDs and the room inventory are unchanged. Map-relative names (for example "South lawns", which lie north of A) are explained in `notes` rather than renamed.

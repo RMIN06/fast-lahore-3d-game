@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M2 tracer available; site-plan acceptance pending)
+## Run the app (M2 accepted: calibrated site plan in `data/campus.json`)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -17,8 +17,9 @@ the development overlay to inspect the loaded seed inventory and validation warn
 
 Open `/dev/tracer` for local image calibration, polygon/gate/entry tracing,
 confidence-colored world preview, undo and JSON export. The initial schematic
-preview is in pixels and is explicitly not a measured campus. See
-[M2 status and remaining source input](docs/M2_STATUS.md).
+preview is in pixels and is explicitly not a measured campus. Use **Load campus
+JSON** with `data/campus.json` to see the accepted metric site plan. See
+[M2 status](docs/M2_STATUS.md).
 
 ```sh
 npm run typecheck
@@ -51,8 +52,9 @@ npm run apply:site-plan -- path/to/export.json
 
 Task/NPC files are checked for campus references when present; their gameplay
 schemas and content belong to later milestones. `build:navmesh` remains an M9
-notice. The tracer is implemented; no accepted real campus geometry has been
-generated because the available OSM source is incomplete and fails the area check.
+notice. The M2 site plan (boundary, six block footprints, gates, grounds, courts,
+parking, lawns and paths) was traced from satellite imagery and OpenStreetMap
+and applied with `apply:site-plan`. Its sources are logged in `docs/ASSET_LICENSES.md`.
 
 M1 tour outputs are private under `reference/tour/` (graph, raw config, locations)
 and `reference/photos/` (previews, manifests, coverage and contact sheet).
@@ -97,8 +99,8 @@ Then repeat with M1, M2, and so on. Milestones M1 and M2 need small inputs from 
 
 ## What the owner must still supply
 
-1. A top-down satellite screenshot of the campus at max zoom with the Google Maps scale bar visible (or confirm OSM footprints are good enough).
-2. (Resolved, assumed) Map top = south. Codex verifies against the satellite image in M2.
+1. (Done in M2, 2026-11-20) Satellite-based site plan traced from Esri World Imagery and OpenStreetMap. The owner should confirm the items in `docs/OPEN_QUESTIONS.md` #31–37 (area decision, Gate-2, C/D split, placeholder shops).
+2. (Verified in M2) Map top = south, as a 180-degree rotation rather than a mirror.
 3. Answers to the blockers in `docs/OPEN_QUESTIONS.md` (department list, gates 1/2/4, upper floors of A and E blocks).
 4. Phone photos for places the tour does not cover.
 5. Permission from FAST (and Panora, if their imagery is used beyond private reference) before public release.
