@@ -445,3 +445,20 @@ export function windowBands(
   }
   return bands;
 }
+
+/**
+ * Spawn for a department (GAMEPLAY_SPEC §1): its `spawnAnchor` from campus
+ * data, outdoors at ground level, facing the anchor's heading.
+ */
+export function departmentSpawn(campus: Campus, departmentId: string) {
+  const department = campus.departments.find((d) => d.id === departmentId);
+  if (!department) throw new Error(`Unknown department ${departmentId}`);
+  const anchor = campus.anchors.find((a) => a.id === department.spawnAnchor);
+  if (!anchor?.position)
+    throw new Error(`Spawn anchor ${department.spawnAnchor} has no position`);
+  return {
+    position: [anchor.position[0], anchor.position[2]] as Vec2,
+    yaw: (-(anchor.heading ?? 0) * Math.PI) / 180,
+    anchorId: anchor.id,
+  };
+}

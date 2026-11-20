@@ -85,7 +85,7 @@ interface Connector { id: string; kind: "stairs" | "lift"; position: Vec2 | null
 interface Area { id: string; label: string; kind: "lawn"|"ground"|"court"|"parking"|"path"|"road"|"plaza"|"shop"|"cafe"|"masjid"|"water_feature"|"other"; polygon: Vec2[] | null; schematicBoxPx?: [number,number,number,number]; surface?: "grass"|"asphalt"|"paving"|"clay"|"turf"|"concrete"; notes?: string; confidence: Confidence }
 
 interface Department { id: string; name: string; buildingIds: string[]; spawnAnchor: string; aliases: string[] }
-interface Anchor { id: string; kind: "spawn"|"seat"|"interact"|"npc_wp"|"camera"; position: Vec3 | null; heading?: number; refs?: string[] }
+interface Anchor { id: string; kind: "spawn"|"seat"|"interact"|"npc_wp"|"camera"; position: Vec3 | null; heading?: number; refs?: string[]; confidence?: Confidence; notes?: string }  // heading: compass bearing faced
 ```
 Notes:
 - `side` values come from the student map ("On Right", "On Left", "On Front", "Middle"). Their reference frame is unconfirmed (assumed: standing at the top of the main stair/entry looking into the floor). Treat as `estimated`.

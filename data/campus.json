@@ -1973,26 +1973,38 @@
     {
       "id": "spawn.cs",
       "kind": "spawn",
-      "position": null,
-      "refs": ["C"]
+      "position": [5.4, 0, 108.35],
+      "refs": ["C"],
+      "heading": 252.65,
+      "confidence": "placeholder",
+      "notes": "PLACEHOLDER: 3 m outside block C's placeholder main entrance, facing it (OPEN_QUESTIONS #39). Heading is a compass bearing."
     },
     {
       "id": "spawn.civil",
       "kind": "spawn",
-      "position": null,
-      "refs": ["B"]
+      "position": [55.81, 0, 14.45],
+      "refs": ["B"],
+      "heading": 73.32,
+      "confidence": "placeholder",
+      "notes": "PLACEHOLDER: 3 m outside block B's placeholder main entrance, facing it (OPEN_QUESTIONS #39). Heading is a compass bearing."
     },
     {
       "id": "spawn.ee",
       "kind": "spawn",
-      "position": null,
-      "refs": ["D"]
+      "position": [51.96, 0, 103.14],
+      "refs": ["D"],
+      "heading": 160.62,
+      "confidence": "placeholder",
+      "notes": "PLACEHOLDER: 3 m outside block D's placeholder main entrance, facing it (OPEN_QUESTIONS #39). Heading is a compass bearing."
     },
     {
       "id": "spawn.mgmt",
       "kind": "spawn",
-      "position": null,
-      "refs": ["D"]
+      "position": [51.96, 0, 103.14],
+      "refs": ["D"],
+      "heading": 160.62,
+      "confidence": "placeholder",
+      "notes": "PLACEHOLDER: 3 m outside block D's placeholder main entrance, facing it (OPEN_QUESTIONS #39). Heading is a compass bearing."
     }
   ]
 }

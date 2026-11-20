@@ -226,6 +226,8 @@ export const campusSchema = z.strictObject({
       position: vec3Schema.nullable(),
       heading: number.optional(),
       refs: z.array(text).optional(),
+      confidence: confidenceSchema.optional(),
+      notes: text.optional(),
     }),
   ),
 });

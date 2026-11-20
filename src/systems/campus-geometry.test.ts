@@ -12,6 +12,7 @@ import {
   lampPositions,
   pointInPolygon,
   windowBands,
+  departmentSpawn,
 } from './campus-geometry';
 
 const campus = loadCampus(campusJson, { mode: 'site-plan' }).campus;
@@ -155,4 +156,25 @@ test('window bands sit on facades, one band per floor, facing outward', () => {
     expect(masses.some((m) => pointInPolygon(mid, m.footprint))).toBe(false);
     expect(band.top).toBeGreaterThan(band.base);
   }
+});
+
+test('each department spawns at its anchor, outside its block entrance and on campus', () => {
+  for (const department of campus.departments) {
+    const spawn = departmentSpawn(campus, department.id);
+    expect(spawn.anchorId).toBe(department.spawnAnchor);
+    const anchor = campus.anchors.find((a) => a.id === department.spawnAnchor)!;
+    const block = campus.buildings.find((b) => b.id === anchor.refs![0])!;
+    const entry = block.entries.find((e) => e.id === 'main')!.position!;
+    expect(
+      Math.hypot(spawn.position[0] - entry[0], spawn.position[1] - entry[1]),
+    ).toBeCloseTo(3, 0);
+    expect(pointInPolygon(spawn.position, campus.boundary.polygon!)).toBe(true);
+    for (const b of campus.buildings)
+      expect(pointInPolygon(spawn.position, b.footprint!)).toBe(false);
+    // Facing the entrance: the view direction points toward the door.
+    const view = [-Math.sin(spawn.yaw), -Math.cos(spawn.yaw)];
+    const toDoor = [entry[0] - spawn.position[0], entry[1] - spawn.position[1]];
+    expect(view[0]! * toDoor[0]! + view[1]! * toDoor[1]!).toBeGreaterThan(2.5);
+  }
+  expect(() => departmentSpawn(campus, 'nope')).toThrow();
 });
