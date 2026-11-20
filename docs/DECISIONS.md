@@ -62,3 +62,26 @@
 - **Confidence colours are on by default** in the dev overlay, so placeholders (A and E floor counts, placeholder areas and gates) stay obvious. A block shows the weaker of its footprint confidence and its floor-count confidence. The inner campus ground stays neutral so traced areas remain visible.
 - **Labels use drei `Html`** (DOM elements, no extra draw calls), so no font file has to be fetched.
 - **The M0 test scene and its spin toggle were removed.** The smoke test now checks the M3 acceptance criteria instead.
+
+## M4 — 2026-11-20
+
+- **Rapier is used directly (`@dimforge/rapier3d-compat`), not through `@react-three/rapier`.**
+  - It is the same physics engine that `@react-three/rapier` wraps.
+  - Calling it directly keeps the controller and world in plain TypeScript (`src/systems/`). The "walk from Gate-5 to every block without passing through anything" check can then run as a fast headless unit test.
+  - The R3F component only wires input and the camera.
+- **Building colliders are side-wall triangle meshes generated from footprints**, not from render meshes, so concave footprints are exact. The boundary wall and the closed gate barriers are boxes.
+  - Gates are closed for now: there are no off-campus areas (PRD §2).
+  - Opening the Masjid gate at Jummah belongs to M5 and M12.
+- **Player numbers** not given by GAMEPLAY_SPEC:
+  - capsule radius 0.3 m, height 1.75 m;
+  - walk 1.6 m/s, sprint 4.8 m/s, jump 3.6 m/s;
+  - autostep 0.30 m, slopes up to 40°;
+  - a 60 Hz fixed timestep.
+
+  The eye height of 1.65 m comes from the spec.
+
+- **Rapier's snap-to-ground is disabled.** In rapier3d-compat 0.21 it made a resting capsule sink through the ground slab; a regression test reproduces this. Gravity alone handles stepping down.
+  - The controller also takes one world step on creation, because Rapier's scene queries don't see new colliders until then.
+  - While sprinting the capsule settles up to about 7 cm into the ground slab, then recovers. Tests allow 10 cm; falling through would be metres.
+- **Placeholder block entrances.** One `main` entrance per block, on the side the student map marks with entry points, at the midpoint of the longest facade there, marked `confidence: "placeholder"`. Entries gained optional `confidence` and `notes` fields.
+- **The camera starts in first person.** The M3 orbit overview stays available as the dev overlay's "Free camera".

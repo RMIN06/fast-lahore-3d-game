@@ -63,3 +63,7 @@ Items 1, 2 and 28–30 are now answered by imagery: orientation is a 180° rotat
 ## M3 greybox — 2026-11-20
 
 38. **Boundary wall height and gate widths.** The greybox uses placeholder values from `meta.defaults`: a 2.5 m wall and 6 m gate openings. What are the real wall height and the width of each gate?
+
+## M4 player — 2026-11-20
+
+39. **Block entrances.** Each block has one placeholder main entrance: A on its south side (courtyard), B west (Highway), C east (courtyard), D north (courtyard), E west (Highway) and F north (Gate-3 path), at the midpoint of the longest facade on that side. Where are the actual main and side doors of each block?

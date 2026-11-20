@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M3 accepted: exterior campus greybox)
+## Run the app (M4 accepted: walkable campus with a player controller)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -10,13 +10,19 @@ npx playwright install chromium
 npm run dev
 ```
 
-Open the local URL printed by Vite. The page renders the exterior greybox of the
-whole campus from `data/campus.json`: ground and surfaces, the boundary wall
-with gate openings, blocks extruded floor by floor, and gate posts and labels.
-Drag to orbit, scroll to zoom and right-drag to pan. The development overlay shows
-FPS, draw calls and triangles. It has toggles for **Confidence colors**
-(placeholders show in red), **Labels** and **Collision shapes**. Enable
-**Campus data** to list the validation warnings. See
+Open the local URL printed by Vite. You start just inside Gate-5 as a placeholder
+capsule player in the exterior greybox of the campus, built from `data/campus.json`.
+
+- Click the view to look around with the mouse.
+- **WASD** moves, **Shift** sprints and **Space** jumps.
+- **V** switches between first and third person, and **Esc** releases the mouse.
+- Buildings, the boundary wall and the closed gates block you.
+
+The development overlay shows FPS, draw calls and triangles, plus the player's
+camera mode, position and grounded state. It has toggles for **Confidence
+colors** (placeholders show in red), **Labels**, **Collision shapes** and **Free
+camera (orbit)**, which gives the M3 overview. Enable **Campus data** to list
+the validation warnings. See [M4 verification](docs/M4_VERIFICATION.md) and
 [M3 verification](docs/M3_VERIFICATION.md).
 
 Open `/dev/tracer` for local image calibration, polygon/gate/entry tracing,
@@ -36,9 +42,14 @@ npm run preview
 ```
 
 `npm run format` formats the scaffold and `npm run format:check` checks it.
-The browser smoke test checks the M3 acceptance criteria: draw-call and triangle
-budgets, the floor count on every block, the debug toggles, orbiting and the
-absence of console errors. Its screenshots are saved to `test-results/m3-*.png`.
+The browser tests cover:
+
+- the M3 overview (draw-call and triangle budgets, floor counts, debug toggles,
+  orbiting);
+- the M4 player (walk, sprint, jump, the V camera switch, and the closed gate);
+- the tracer.
+
+Screenshots are saved to `test-results/m3-*.png` and `test-results/m4-*.png`.
 
 `validate:campus` runs Zod, ID/reference, polygon, containment, connector and area
 checks. The supplied seed allows explicit warnings for unfinished geometry and
