@@ -50,3 +50,15 @@
 - **Gate heading convention.** `heading` is the compass bearing (degrees clockwise from true north) a person faces when walking into campus through the gate.
 - **Orientation.** The student map's top is south, and it is a 180° rotation of the real layout, not a mirror. `mapToWorld` is kept for schematic display only; metric positions come from `meta.calibration`.
 - **No structural changes to the seed.** Seed labels, IDs and the room inventory are unchanged. Map-relative names (for example "South lawns", which lie north of A) are explained in `notes` rather than renamed.
+
+## M3 — 2026-11-20
+
+- **Greybox, not final looks.** Buildings are extruded floor by floor, with a thin gap that makes the floor count readable. Basements stay underground and are not drawn. Facades, materials and shadows belong to M5 and M13.
+- **Additive schema fields** (optional, so existing data stays valid):
+  - `buildings[].floorsConfidence` lets the data say that A's and E's floor counts are unknown. Without it, the M3 rule "A: unknown → placeholder" could not be shown.
+  - `meta.defaults.boundaryWallHeight` (2.5 m) and `gateWidth` (6 m) are rendering placeholders. They live in data rather than code (OPEN_QUESTIONS #38).
+- **Pure logic in `src/systems/campus-geometry.ts`** covers floor stacks, wall segments with gate openings, colliders and camera framing. The three.js geometry builders are in `src/world/campus-meshes.ts`, and `CampusScene.tsx` stays thin.
+- **Colliders as data now, physics in M4.** `staticColliders()` returns simplified shapes built from footprints and wall segments, never from render meshes: building prisms and wall boxes. Rapier is not installed until M4, which owns movement and collision. A debug toggle draws the shapes.
+- **Confidence colours are on by default** in the dev overlay, so placeholders (A and E floor counts, placeholder areas and gates) stay obvious. A block shows the weaker of its footprint confidence and its floor-count confidence. The inner campus ground stays neutral so traced areas remain visible.
+- **Labels use drei `Html`** (DOM elements, no extra draw calls), so no font file has to be fetched.
+- **The M0 test scene and its spin toggle were removed.** The smoke test now checks the M3 acceptance criteria instead.

@@ -59,3 +59,7 @@ Items 1, 2 and 28–30 are now answered by imagery: orientation is a 180° rotat
 35. **Unlabelled building south of the Library.** OSM labels it "Cafeteria" (way 841040148). It is the unlabelled grey/orange structure on the student map, and the seed has no entity for it. What is it, and should it become a building or area?
 36. **Licensing of derived geometry.** Geometry is derived from OSM (ODbL, which requires attribution and share-alike for the database) and traced from Esri World Imagery. Review both licences before any public release (see `docs/ASSET_LICENSES.md`).
 37. **Map-relative names.** The seed's "South lawns (below Block A)" is the lawn north of Block A (the "Love Garden"). The "north" and "south" fountain labels are map-relative too. Should these be renamed?
+
+## M3 greybox — 2026-11-20
+
+38. **Boundary wall height and gate widths.** The greybox uses placeholder values from `meta.defaults`: a 2.5 m wall and 6 m gate openings. What are the real wall height and the width of each gate?

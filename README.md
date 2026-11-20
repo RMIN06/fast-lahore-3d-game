@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M2 accepted: calibrated site plan in `data/campus.json`)
+## Run the app (M3 accepted: exterior campus greybox)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -10,10 +10,14 @@ npx playwright install chromium
 npm run dev
 ```
 
-Open the local URL printed by Vite. The development scene shows a ground plane,
-spinning cube, and an overlay with FPS, draw calls, triangles, and a spin toggle.
-These are technical primitives, not campus geometry. Enable **Campus data** in
-the development overlay to inspect the loaded seed inventory and validation warnings.
+Open the local URL printed by Vite. The page renders the exterior greybox of the
+whole campus from `data/campus.json`: ground and surfaces, the boundary wall
+with gate openings, blocks extruded floor by floor, and gate posts and labels.
+Drag to orbit, scroll to zoom and right-drag to pan. The development overlay shows
+FPS, draw calls and triangles. It has toggles for **Confidence colors**
+(placeholders show in red), **Labels** and **Collision shapes**. Enable
+**Campus data** to list the validation warnings. See
+[M3 verification](docs/M3_VERIFICATION.md).
 
 Open `/dev/tracer` for local image calibration, polygon/gate/entry tracing,
 confidence-colored world preview, undo and JSON export. The initial schematic
@@ -32,9 +36,9 @@ npm run preview
 ```
 
 `npm run format` formats the scaffold and `npm run format:check` checks it.
-The browser smoke test verifies a rendered canvas, live metrics, the debug toggle,
-and absence of console errors or uncaught exceptions. Its screenshot is saved to
-`test-results/m0-scaffold.png`.
+The browser smoke test checks the M3 acceptance criteria: draw-call and triangle
+budgets, the floor count on every block, the debug toggles, orbiting and the
+absence of console errors. Its screenshots are saved to `test-results/m3-*.png`.
 
 `validate:campus` runs Zod, ID/reference, polygon, containment, connector and area
 checks. The supplied seed allows explicit warnings for unfinished geometry and
