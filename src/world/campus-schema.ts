@@ -85,6 +85,8 @@ export const buildingSchema = z.strictObject({
       floor: text,
       kind: z.enum(['main', 'side', 'stair', 'ramp']),
       label: text.optional(),
+      confidence: confidenceSchema.optional(),
+      notes: text.optional(),
     }),
   ),
   floors: z.array(floorSchema).min(1),

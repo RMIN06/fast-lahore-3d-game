@@ -150,7 +150,17 @@
       ],
       "schematicBoxPx": [545, 545, 440, 110],
       "features": ["brick_facade"],
-      "entries": [],
+      "entries": [
+        {
+          "id": "main",
+          "position": [5.46, 80.46],
+          "floor": "G",
+          "kind": "main",
+          "label": "Main entrance",
+          "confidence": "placeholder",
+          "notes": "PLACEHOLDER: midpoint of the longest facade on the south side, facing the A/C/D courtyard, the side the student map marks with entry points. Exact door position unknown (OPEN_QUESTIONS #39)."
+        }
+      ],
       "floors": [
         {
           "id": "G",
@@ -243,7 +253,17 @@
       ],
       "schematicBoxPx": [278, 612, 187, 133],
       "features": ["brick_facade"],
-      "entries": [],
+      "entries": [
+        {
+          "id": "main",
+          "position": [58.68, 13.59],
+          "floor": "G",
+          "kind": "main",
+          "label": "Main entrance",
+          "confidence": "placeholder",
+          "notes": "PLACEHOLDER: midpoint of the longest facade on the west side, facing the Highway, the side the student map marks with entry points. Exact door position unknown (OPEN_QUESTIONS #39)."
+        }
+      ],
       "floors": [
         {
           "id": "B1",
@@ -520,7 +540,17 @@
       ],
       "schematicBoxPx": [943, 440, 67, 180],
       "features": ["brick_facade"],
-      "entries": [],
+      "entries": [
+        {
+          "id": "main",
+          "position": [2.54, 109.24],
+          "floor": "G",
+          "kind": "main",
+          "label": "Main entrance",
+          "confidence": "placeholder",
+          "notes": "PLACEHOLDER: midpoint of the longest facade on the east side, facing the A/C/D courtyard, the side the student map marks with entry points. Exact door position unknown (OPEN_QUESTIONS #39)."
+        }
+      ],
       "floors": [
         {
           "id": "B1",
@@ -799,7 +829,17 @@
       ],
       "schematicBoxPx": [595, 368, 410, 98],
       "features": ["brick_facade"],
-      "entries": [],
+      "entries": [
+        {
+          "id": "main",
+          "position": [52.96, 105.97],
+          "floor": "G",
+          "kind": "main",
+          "label": "Main entrance",
+          "confidence": "placeholder",
+          "notes": "PLACEHOLDER: midpoint of the longest facade on the north side, facing the A/C/D courtyard, the side the student map marks with entry points. Exact door position unknown (OPEN_QUESTIONS #39)."
+        }
+      ],
       "floors": [
         {
           "id": "B1",
@@ -1146,7 +1186,17 @@
       ],
       "schematicBoxPx": [285, 468, 183, 132],
       "features": ["brick_facade"],
-      "entries": [],
+      "entries": [
+        {
+          "id": "main",
+          "position": [88.17, 86.65],
+          "floor": "G",
+          "kind": "main",
+          "label": "Main entrance",
+          "confidence": "placeholder",
+          "notes": "PLACEHOLDER: midpoint of the longest facade on the west side, facing the Highway, the side the student map marks with entry points. Exact door position unknown (OPEN_QUESTIONS #39)."
+        }
+      ],
       "floors": [
         {
           "id": "G",
@@ -1194,7 +1244,17 @@
       ],
       "schematicBoxPx": [295, 118, 305, 207],
       "features": ["modern_facade"],
-      "entries": [],
+      "entries": [
+        {
+          "id": "main",
+          "position": [120.47, 152.68],
+          "floor": "G",
+          "kind": "main",
+          "label": "Main entrance",
+          "confidence": "placeholder",
+          "notes": "PLACEHOLDER: midpoint of the longest facade on the north side, facing the Gate-3 path, the side the student map marks with entry points. Exact door position unknown (OPEN_QUESTIONS #39)."
+        }
+      ],
       "floors": [
         {
           "id": "B2",

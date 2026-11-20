@@ -54,7 +54,7 @@ interface Building {
   confidence: Confidence;
 }
 
-interface Entry { id: string; position: Vec2 | null; floor: string; kind: "main" | "side" | "stair" | "ramp"; label?: string }
+interface Entry { id: string; position: Vec2 | null; floor: string; kind: "main" | "side" | "stair" | "ramp"; label?: string; confidence?: Confidence; notes?: string }
 
 interface Floor {
   id: string;                // "B2","B1","G","1","2","3"
