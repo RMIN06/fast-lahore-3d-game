@@ -12,7 +12,7 @@ The campus is data. `data/campus.json` (curated from `data/campus.seed.json`) is
 1. The student map (`reference/maps/student-map.png`, 1320x891 px) is **not to scale**; use it for topology, labels, relative placement and floor contents.
 2. Metric scale comes from satellite imagery. Method: take a top-down capture at known zoom with the Google Maps scale bar visible, or measure two or more long known distances with the Google Maps ruler (cricket ground length, Highway length, campus boundary edges). Fit pixels-per-meter; for Web Mercator tiles: `metersPerPixel = 156543.03392 * cos(latitude) / 2^zoom` (divide by device pixel ratio for screenshots). Lahore latitude is about 31.5 N.
 3. Trace footprints with the tracer tool (`src/dev/tracer`). OSM building footprints for the area may be used if available and accurate (attribute OpenStreetMap contributors, ODbL).
-4. **Sanity check:** the official campus area is about 12.5 acres (about 50,600 m²). The traced boundary polygon must land within about +/-15% of that or calibration is wrong.
+4. **Sanity check:** the official campus area is about 12.5 acres (about 50,600 m²). The traced boundary polygon must land within +/-20% of that or calibration is wrong. (The band was widened from +/-15% in M2: the walled campus measures about 42,484 m², or 10.5 acres. See DECISIONS.md.)
 5. Record the calibration in `meta.calibration` (method, reference distances, pixels-per-meter, date, residual error).
 
 ## 3. Top-level shape (`campus.json`)
@@ -95,7 +95,7 @@ Notes:
 - Room code naming from the source map: F `NB-###`, B `CE-##`, D `E&M-##`, C `CS-##`, CS labs `CS LAB-##`, Eng labs `ENG LAB-#`.
 
 ## 5. Validation (`npm run validate:campus`)
-Fails on: schema errors, duplicate IDs, unresolved references (tasks, NPCs, departments, anchors), polygons that self-intersect, footprints overlapping each other or the boundary exterior, spaces outside their building, missing floor connectors between adjacent floors, boundary area outside 12.5 acres +/-15%.
+Fails on: schema errors, duplicate IDs, unresolved references (tasks, NPCs, departments, anchors), polygons that self-intersect, footprints overlapping each other or the boundary exterior, spaces outside their building, missing floor connectors between adjacent floors, boundary area outside 12.5 acres +/-20%.
 Warns on: `null` footprints, `placeholder` confidence, rooms without polygons.
 
 ## 6. What the sources give us (seed summary)

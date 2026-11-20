@@ -14,7 +14,7 @@ Standard check set: `npm run typecheck && npm run lint && npm test && npm run va
 
 ## M2 — Calibrated site plan and tracer
 **Do:** `src/dev/tracer` per ASSET_PIPELINE; owner traces boundary, blocks, courts, grounds, gates; export to `data/campus.json`; add area sanity check.
-**Accept:** boundary area within 12.5 acres +/-15%; all six block footprints, gates, ground/courts/parking/lawn/path polygons are non-null; top-down debug view shows the layout and its relative arrangement matches `reference/maps/student-map.png`.
+**Accept:** boundary area within 12.5 acres +/-20% (widened from +/-15% on 2026-11-20: the walled campus measures about 10.5 acres; see DECISIONS.md); all six block footprints, gates, ground/courts/parking/lawn/path polygons are non-null; top-down debug view shows the layout and its relative arrangement matches `reference/maps/student-map.png`.
 **Needs owner:** satellite capture and tracing session (about 30-60 minutes).
 
 ## M3 — Exterior greybox

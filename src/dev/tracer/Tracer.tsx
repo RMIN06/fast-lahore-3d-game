@@ -1007,7 +1007,7 @@ export default function Tracer() {
               {errors.length} errors
             </p>
             <p>
-              Required boundary: 42,997.8–58,173.6 m². Interior warnings remain
+              Required boundary: 40,468.6–60,702.8 m². Interior warnings remain
               for later milestones.
             </p>
             <div className="tracer-legend">

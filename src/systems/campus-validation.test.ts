@@ -559,6 +559,28 @@ test('loader rejects invalid JSON and includes offending paths for schema and re
   campus.departments[0]!.spawnAnchor = 'missing';
   expect(() => loadCampus(campus)).toThrow('departments.0.spawnAnchor');
 });
+test('boundary area sanity band is 12.5 acres ±20%', () => {
+  const expected = 12.5 * 4046.8564224;
+  const areaIssue = (factor: number) => {
+    const side = Math.sqrt(expected * factor);
+    const campus = valid();
+    campus.boundary.polygon = [
+      [0, 0],
+      [side, 0],
+      [side, side],
+      [0, side],
+    ];
+    return validateCampus(campus, { mode: 'curated' }).issues.some(
+      (issue) => issue.code === 'boundary-area',
+    );
+  };
+  expect(areaIssue(0.79)).toBe(true);
+  expect(areaIssue(0.801)).toBe(false);
+  // Measured walled campus (Esri World Imagery and OSM agree): ~42,484 m².
+  expect(areaIssue(42484 / expected)).toBe(false);
+  expect(areaIssue(1.199)).toBe(false);
+  expect(areaIssue(1.21)).toBe(true);
+});
 test('concave containment detects edges that leave the polygon even when vertices lie inside', () => {
   const concave: [number, number][] = [
     [0, 0],

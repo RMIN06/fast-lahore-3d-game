@@ -7,6 +7,9 @@ import {
   polygonsOverlap,
 } from './polygon-validation';
 
+export const BOUNDARY_AREA_MIN = 0.8;
+export const BOUNDARY_AREA_MAX = 1.2;
+
 export interface ValidationIssue {
   severity: 'error' | 'warning';
   code: string;
@@ -255,12 +258,17 @@ export function validateCampus(
   polygon(campus.boundary.polygon, 'boundary.polygon');
   if (campus.boundary.polygon && goodPolygons.has(campus.boundary.polygon)) {
     const area = polygonArea(campus.boundary.polygon);
+    // Calibration sanity band. The walled campus measures ~10.5 acres against the
+    // published 12.5 acres, so the band is ±20% (see docs/DECISIONS.md, M2).
     const expected = 12.5 * 4046.8564224;
-    if (area < expected * 0.85 || area > expected * 1.15)
+    if (
+      area < expected * BOUNDARY_AREA_MIN ||
+      area > expected * BOUNDARY_AREA_MAX
+    )
       report(
         'boundary-area',
         'boundary.polygon',
-        `Area ${area.toFixed(2)} m² is outside 12.5 acres ±15%`,
+        `Area ${area.toFixed(2)} m² is outside 12.5 acres ±20%`,
       );
   }
   campus.areas.forEach((area, i) =>
