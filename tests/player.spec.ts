@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { startNewGame, teleport } from './helpers';
 
 const position = async (page: Page) =>
   Promise.all(
@@ -18,8 +19,9 @@ test('player walks, sprints, jumps, switches camera and cannot leave through a g
   page.on('console', (message) => {
     if (message.type() === 'error') errors.push(message.text());
   });
-  await page.goto('/');
-  await expect(page.getByTestId('player-mode')).toHaveText('first');
+  await startNewGame(page);
+  // Start just inside Gate-5, facing into campus (the origin gate).
+  await teleport(page, 'gate:origin');
   await expect
     .poll(async () => page.getByTestId('player-grounded').textContent())
     .toBe('true');

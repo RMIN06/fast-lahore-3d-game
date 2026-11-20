@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { gameClock, useClockStore } from '../state/clock-store';
+import { useAppStore } from '../state/app-store';
 import { DAYS, SPEEDS, formatTime, parseTime } from '../systems/time';
 
 /** Time panel (T): pause, speed, set time and day (GAMEPLAY_SPEC §4). */
 export function TimePanel() {
-  const panelOpen = useClockStore((s) => s.panelOpen);
+  const panelOpen = useAppStore((s) => s.overlay === 'time');
   // Mounted only while open so its fields start from the current game time.
   return panelOpen ? <TimePanelBody /> : null;
 }
 
 function TimePanelBody() {
-  const { label, speed, paused, setSpeed, setPaused, setTime, setPanelOpen } =
+  const { label, speed, paused, setSpeed, setPaused, setTime } =
     useClockStore();
+  const setOverlay = useAppStore((s) => s.setOverlay);
   const [time, setTimeText] = useState(() => formatTime(gameClock.minutes));
   const [day, setDay] = useState(() => gameClock.day);
   const [error, setError] = useState('');
@@ -74,7 +76,7 @@ function TimePanelBody() {
       </form>
       {error && <p role="alert">{error}</p>}
       <p>1 real minute = 1 game hour at ×1. Press T or Esc to close.</p>
-      <button onClick={() => setPanelOpen(false)}>Close</button>
+      <button onClick={() => setOverlay(null)}>Close</button>
     </section>
   );
 }

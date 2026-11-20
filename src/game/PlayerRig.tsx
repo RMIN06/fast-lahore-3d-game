@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import type { Mesh, PerspectiveCamera } from 'three';
+import type { Group, PerspectiveCamera } from 'three';
+import type RAPIER from '@dimforge/rapier3d-compat';
 import { loadedCampus } from '../world/campus';
 import {
   campusBounds,
@@ -12,25 +13,29 @@ import { createPhysicsWorld, initRapier } from '../systems/physics';
 import type { Rapier, World } from '../systems/physics';
 import {
   cameraArmLength,
-  DEFAULT_PLAYER,
   FixedStepper,
   PlayerController,
+  playerConfigFor,
 } from '../systems/player-controller';
 import type { Vec3 } from '../systems/player-controller';
 import { InputState } from '../systems/input-map';
+import { DEFAULT_AVATAR } from '../systems/save';
 import { toggledMode, usePlayerStore } from '../state/player-store';
-import { useClockStore } from '../state/clock-store';
-import type RAPIER from '@dimforge/rapier3d-compat';
+import { useClockStore, gameClock } from '../state/clock-store';
+import { useAppStore } from '../state/app-store';
+import type { Overlay } from '../state/app-store';
 
-// M4 player: Rapier kinematic capsule, pointer-lock mouse look, first/third
-// person (V). Logic lives in src/systems; this component only wires it up.
+// Player: Rapier kinematic capsule, pointer-lock mouse look, first/third
+// person (V), overlays (Esc pause, T time, P phone, M map). Logic lives in
+// src/systems; this component only wires it up.
 
 const LOOK_SPEED = 0.0022;
 const MAX_PITCH = 1.45;
 const ARM_LENGTH = 3.5;
 const SHOULDER = 0.35;
-const PIVOT_HEIGHT = 1.6;
 const FOV = { first: 75, third: 65 } as const;
+/** Overlays that pause game time while open. */
+const PAUSING: Overlay[] = ['pause', 'settings'];
 
 interface Sim {
   R: Rapier;
@@ -38,6 +43,14 @@ interface Sim {
   player: PlayerController;
   colliders: Map<string, RAPIER.Collider>;
 }
+
+/** Release the mouse, remembering it was us (so it does not open the pause menu). */
+const releasePointer = (intentional: { current: boolean }) => {
+  if (document.pointerLockElement) {
+    intentional.current = true;
+    void document.exitPointerLock();
+  }
+};
 
 const applyGates = (
   colliders: Map<string, RAPIER.Collider>,
@@ -54,10 +67,14 @@ export function PlayerRig() {
   // Up to 10 catch-up steps keeps the simulation real-time down to ~6 FPS.
   const stepper = useMemo(() => new FixedStepper(1 / 60, 10), []);
   const look = useRef({ yaw: 0, pitch: 0 });
-  const capsule = useRef<Mesh>(null);
+  const body = useRef<Group>(null);
   const publishTimer = useRef(0);
+  const intentionalUnlock = useRef(false);
+  const pausedBefore = useRef<boolean>();
   const mode = usePlayerStore((s) => s.mode);
-  const panelOpen = useClockStore((s) => s.panelOpen);
+  const overlay = useAppStore((s) => s.overlay);
+  const avatar = useAppStore((s) => s.profile?.avatar ?? DEFAULT_AVATAR);
+  const config = useMemo(() => playerConfigFor(avatar.body), [avatar.body]);
   const gatesOpen = useClockStore((s) => s.gatesOpen);
 
   // Scheduled gates (e.g. Masjid-side at Jummah) stop blocking while open.
@@ -65,12 +82,20 @@ export function PlayerRig() {
     if (sim.current) applyGates(sim.current.colliders, gatesOpen);
   }, [gatesOpen]);
 
-  // The time panel takes the mouse and switches input to the menu layer.
+  // Overlays take the mouse and switch input to the menu layer; the pause
+  // menu and settings also pause game time, restoring it afterwards.
   useEffect(() => {
-    input.setContext(panelOpen ? 'menu' : 'explore');
-    if (panelOpen && document.pointerLockElement)
-      void document.exitPointerLock();
-  }, [input, panelOpen]);
+    input.setContext(overlay ? 'menu' : 'explore');
+    if (overlay) releasePointer(intentionalUnlock);
+    const clock = useClockStore.getState();
+    if (PAUSING.includes(overlay)) {
+      pausedBefore.current ??= gameClock.paused;
+      clock.setPaused(true);
+    } else if (pausedBefore.current !== undefined) {
+      clock.setPaused(pausedBefore.current);
+      pausedBefore.current = undefined;
+    }
+  }, [input, overlay]);
 
   // Build the physics world from campus data once Rapier's WASM is loaded.
   useEffect(() => {
@@ -83,18 +108,16 @@ export function PlayerRig() {
       const world = createPhysicsWorld(
         R,
         staticColliders(campus),
-        {
-          groundCenter: bounds.center,
-          groundHalfSize: bounds.size,
-        },
+        { groundCenter: bounds.center, groundHalfSize: bounds.size },
         colliders,
       );
-      const spawn = gateSpawn(campus);
-      const player = new PlayerController(R, world, [
-        spawn.position[0],
-        0,
-        spawn.position[1],
-      ]);
+      // Department spawn or saved position from the app; Gate-5 as a fallback.
+      const fallback = gateSpawn(campus);
+      const spawn = useAppStore.getState().spawn ?? {
+        position: [fallback.position[0], 0, fallback.position[1]] as Vec3,
+        yaw: fallback.yaw,
+      };
+      const player = new PlayerController(R, world, spawn.position, config);
       look.current = { yaw: spawn.yaw, pitch: 0 };
       sim.current = { R, world, player, colliders };
       applyGates(colliders, useClockStore.getState().gatesOpen);
@@ -106,7 +129,7 @@ export function PlayerRig() {
       sim.current = undefined;
       usePlayerStore.getState().setReady(false);
     };
-  }, []);
+  }, [config]);
 
   // Keyboard through the layered input map; mouse look under pointer lock.
   useEffect(() => {
@@ -137,9 +160,20 @@ export function PlayerRig() {
     const click = () => {
       if (
         usePlayerStore.getState().mode !== 'free' &&
-        !useClockStore.getState().panelOpen
+        !useAppStore.getState().overlay
       )
         void canvas.requestPointerLock?.();
+    };
+    // Losing the mouse lock (e.g. the browser's own Esc) opens the pause menu.
+    const lockChange = () => {
+      if (document.pointerLockElement) return;
+      if (intentionalUnlock.current) {
+        intentionalUnlock.current = false;
+        return;
+      }
+      const app = useAppStore.getState();
+      if (!app.overlay && usePlayerStore.getState().mode !== 'free')
+        app.setOverlay('pause');
     };
     const move = (event: MouseEvent) => {
       if (document.pointerLockElement !== canvas) return;
@@ -154,14 +188,17 @@ export function PlayerRig() {
     window.addEventListener('keyup', up);
     window.addEventListener('blur', blur);
     canvas.addEventListener('click', click);
+    document.addEventListener('pointerlockchange', lockChange);
     document.addEventListener('mousemove', move);
     return () => {
       window.removeEventListener('keydown', down);
       window.removeEventListener('keyup', up);
       window.removeEventListener('blur', blur);
       canvas.removeEventListener('click', click);
+      document.removeEventListener('pointerlockchange', lockChange);
       document.removeEventListener('mousemove', move);
       input.clear();
+      if (document.pointerLockElement) void document.exitPointerLock();
     };
   }, [gl, input]);
 
@@ -173,7 +210,7 @@ export function PlayerRig() {
       lens.near = overview.near;
       lens.fov = overview.fov;
       lens.position.set(...overview.position);
-      if (document.pointerLockElement) void document.exitPointerLock();
+      releasePointer(intentionalUnlock);
     } else {
       lens.near = 0.1;
       lens.fov = FOV[mode];
@@ -185,12 +222,19 @@ export function PlayerRig() {
     const s = sim.current;
     if (!s) return;
     const state = usePlayerStore.getState();
+    const app = useAppStore.getState();
+    const toggle = (o: Overlay) => app.setOverlay(app.overlay === o ? null : o);
+    if (input.consume('pause')) app.setOverlay(app.overlay ? null : 'pause');
+    else if (input.consume('timePanel')) toggle('time');
+    else if (input.consume('phone')) toggle('phone');
+    else if (input.consume('map')) toggle('map');
     if (input.consume('toggleCamera')) state.setMode(toggledMode(state.mode));
-    const clock = useClockStore.getState();
-    if (input.consume('timePanel')) clock.setPanelOpen(!clock.panelOpen);
-    else if (clock.panelOpen && input.consume('pause'))
-      clock.setPanelOpen(false);
-    const current = usePlayerStore.getState().mode;
+    if (state.teleport) {
+      s.player.teleport(state.teleport.position);
+      look.current = { yaw: state.teleport.yaw, pitch: 0 };
+      state.requestTeleport(undefined);
+    }
+    const current = state.mode;
 
     const steps = stepper.advance(Math.min(delta, 0.25));
     // Keep a jump press pending until a physics step actually runs.
@@ -210,25 +254,17 @@ export function PlayerRig() {
       }
 
     const feet = s.player.feet();
-    if (capsule.current) {
-      capsule.current.position.set(
-        feet[0],
-        feet[1] + DEFAULT_PLAYER.height / 2,
-        feet[2],
-      );
-      capsule.current.rotation.y = look.current.yaw;
-      capsule.current.visible = current !== 'first';
+    if (body.current) {
+      body.current.position.set(feet[0], feet[1], feet[2]);
+      body.current.rotation.y = look.current.yaw;
+      body.current.visible = current !== 'first';
     }
 
     if (current !== 'free') {
       const { yaw, pitch } = look.current;
       camera.rotation.set(0, 0, 0);
       if (current === 'first') {
-        camera.position.set(
-          feet[0],
-          feet[1] + DEFAULT_PLAYER.eyeHeight,
-          feet[2],
-        );
+        camera.position.set(feet[0], feet[1] + config.eyeHeight, feet[2]);
         camera.rotation.order = 'YXZ';
         camera.rotation.set(pitch, yaw, 0);
       } else {
@@ -241,7 +277,7 @@ export function PlayerRig() {
         const back: Vec3 = [-view[0], -view[1], -view[2]];
         const pivot: Vec3 = [
           feet[0] + Math.cos(yaw) * SHOULDER,
-          feet[1] + PIVOT_HEIGHT,
+          feet[1] + config.eyeHeight - 0.05,
           feet[2] - Math.sin(yaw) * SHOULDER,
         ];
         const arm = cameraArmLength(
@@ -271,24 +307,32 @@ export function PlayerRig() {
       publishTimer.current = 0;
       state.publish({
         position: feet,
+        yaw: look.current.yaw,
         grounded: s.player.grounded,
         sprinting: sprint && (forward !== 0 || right !== 0),
       });
     }
   });
 
-  // Capsule placeholder at the real player height (radius 0.3 m, 1.75 m tall).
+  // Placeholder body until M8: capsule in the outfit colour at the avatar's
+  // real height, with a head sphere in the chosen skin tone.
   return (
-    <mesh ref={capsule} name="player-capsule">
-      <capsuleGeometry
-        args={[
-          DEFAULT_PLAYER.radius,
-          DEFAULT_PLAYER.height - DEFAULT_PLAYER.radius * 2,
-          6,
-          12,
-        ]}
-      />
-      <meshStandardMaterial color="#f0d58c" roughness={0.6} />
-    </mesh>
+    <group ref={body} name="player-body">
+      <mesh position={[0, (config.height - 0.24) / 2, 0]} castShadow>
+        <capsuleGeometry
+          args={[
+            config.radius,
+            config.height - 0.24 - config.radius * 2,
+            6,
+            12,
+          ]}
+        />
+        <meshStandardMaterial color={avatar.outfitColor} roughness={0.7} />
+      </mesh>
+      <mesh position={[0, config.height - 0.13, 0]} castShadow>
+        <sphereGeometry args={[0.13, 12, 10]} />
+        <meshStandardMaterial color={avatar.skinTone} roughness={0.6} />
+      </mesh>
+    </group>
   );
 }

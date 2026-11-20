@@ -94,6 +94,20 @@ export class PlayerController {
     world.step();
   }
 
+  /** Move instantly (spawn, continue, debug teleport); clears falling speed. */
+  teleport(feet: Vec3): void {
+    const p = {
+      x: feet[0],
+      y: feet[1] + this.config.height / 2,
+      z: feet[2],
+    };
+    this.body.setTranslation(p, true);
+    this.body.setNextKinematicTranslation(p);
+    this.verticalSpeed = 0;
+    this.grounded = false;
+    this.world.step();
+  }
+
   /** Feet position (bottom of the capsule). */
   feet(): Vec3 {
     const t = this.body.translation();
@@ -184,4 +198,10 @@ export function cameraArmLength(
     exclude,
   );
   return hit ? Math.max(0.3, hit.timeOfImpact - margin) : maxLength;
+}
+
+/** Capsule and eye heights per avatar body (GAMEPLAY_SPEC §3: eyes 1.65 m / 1.58 m). */
+export function playerConfigFor(body: 'male' | 'female'): PlayerConfig {
+  const eyeHeight = body === 'female' ? 1.58 : 1.65;
+  return { ...DEFAULT_PLAYER, eyeHeight, height: eyeHeight + 0.1 };
 }

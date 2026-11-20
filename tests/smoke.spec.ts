@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { startNewGame } from './helpers';
 
 test('renders the M3 campus greybox overview within budget without browser errors', async ({
   page,
@@ -8,9 +9,9 @@ test('renders the M3 campus greybox overview within budget without browser error
   page.on('console', (message) => {
     if (message.type() === 'error') errors.push(message.text());
   });
-  await page.goto('/');
+  await startNewGame(page);
   await expect(
-    page.getByRole('heading', { name: 'M5 · Time, sky and lighting' }),
+    page.getByRole('heading', { name: 'M6 · Registration, save and HUD' }),
   ).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();

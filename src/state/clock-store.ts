@@ -21,12 +21,10 @@ interface ClockState {
   paused: boolean;
   dayType: GameClock['dayType'];
   gatesOpen: Record<string, boolean>;
-  panelOpen: boolean;
   publish: () => void;
   setSpeed: (speed: Speed) => void;
   setPaused: (paused: boolean) => void;
   setTime: (minutes: number, day?: number) => void;
-  setPanelOpen: (open: boolean) => void;
 }
 
 const snapshot = () => ({
@@ -39,7 +37,6 @@ const snapshot = () => ({
 
 export const useClockStore = create<ClockState>((set, get) => ({
   ...snapshot(),
-  panelOpen: false,
   publish: () => {
     const next = snapshot();
     const current = get();
@@ -67,5 +64,4 @@ export const useClockStore = create<ClockState>((set, get) => ({
     if (day !== undefined) gameClock.setDay(day);
     get().publish();
   },
-  setPanelOpen: (panelOpen) => set({ panelOpen }),
 }));

@@ -32,6 +32,7 @@ import { lightingAt } from '../systems/time';
 import type { Lighting } from '../systems/time';
 import { gameClock, useClockStore } from '../state/clock-store';
 import { usePlayerStore } from '../state/player-store';
+import { useAppStore } from '../state/app-store';
 
 // M5 time of day: sky, sun (with shadows), moon, stars, fog, exposure, lamp
 // posts and window glow, all driven by the game clock.
@@ -45,6 +46,8 @@ const LAMP_OFF = new Color('#5c5a52');
 export function Environment() {
   const { campus } = loadedCampus;
   const { gl, scene } = useThree();
+  const setDpr = useThree((s) => s.setDpr);
+  const graphics = useAppStore((s) => s.settings.graphics);
   const { center, size } = useMemo(() => campusBounds(campus), [campus]);
   const sun = useRef<DirectionalLight>(null);
   const moonLight = useRef<DirectionalLight>(null);
@@ -55,6 +58,22 @@ export function Environment() {
   const lastQuarter = useRef(-1);
   const publishTimer = useRef(0);
   const lighting = useRef<Lighting>(lightingAt(gameClock.minutes));
+
+  // Graphics preset (settings): resolution scale and sun shadow quality.
+  useEffect(() => {
+    const ratio = window.devicePixelRatio || 1;
+    setDpr(
+      graphics === 'low' ? 1 : Math.min(ratio, graphics === 'high' ? 2 : 1.5),
+    );
+    const light = sun.current;
+    if (light) {
+      const size = graphics === 'high' ? 2048 : 1024;
+      light.shadow.mapSize.set(size, size);
+      light.shadow.map?.dispose();
+      light.shadow.map = null;
+    }
+    lastQuarter.current = -1; // re-apply lighting (shadows on/off)
+  }, [graphics, setDpr]);
 
   const target = useMemo(() => new Object3D(), []);
   const fog = useMemo(() => new Fog('#b9d2e6', 120, size * 3), [size]);
@@ -162,7 +181,9 @@ export function Environment() {
       lamps.pool.visible = l.lampsOn;
       if (sun.current) {
         sun.current.intensity = l.sunIntensity;
-        sun.current.castShadow = l.sunIntensity > 0.05;
+        sun.current.castShadow =
+          l.sunIntensity > 0.05 &&
+          useAppStore.getState().settings.graphics !== 'low';
       }
       if (moonLight.current) moonLight.current.intensity = l.moonIntensity;
       if (moon.current) moon.current.visible = l.daylight < 0.5;

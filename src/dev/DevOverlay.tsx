@@ -5,6 +5,7 @@ import { useMetricsStore } from './metrics-store';
 import { usePlayerStore } from '../state/player-store';
 import { useClockStore } from '../state/clock-store';
 import { loadedCampus } from '../world/campus';
+import { gateSpawn } from '../systems/campus-geometry';
 
 const TOGGLES: [DebugToggle, string][] = [
   ['confidenceColors', 'Confidence colors'],
@@ -27,6 +28,7 @@ export default function DevOverlay() {
     .filter(([, open]) => open)
     .map(([id]) => id);
   const [showCampusData, setShowCampusData] = useState(false);
+  const [target, setTarget] = useState('gate:origin');
   const { campus, warnings } = loadedCampus;
 
   return (
@@ -76,6 +78,45 @@ export default function DevOverlay() {
         />
         Free camera (orbit)
       </label>
+      <label>
+        Teleport
+        <select
+          value={target}
+          onChange={(event) => setTarget(event.target.value)}
+          aria-label="Teleport target"
+        >
+          <option value="gate:origin">Inside Gate-5 (origin)</option>
+          {loadedCampus.campus.anchors.map((a) =>
+            a.position ? (
+              <option key={a.id} value={a.id}>
+                {a.id}
+              </option>
+            ) : null,
+          )}
+        </select>
+      </label>
+      <button
+        disabled={!player.ready || player.mode === 'free'}
+        onClick={() => {
+          const { campus } = loadedCampus;
+          if (target === 'gate:origin') {
+            const spawn = gateSpawn(campus);
+            player.requestTeleport({
+              position: [spawn.position[0], 0, spawn.position[1]],
+              yaw: spawn.yaw,
+            });
+            return;
+          }
+          const anchor = campus.anchors.find((a) => a.id === target);
+          if (anchor?.position)
+            player.requestTeleport({
+              position: anchor.position,
+              yaw: (-(anchor.heading ?? 0) * Math.PI) / 180,
+            });
+        }}
+      >
+        Teleport
+      </button>
       <dl aria-label="Player state">
         <dt>Camera</dt>
         <dd data-testid="player-mode">

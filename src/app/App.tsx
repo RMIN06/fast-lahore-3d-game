@@ -1,11 +1,15 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { CampusScene } from '../game/CampusScene';
 import { PlayerRig } from '../game/PlayerRig';
 import { Environment } from '../game/Environment';
 import { Hud } from '../ui/Hud';
 import { TimePanel } from '../ui/TimePanel';
+import { Overlays } from '../ui/Overlays';
+import { TitleScreen } from '../ui/TitleScreen';
+import { RegisterScreen } from '../ui/RegisterScreen';
 import { usePlayerStore } from '../state/player-store';
+import { useAppStore } from '../state/app-store';
 import { loadedCampus } from '../world/campus';
 import { campusCamera } from '../systems/campus-geometry';
 
@@ -20,24 +24,38 @@ const Tracer = import.meta.env.DEV
   : null;
 
 const camera = campusCamera(loadedCampus.campus);
+const AUTOSAVE_SECONDS = 60;
 
-export function App() {
+/** The 3D game with HUD and overlays; remounted for each new game/continue. */
+function GameScreen() {
   const mode = usePlayerStore((s) => s.mode);
-  if (Tracer && window.location.pathname === '/dev/tracer')
-    return (
-      <Suspense fallback={<p>Loading tracer…</p>}>
-        <Tracer />
-      </Suspense>
-    );
+  const overlay = useAppStore((s) => s.overlay);
+
+  // Autosave every minute and whenever the page is hidden or closed.
+  useEffect(() => {
+    const save = () => useAppStore.getState().saveNow();
+    const timer = window.setInterval(save, AUTOSAVE_SECONDS * 1000);
+    const hidden = () => {
+      if (document.visibilityState === 'hidden') save();
+    };
+    document.addEventListener('visibilitychange', hidden);
+    window.addEventListener('pagehide', save);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', hidden);
+      window.removeEventListener('pagehide', save);
+    };
+  }, []);
+
   return (
     <main>
       <header>
         <p>FAST LAHORE / DEVELOPMENT</p>
-        <h1>M5 · Time, sky and lighting</h1>
+        <h1>M6 · Registration, save and HUD</h1>
         <p data-testid="controls-hint">
           {mode === 'free'
             ? 'Free camera: drag to orbit · scroll to zoom · right-drag to pan'
-            : 'Click to look around · WASD move · Shift sprint · Space jump · V first/third person · T time panel · Esc releases the mouse'}
+            : 'Click to look around · WASD move · Shift sprint · Space jump · V camera · T time · P phone · M map · Esc pause'}
         </p>
       </header>
       <Canvas
@@ -55,9 +73,12 @@ export function App() {
           </Suspense>
         )}
       </Canvas>
-      {mode === 'first' && <div className="crosshair" aria-hidden />}
+      {mode === 'first' && !overlay && (
+        <div className="crosshair" aria-hidden />
+      )}
       <Hud />
       <TimePanel />
+      <Overlays />
       {DevOverlay && (
         <Suspense fallback={null}>
           <DevOverlay />
@@ -70,4 +91,18 @@ export function App() {
       </footer>
     </main>
   );
+}
+
+export function App() {
+  const screen = useAppStore((s) => s.screen);
+  const session = useAppStore((s) => s.session);
+  if (Tracer && window.location.pathname === '/dev/tracer')
+    return (
+      <Suspense fallback={<p>Loading tracer…</p>}>
+        <Tracer />
+      </Suspense>
+    );
+  if (screen === 'title') return <TitleScreen />;
+  if (screen === 'register') return <RegisterScreen />;
+  return <GameScreen key={session} />;
 }
