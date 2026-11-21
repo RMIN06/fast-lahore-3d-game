@@ -92,7 +92,12 @@ export interface InteriorLayout {
 
 const WALL = 0.2;
 const SLAB = 0.2;
-const DOOR_WIDTH = 1.4;
+export const DOOR_WIDTH = 1.4;
+/** Room door leaf height (M10). */
+export const DOOR_LEAF_HEIGHT = 2.1;
+/** Rooms whose doorway has a door leaf (not parking or open seating). */
+export const hasDoorLeaf = (room: { kind: string }) =>
+  !['parking', 'open_seating'].includes(room.kind);
 const ENTRY_WIDTH = 3;
 const ENTRY_HEIGHT = 2.7;
 const SHAFT_WIDTH = 2.4;
@@ -837,6 +842,23 @@ export function interiorColliders(layout: InteriorLayout): StaticCollider[] {
       rotationY: yaw,
     });
   });
+  // M10 room doors: one leaf per doorway. Physics enables the collider only
+  // while the door is shut; the navmesh ignores "door:" colliders.
+  for (const floor of layout.floors)
+    for (const room of floor.rooms) {
+      if (!hasDoorLeaf(room)) continue;
+      const c = toWorld(f, room.door.u, room.door.v);
+      const along = toWorld(f, -room.doorFacing.v, room.doorFacing.u);
+      const dx = along[0] - f.origin[0],
+        dz = along[1] - f.origin[1];
+      out.push({
+        kind: 'box',
+        id: `door:${room.spaceId}`,
+        center: [c[0], room.anchor[1] + DOOR_LEAF_HEIGHT / 2, c[1]],
+        halfExtents: [DOOR_WIDTH / 2, DOOR_LEAF_HEIGHT / 2, 0.06],
+        rotationY: Math.atan2(-dz, dx),
+      });
+    }
   layout.ramps.forEach((r, i) => {
     const t = 0.2;
     const run = r.rect.u1 - r.rect.u0,

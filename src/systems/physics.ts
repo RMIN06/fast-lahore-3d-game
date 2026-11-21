@@ -146,6 +146,8 @@ export function createPhysicsWorld(
           .setRotation(rotation(collider.rotationY, collider.tiltZ)),
         fixed,
       );
+      // Room doors start open (M10): their colliders block only once shut.
+      if (collider.id.startsWith('door:')) created.setEnabled(false);
       registry?.set(collider.id, created);
     } else {
       const { vertices, indices } = prismSides(collider);

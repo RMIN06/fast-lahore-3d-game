@@ -159,7 +159,8 @@ export function navMeshInput(
     flatPolygon(soup, pathOutline, [], 0.01);
   }
   for (const c of colliders) {
-    if (c.id.startsWith('gate:')) continue;
+    // Gates and room doors open and close; NPCs path through them.
+    if (c.id.startsWith('gate:') || c.id.startsWith('door:')) continue;
     if (c.kind === 'box') boxTriangles(soup, c);
     else {
       const { vertices, indices } = prismSides(c);
