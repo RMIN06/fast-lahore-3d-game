@@ -3,6 +3,8 @@ import { useDebugStore } from '../state/debug-store';
 import type { DebugToggle } from '../state/debug-store';
 import { useMetricsStore } from './metrics-store';
 import { useNpcStore } from '../state/npc-store';
+import { useTaskStore } from '../state/task-store';
+import { taskTeleport } from './task-teleport';
 import { usePlayerStore } from '../state/player-store';
 import { useClockStore } from '../state/clock-store';
 import { loadedCampus } from '../world/campus';
@@ -33,6 +35,12 @@ export default function DevOverlay() {
     .map(([id]) => id);
   const [showCampusData, setShowCampusData] = useState(false);
   const [target, setTarget] = useState('gate:origin');
+  const [taskTarget, setTaskTarget] = useState('');
+  useTaskStore((s) => s.rev);
+  const engine = useTaskStore((s) => s.engine);
+  const focus = useTaskStore((s) => s.focus);
+  const seated = useTaskStore((s) => s.seated);
+  const hint = engine.hint();
   const { campus, warnings } = loadedCampus;
 
   return (
@@ -188,6 +196,59 @@ export default function DevOverlay() {
           {openGates.length ? openGates.join(', ') : 'none'}
         </dd>
       </dl>
+      <dl aria-label="Task state">
+        <dt>Task</dt>
+        <dd>
+          <span data-testid="task-id">{engine.active?.task.id ?? 'none'}</span>{' '}
+          step{' '}
+          <span data-testid="task-step-index">
+            {engine.active?.index ?? -1}
+          </span>{' '}
+          <span data-testid="task-step-kind">{engine.step?.kind ?? ''}</span>
+        </dd>
+        <dt>Targets</dt>
+        <dd>
+          <span data-testid="task-targets">
+            {hint?.fixtures.slice(0, 4).join(' ')}
+          </span>
+          <span data-testid="task-places">
+            {hint?.places.slice(0, 3).join(' ')}
+          </span>
+          <span data-testid="task-actor">{hint?.actor ?? ''}</span>
+        </dd>
+        <dt>Focus</dt>
+        <dd>
+          <span data-testid="focus-id">{focus?.id ?? ''}</span>
+          {seated ? (
+            <span data-testid="seated-id"> seated {seated.id}</span>
+          ) : null}
+        </dd>
+        <dt>Last</dt>
+        <dd data-testid="task-last">
+          {engine.last ? `${engine.last.taskId}:${engine.last.result}` : ''}
+        </dd>
+        <dt>Done</dt>
+        <dd data-testid="tasks-completed">{engine.completed.join(' ')}</dd>
+      </dl>
+      <label>
+        Go to
+        <input
+          type="text"
+          value={taskTarget}
+          aria-label="Task target"
+          placeholder="fixture:… actor:… space:… area:… gate:…"
+          onChange={(event) => setTaskTarget(event.target.value)}
+        />
+      </label>
+      <button
+        disabled={!player.ready || player.mode === 'free'}
+        onClick={() => {
+          const to = taskTeleport(taskTarget.trim());
+          if (to) player.requestTeleport(to);
+        }}
+      >
+        Go
+      </button>
       <label>
         <input
           type="checkbox"

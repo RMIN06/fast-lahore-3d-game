@@ -104,7 +104,8 @@ test('save, reload and Continue restore position, time and settings; menus work'
   await expect(phone).toBeVisible();
   await expect(phone.getByTestId('map-player')).toBeVisible();
   await phone.getByRole('tab', { name: 'Tasks' }).click();
-  await expect(phone).toContainText('No tasks yet');
+  await expect(phone).toContainText('No active task');
+  await expect(phone.getByTestId('task-attend-class')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(phone).toBeHidden();
   await page.keyboard.press('KeyM');

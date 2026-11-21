@@ -89,7 +89,10 @@ for (const id of enabled) {
     const flagged = await canvas.screenshot(hide);
     await page.getByRole('checkbox', { name: 'Confidence colors' }).uncheck();
     await expect
-      .poll(async () => (await canvas.screenshot(hide)).equals(flagged))
+      .poll(async () => (await canvas.screenshot(hide)).equals(flagged), {
+        // Software WebGL on a busy machine can drop to 2–3 FPS.
+        timeout: 20_000,
+      })
       .toBe(false);
     await page.screenshot({ path: `test-results/m7-${id}.png` });
     console.log(

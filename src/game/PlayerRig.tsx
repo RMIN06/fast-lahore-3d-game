@@ -26,6 +26,17 @@ import { toggledMode, usePlayerStore } from '../state/player-store';
 import { useClockStore, gameClock } from '../state/clock-store';
 import { useAppStore } from '../state/app-store';
 import type { Overlay } from '../state/app-store';
+import { actorPoses, taskData, useTaskStore } from '../state/task-store';
+import {
+  ambientLine,
+  FOCUS_HEIGHT,
+  pickFocus,
+  VERB,
+} from '../systems/interaction';
+import type { Interactable } from '../systems/interaction';
+import { SEATING } from '../systems/fixtures';
+import type { Fixture } from '../systems/fixtures';
+import { npcFeet } from '../state/npc-store';
 
 // Player: Rapier kinematic capsule, pointer-lock mouse look, first/third
 // person (V), overlays (Esc pause, T time, P phone, M map). Logic lives in
@@ -62,6 +73,62 @@ const applyGates = (
     colliders.get(`gate:${id}`)?.setEnabled(!isOpen);
 };
 
+/** Interactables near the feet: fixtures and task actors (M10). */
+function findFocus(s: Sim, feet: Vec3, yaw: number): Interactable | undefined {
+  const { fixtures } = taskData();
+  // A desk or bench someone is using belongs to them: talk to the person.
+  const taken = useTaskStore.getState().engine.occupied();
+  const near: Interactable[] = [];
+  for (const f of fixtures) {
+    if (taken.has(f.id)) continue;
+    if (
+      Math.abs(f.position[0] - feet[0]) > 3 ||
+      Math.abs(f.position[2] - feet[2]) > 3
+    )
+      continue;
+    near.push({
+      id: f.id,
+      type: 'fixture',
+      position: f.position,
+      height: FOCUS_HEIGHT[f.kind],
+      label: f.label,
+      verb: VERB[f.kind],
+      fixture: f,
+    });
+  }
+  for (const a of actorPoses(useTaskStore.getState().engine))
+    near.push({
+      id: a.id,
+      type: 'actor',
+      // Slightly closer than the bench or lectern they are at, so they win.
+      position: a.position,
+      height: a.sitting ? 1 : 1.5,
+      label: a.name,
+      verb: 'Talk',
+    });
+  const eye = { x: feet[0], y: feet[1] + 1.5, z: feet[2] };
+  return pickFocus(feet, yaw, near, (c) => {
+    const to = {
+      x: c.position[0] - eye.x,
+      y: c.position[1] + c.height - eye.y,
+      z: c.position[2] - eye.z,
+    };
+    const d = Math.hypot(to.x, to.y, to.z);
+    if (d < 0.3) return false;
+    const ray = new s.R.Ray(eye, { x: to.x / d, y: to.y / d, z: to.z / d });
+    const hit = s.world.castRay(
+      ray,
+      d,
+      true,
+      undefined,
+      undefined,
+      s.player.collider,
+    );
+    // A wall in between (a shut door being looked at is the target itself).
+    return Boolean(hit && hit.timeOfImpact < d - 0.35);
+  });
+}
+
 export function PlayerRig() {
   const { camera, gl } = useThree();
   const sim = useRef<Sim>();
@@ -73,6 +140,7 @@ export function PlayerRig() {
   const lastFeet = useRef<Vec3>();
   const publishTimer = useRef(0);
   const intentionalUnlock = useRef(false);
+  const focusTimer = useRef(0);
   const pausedBefore = useRef<boolean>();
   const mode = usePlayerStore((s) => s.mode);
   const overlay = useAppStore((s) => s.overlay);
@@ -98,7 +166,9 @@ export function PlayerRig() {
   // Overlays take the mouse and switch input to the menu layer; the pause
   // menu and settings also pause game time, restoring it afterwards.
   useEffect(() => {
-    input.setContext(overlay ? 'menu' : 'explore');
+    input.setContext(
+      overlay === 'dialogue' ? 'dialogue' : overlay ? 'menu' : 'explore',
+    );
     if (overlay) releasePointer(intentionalUnlock);
     const clock = useClockStore.getState();
     if (PAUSING.includes(overlay)) {
@@ -243,12 +313,17 @@ export function PlayerRig() {
     const state = usePlayerStore.getState();
     const app = useAppStore.getState();
     const toggle = (o: Overlay) => app.setOverlay(app.overlay === o ? null : o);
-    if (input.consume('pause')) app.setOverlay(app.overlay ? null : 'pause');
-    else if (input.consume('timePanel')) toggle('time');
+    const tasks = useTaskStore.getState();
+    // Esc in a conversation is handled by the dialogue box (walk away).
+    if (input.consume('pause')) {
+      if (app.overlay !== 'dialogue')
+        app.setOverlay(app.overlay ? null : 'pause');
+    } else if (input.consume('timePanel')) toggle('time');
     else if (input.consume('phone')) toggle('phone');
     else if (input.consume('map')) toggle('map');
     if (input.consume('toggleCamera')) state.setMode(toggledMode(state.mode));
     if (state.teleport) {
+      if (tasks.seated) tasks.setSeated(undefined);
       s.player.teleport(state.teleport.position);
       look.current = { yaw: state.teleport.yaw, pitch: 0 };
       state.requestTeleport(undefined);
@@ -260,7 +335,12 @@ export function PlayerRig() {
     let jump = steps > 0 && input.consume('jump');
     const { forward, right } = input.axes();
     const sprint = input.isHeld('sprint');
-    if (current !== 'free')
+    // Seated: any movement key (or jump) stands up; otherwise stay put.
+    if (tasks.seated && (forward !== 0 || right !== 0 || jump)) {
+      tasks.setSeated(undefined);
+      jump = false;
+    }
+    if (current !== 'free' && !useTaskStore.getState().seated)
       for (let i = 0; i < steps; i += 1) {
         s.player.step(stepper.dt, {
           forward,
@@ -289,7 +369,9 @@ export function PlayerRig() {
       );
       bodyYaw.current += diff * Math.min(1, delta * 12);
     } else if (current === 'first') bodyYaw.current = look.current.yaw;
-    const action = state.animAction;
+    const seat = useTaskStore.getState().seated;
+    if (seat) bodyYaw.current = seat.yaw;
+    const action = seat ? 'sit' : state.animAction;
     if (action === 'kick' || action === 'swing') state.requestAction(undefined);
     const pose = animator.update({
       distance: moved,
@@ -343,6 +425,44 @@ export function PlayerRig() {
         );
       }
     }
+
+    // M10 interaction: what is in front of the player, and E to use it.
+    focusTimer.current += delta;
+    if (focusTimer.current >= 0.1 && current !== 'free') {
+      focusTimer.current = 0;
+      tasks.setFocus(
+        tasks.seated || app.overlay
+          ? undefined
+          : findFocus(s, feet, look.current.yaw),
+      );
+    }
+    if (input.consume('interact') && current !== 'free') {
+      const t = useTaskStore.getState();
+      if (t.seated) t.setSeated(undefined);
+      else if (t.focus) {
+        const f = t.focus;
+        if (f.type === 'actor') {
+          if (!t.engine.talk(f.id)) t.notify(`${f.label}: Not now, please.`);
+          t.bump();
+        } else if (f.fixture!.kind === 'door') t.doors.toggle(f.id);
+        else if (t.engine.use(f.fixture!)) t.bump();
+        else if (SEATING.includes(f.fixture!.kind)) {
+          const seatAt: Fixture = f.fixture!;
+          s.player.teleport(seatAt.position);
+          look.current = { yaw: seatAt.yaw, pitch: look.current.pitch };
+          bodyYaw.current = seatAt.yaw;
+          lastFeet.current = undefined;
+          t.setSeated(seatAt);
+        } else {
+          const line = ambientLine(f.fixture!, loadedCampus.campus);
+          if (line.dialogue) t.openDialogue(line.dialogue, f.label, {}, false);
+          else t.notify(line.text);
+        }
+      }
+    }
+    // Doors: NPCs open them; shut doors enable their colliders.
+    for (const id of tasks.doors.update(Math.min(delta, 0.1), npcFeet).changed)
+      s.colliders.get(id)?.setEnabled(tasks.doors.blocking(id));
 
     // Publish to React ~10 Hz; never per frame.
     publishTimer.current += delta;

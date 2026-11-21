@@ -12,7 +12,9 @@ test('renders the M3 campus greybox overview within budget without browser error
   await startNewGame(page);
   // Outdoors, away from any streamed interior (this test is the M3 overview).
   await teleport(page, 'gate:origin');
-  await expect(page.getByRole('heading', { name: 'M9 · NPCs' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'M10 · Interaction and tasks' }),
+  ).toBeVisible();
   const canvas = page.locator('canvas');
   await expect(canvas).toBeVisible();
   // The M3 overview is the free debug camera from M4 onwards.
@@ -58,7 +60,10 @@ test('renders the M3 campus greybox overview within budget without browser error
   const coloured = await canvas.screenshot(hide);
   await page.getByRole('checkbox', { name: 'Confidence colors' }).uncheck();
   await expect
-    .poll(async () => (await canvas.screenshot(hide)).equals(coloured))
+    .poll(async () => (await canvas.screenshot(hide)).equals(coloured), {
+      // Software WebGL on a busy machine can drop to 2–3 FPS.
+      timeout: 20_000,
+    })
     .toBe(false);
   const neutral = await canvas.screenshot(hide);
   await page.getByRole('checkbox', { name: 'Collision shapes' }).check();

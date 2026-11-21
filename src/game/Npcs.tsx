@@ -25,7 +25,7 @@ import type { NpcState } from '../systems/npc-sim';
 import type { Vec3 } from '../systems/npc';
 import { gameClock } from '../state/clock-store';
 import { usePlayerStore } from '../state/player-store';
-import { useNpcStore } from '../state/npc-store';
+import { npcFeet, useNpcStore } from '../state/npc-store';
 import { useDebugStore } from '../state/debug-store';
 
 // M9 NPCs: loads the baked campus navmesh, runs the schedule/crowd simulation
@@ -201,7 +201,9 @@ export function Npcs() {
     }
 
     let seated = 0;
+    npcFeet.length = 0;
     for (const s of shown.current.values()) {
+      npcFeet.push(s.npc.position);
       const p = s.npc.position;
       let moved = Math.hypot(p[0] - s.last[0], p[2] - s.last[2]);
       if (moved > 2) moved = 0; // a re-plan jump is not a step

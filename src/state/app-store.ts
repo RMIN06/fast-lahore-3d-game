@@ -21,7 +21,8 @@ import { usePlayerStore } from './player-store';
 // App flow (PRD §5): Title → Register → Game, with Continue from a local save.
 
 export type Screen = 'title' | 'register' | 'game';
-export type Overlay = 'pause' | 'settings' | 'phone' | 'map' | 'time' | null;
+export type Overlay =
+  'pause' | 'settings' | 'phone' | 'map' | 'time' | 'dialogue' | null;
 
 export interface Spawn {
   position: [number, number, number];

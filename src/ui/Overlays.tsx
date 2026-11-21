@@ -3,6 +3,8 @@ import { useAppStore } from '../state/app-store';
 import { SettingsPanel } from './SettingsPanel';
 import { CampusMap } from './CampusMap';
 import { loadedCampus } from '../world/campus';
+import { MessagesTab, TasksTab, TimetableTab } from './PhoneTabs';
+import { DialogueBox } from './DialogueBox';
 
 /** Pause menu (PRD §5): resume, save, settings, time controls, exit to title. */
 function PauseMenu() {
@@ -34,7 +36,7 @@ function PauseMenu() {
 
 const TABS = ['Map', 'Timetable', 'Messages', 'Tasks'] as const;
 
-/** Phone shell (GAMEPLAY_SPEC §5). Timetable, messages and tasks arrive in M10. */
+/** Phone (GAMEPLAY_SPEC §5): map, timetable, messages, tasks, settings. */
 function Phone() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Map');
   const setOverlay = useAppStore((s) => s.setOverlay);
@@ -61,14 +63,10 @@ function Phone() {
       <div role="tabpanel" aria-label={tab} className="phone__body">
         {tab === 'Map' && <CampusMap />}
         {tab === 'Timetable' && (
-          <p>
-            {department?.name ?? 'Your department'} timetable: generated class
-            schedules arrive with tasks (M10). Template pending (OPEN_QUESTIONS
-            #18).
-          </p>
+          <TimetableTab department={department?.name ?? 'Your department'} />
         )}
-        {tab === 'Messages' && <p>No messages yet. Friends arrive in M10.</p>}
-        {tab === 'Tasks' && <p>No tasks yet. The task list arrives in M10.</p>}
+        {tab === 'Messages' && <MessagesTab />}
+        {tab === 'Tasks' && <TasksTab />}
       </div>
       <p className="panel__hint">P or Esc to close.</p>
     </section>
@@ -97,5 +95,6 @@ export function Overlays() {
     return <SettingsPanel onClose={() => setOverlay('pause')} />;
   if (overlay === 'phone') return <Phone />;
   if (overlay === 'map') return <MapOverlay />;
+  if (overlay === 'dialogue') return <DialogueBox />;
   return null;
 }

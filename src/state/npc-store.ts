@@ -18,3 +18,6 @@ export const useNpcStore = create<NpcCounts>(() => ({
   stuck: 0,
   pathFailures: 0,
 }));
+
+/** Feet of the NPCs drawn this frame (doors open for them, M10). */
+export const npcFeet: [number, number, number][] = [];
