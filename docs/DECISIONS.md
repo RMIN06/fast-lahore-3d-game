@@ -165,3 +165,25 @@
 - **Random spots in a room stay inside the building footprint** (with a 1 m margin). The generated room rectangles can extend past the irregular footprint of F.
 - **Shared NPC geometry:** one LOD set per look (body, skin, hair, outfit) and one material for all NPCs. Only LOD0 casts shadows. Seated NPCs get a plain instanced stool until furniture exists.
 - **Opening hours, population and staff counts are placeholders** (OPEN_QUESTIONS #46): students 110, faculty 8, cafe 07:30–21:00 (second server 08:00–18:00), library 08:00–20:00, medical 08:00–17:00 on weekdays, shops 08:00–20:00 except Sunday.
+
+## M10 — 2026-11-20
+
+- **Fixtures are generated from room and area geometry, not stored in campus.json.** Seats, PCs, lecterns, library shelves (codes A1–F6), counters, desks, benches, prayer spaces, parking bays, bike racks and room doors come from `src/systems/fixtures.ts`, the way the M7 interiors do.
+  - Real furniture plans don't exist, and `props` in campus.json has no agreed contract (CAMPUS_SPEC).
+  - Everything generated is a placeholder (OPEN_QUESTIONS #49). Fixtures turn red with Confidence colours.
+- **Tasks reference places and fixture kinds, never coordinates** (AGENTS.md rule 1). A step names a room, a room kind (with a name pattern), a building, an area, an area kind, a gate (within 8 m), or a parameter: `class` (from the timetable), `meet` (from a friend's message) or `here` (where the previous step happened).
+- **Task data is validated like the campus.** `npm run validate:campus` and the unit tests check the schema (strict: no progression fields), that every reference resolves, that every use/sit step has a fixture to use, that dialogue trees are sound, and that every branch outcome exists.
+- **Interaction is a look cone, not a pixel-exact ray.** E uses the nearest thing within 2.2 m and about 35° of where you face, on your floor. A physics ray rejects things behind walls. You don't have to aim at a chair's exact pixel.
+- **Room doors start open.** E opens or closes them, and a shut door blocks the player. NPCs open shut doors as they reach them, and the doors swing shut again after 3 s. The navmesh ignores doors (like gates), so NPC routes never change.
+- **Sitting:** E on a seat, PC, bench or prayer space puts you on it (sit pose). E or any movement key stands you up.
+- **One task at a time; completion is session state only.** Finished tasks are ticked in the phone until you leave the game, and nothing is written to the save (a unit test checks the save format; the e2e test checks localStorage).
+- **Sit durations use game minutes; time limits use real seconds** (paused time excluded). The book hunt gives you 180 s.
+- **The book hunt, lab puzzle and class quiz are tasks now.** The lab puzzle and quiz are multiple-choice dialogue questions, and the book hunt is a timed shelf search. M11 turns them into mini-game modules. Playing the court and ground mini-games is an M11 task.
+- **Gates stay closed to the player (M4), so:**
+  - The Masjid is reachable only through the Masjid-side gate at Jummah. Praying at the Masjid is therefore the Jummah task.
+  - Fresh Friez (outside the wall at Gate-5) is not offered for eating; you can eat at the F block cafe or the New Cafe (OPEN_QUESTIONS #50).
+- **Walking away from a conversation (Esc)** leaves the step pending: press E on the person or counter to start again. Auto-starting talks (lectures, seminars) don't reopen by themselves.
+- **Friend meetups have no deadline.** The friend waits at the spot until you arrive or abandon the task.
+- **Timetable slots, office hours and event days are placeholders:** classes at 08:30, 10:00, 11:30, 14:00 and 15:30, three or four a day; office hours 10:00–16:00; society talks Tue/Thu 14:00–16:00; seminar Wednesday 11:00–13:00 (OPEN_QUESTIONS #18, #48).
+- **Furniture streams with the interiors:** one instanced mesh per building and kind, visible only while that interior is active. Drawing all of it at once cost about 280k triangles from anywhere on campus.
+- **Furniture has no colliders yet.** You can walk through chairs and shelves until the M13 props pass. NPC routes are unchanged as a result.

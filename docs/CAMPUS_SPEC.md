@@ -109,3 +109,18 @@ Warns on: `null` footprints, `placeholder` confidence, rooms without polygons.
 | E | Library | Footprint and label only. Floors/interior unknown. |
 | F | New Building | Basement 2 to 3rd floor, parking, cafe, offices, classrooms. |
 Full detail is in `data/campus.seed.json`.
+
+## 7. Tasks and dialogue data (M10)
+`data/tasks.json` (schema: `src/systems/task-schema.ts`) and `data/dialogue/<id>.json`. Everything there is `confidence: "placeholder"`.
+- **Task:** `id`, `title`, `category` (learning, daily, social, faith, explore), `description`, optional `window` (`{days?, from, to}` or `"timetable"`), `timeLimitSeconds`, `params` (`class`, `book`), `viaMessages` (friend meetups), `actors` (role, name, body, place and the fixture they stand or sit at), and `steps`.
+- **Step kinds:**
+  - `go`: be at a place.
+  - `use`: press E on a fixture of a kind in a place, optionally matching a shelf `code` and opening a `dialogue`.
+  - `sit`: sit on a fixture, optionally for `minutes` of game time.
+  - `talk`: a dialogue with an actor. `auto` starts it by itself, and `branches` maps an outcome to extra steps.
+  - `visit`: every place in a checklist, in any order.
+- **Place:** exactly one of `space`, `spaceKind` (+ `namePattern`), `building`, `area`, `areaKind`, `gate` or `param` (`class`, `meet`, `here`). Never coordinates.
+- **Friends:** 4–6 fictional students with a dialogue, meet spots (with benches) and possible times.
+- **Dialogue:** `id` (= file name), `start`, and `nodes` of `{speaker, text, options[1–9]}`. Each option has either `next` or `end` (an outcome such as `done`, `leave`, `bench` or `drink`).
+- **Fixtures** (seats, PCs, lecterns, shelves, counters, desks, benches, prayer spaces, bays, racks, doors) are generated from room and area geometry (`src/systems/fixtures.ts`). Tasks refer to them by kind and place.
+

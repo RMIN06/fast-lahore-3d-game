@@ -1,6 +1,6 @@
 # FAST Lahore Campus Game — Planning Pack
 
-## Run the app (M9 accepted: navmesh and NPCs)
+## Run the app (M10 accepted: interaction and tasks)
 
 Requires Node 20.19+ (or Node 22.12+ on the Node 22 line) and npm.
 
@@ -34,6 +34,20 @@ windows, stars and moon follow the time of day.
   lunch queues at the cafe, the library, Jummah on Fridays, and leaving in the
   evening. The campus is busy at midday and empty except for the guards at night.
   Their numbers and hours are placeholders.
+- **E** uses what is in front of you: sit on chairs, lab PCs and benches (E or
+  a movement key stands up), open and close room doors, search library
+  shelves, talk at counters and to people. A prompt under the crosshair says
+  what E will do.
+- **P → Tasks** lists the tasks: attending a class from your generated
+  timetable (with a quick question), the library (find a book by shelf code,
+  borrow it, study), the timed book hunt, a CS lab debugging exercise,
+  submitting an assignment, office hours, photocopying, the Medical Centre, an
+  Auditorium talk, a Seminar Hall session, eating at a cafe, Jummah, relaxing on
+  a bench, parking via Gate-3 and a campus explorer checklist. One task at a
+  time; markers float over the targets and the HUD shows the next step.
+  **P → Messages** has friends inviting you to meet, and **P → Timetable** shows
+  your week. Finished tasks are ticked for the session only: nothing is saved
+  or scored.
 - **T** opens the time panel: pause, speed (×0.5–×4), and set the day and time.
   At ×1, one real minute is one game hour.
 - Buildings, the boundary wall and the closed gates block you.
@@ -42,7 +56,8 @@ The development overlay shows FPS, draw calls and triangles, plus the player's
 camera mode, position and grounded state. It has toggles for **Confidence
 colors** (placeholders show in red), **Labels**, **Collision shapes** and **Free
 camera (orbit)**, which gives the M3 overview. Enable **Campus data** to list
-the validation warnings. See [M9 verification](docs/M9_VERIFICATION.md),
+the validation warnings. See [M10 verification](docs/M10_VERIFICATION.md),
+[M9 verification](docs/M9_VERIFICATION.md),
 [M8 verification](docs/M8_VERIFICATION.md),
 [M7 verification](docs/M7_VERIFICATION.md),
 [M6 verification](docs/M6_VERIFICATION.md),
@@ -73,6 +88,8 @@ The browser tests cover:
 - the M3 overview (draw-call and triangle budgets, floor counts, debug toggles,
   orbiting);
 - the M4 player (walk, sprint, jump, the V camera switch, and the closed gate);
+- M10 tasks (every task started from the phone and completed in game, a
+  friend meetup from Messages, doors that block when shut, sit and stand);
 - M9 NPCs (lunch-peak budget in the cafe, at most 60 agents, guards only at
   night, the navmesh viewer);
 - M8 characters (every animation for both avatars, LODs, in-game states);
@@ -84,7 +101,7 @@ The browser tests cover:
   and the budget with shadows);
 - the tracer.
 
-Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png`, `m6-*.png`, `m7-*.png`, `m8-*.png` and `m9-*.png`.
+Screenshots are saved to `test-results/m3-*.png`, `m4-*.png`, `m5-*.png`, `m6-*.png`, `m7-*.png`, `m8-*.png`, `m9-*.png` and `m10-*.png`.
 
 `validate:campus` runs Zod, ID/reference, polygon, containment, connector and area
 checks. The supplied seed allows explicit warnings for unfinished geometry and
