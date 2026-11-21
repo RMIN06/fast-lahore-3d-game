@@ -177,3 +177,21 @@ export function deleteSave(storage: SaveStorage): void {
   storage.removeItem(SAVE_KEY);
   LEGACY_SAVE_KEYS.forEach((key) => storage.removeItem(key));
 }
+
+/** Every key path in the save format (no-progression checks, M10). */
+export function saveSchemaKeys(): string[] {
+  const out: string[] = [];
+  const walk = (schema: z.ZodType, path: string) => {
+    if (schema instanceof z.ZodObject)
+      for (const [key, child] of Object.entries(
+        schema.shape as Record<string, z.ZodType>,
+      )) {
+        out.push(`${path}${key}`);
+        walk(child, `${path}${key}.`);
+      }
+    else if (schema instanceof z.ZodOptional)
+      walk(schema.unwrap() as z.ZodType, path);
+  };
+  walk(saveSchema, '');
+  return out;
+}

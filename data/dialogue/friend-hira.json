@@ -1,0 +1,56 @@
+{
+  "id": "friend-hira",
+  "start": "hello",
+  "nodes": {
+    "hello": {
+      "speaker": "{friend}",
+      "text": "There you are! I was about to message again.",
+      "options": [
+        {
+          "text": "How was your day?",
+          "next": "day"
+        },
+        {
+          "text": "Are you coming to the society talk this week?",
+          "next": "ask"
+        }
+      ]
+    },
+    "day": {
+      "speaker": "{friend}",
+      "text": "Good, actually. Our project demo went well!",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    },
+    "ask": {
+      "speaker": "{friend}",
+      "text": "Maybe, if the timing works. Anyway, what shall we do?",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

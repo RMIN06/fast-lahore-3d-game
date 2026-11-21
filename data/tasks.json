@@ -1,0 +1,615 @@
+{
+  "version": 1,
+  "confidence": "placeholder",
+  "tasks": [
+    {
+      "id": "attend-class",
+      "title": "Attend a class",
+      "category": "learning",
+      "description": "Go to the room on your timetable, take a seat, follow the lecture and answer the lecturer's question.",
+      "window": "timetable",
+      "params": ["class"],
+      "actors": [
+        {
+          "id": "lecturer",
+          "role": "faculty",
+          "name": "Lecturer",
+          "body": "male",
+          "at": { "param": "class" },
+          "fixture": "lectern"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to {room} for {course} ({time})",
+          "at": { "param": "class" }
+        },
+        {
+          "id": "sit",
+          "kind": "sit",
+          "text": "Take a seat in {room}",
+          "at": { "param": "class" },
+          "fixture": ["seat", "pc"]
+        },
+        {
+          "id": "lecture",
+          "kind": "talk",
+          "text": "Listen to the lecture",
+          "actor": "lecturer",
+          "dialogue": "lecture",
+          "auto": true
+        }
+      ]
+    },
+    {
+      "id": "library-visit",
+      "title": "Library visit",
+      "category": "learning",
+      "description": "Find a book by its shelf code, borrow it at the issue desk and study for a while. The library is a quiet zone: walk, don't run.",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "from": "08:00",
+        "to": "20:00"
+      },
+      "params": ["book"],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Library (E block)",
+          "at": { "space": "E-G-LIBRARY" }
+        },
+        {
+          "id": "find",
+          "kind": "use",
+          "text": "Find book {book} on shelf {shelf}",
+          "at": { "space": "E-G-LIBRARY" },
+          "fixture": "shelf",
+          "code": "{book}"
+        },
+        {
+          "id": "borrow",
+          "kind": "use",
+          "text": "Borrow it at the issue desk",
+          "at": { "space": "E-G-LIBRARY" },
+          "fixture": "counter",
+          "dialogue": "library-borrow"
+        },
+        {
+          "id": "study",
+          "kind": "sit",
+          "text": "Study at a desk",
+          "at": { "space": "E-G-LIBRARY" },
+          "fixture": "seat",
+          "minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "book-hunt",
+      "title": "Library book hunt",
+      "category": "learning",
+      "description": "A timed search: find the book by its call number and check it out before time runs out.",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "from": "08:00",
+        "to": "20:00"
+      },
+      "timeLimitSeconds": 180,
+      "params": ["book"],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Hurry to the Library (E block)",
+          "at": { "space": "E-G-LIBRARY" }
+        },
+        {
+          "id": "find",
+          "kind": "use",
+          "text": "Find call number {book} (shelf {shelf})",
+          "at": { "space": "E-G-LIBRARY" },
+          "fixture": "shelf",
+          "code": "{book}"
+        },
+        {
+          "id": "checkout",
+          "kind": "use",
+          "text": "Check it out at the issue desk",
+          "at": { "space": "E-G-LIBRARY" },
+          "fixture": "counter"
+        }
+      ]
+    },
+    {
+      "id": "cs-lab",
+      "title": "CS lab session",
+      "category": "learning",
+      "description": "Sit at a PC in any CS lab and fix the bug the lab instructor gives you.",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "from": "08:30",
+        "to": "17:00"
+      },
+      "actors": [
+        {
+          "id": "instructor",
+          "role": "faculty",
+          "name": "Lab instructor",
+          "body": "female",
+          "at": { "param": "here" },
+          "fixture": "lectern"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to a CS lab",
+          "at": { "spaceKind": "lab", "namePattern": "^CS (Lab|LAB)" }
+        },
+        {
+          "id": "sit",
+          "kind": "sit",
+          "text": "Sit at a lab PC",
+          "at": { "param": "here" },
+          "fixture": "pc"
+        },
+        {
+          "id": "debug",
+          "kind": "talk",
+          "text": "Solve the debugging exercise",
+          "actor": "instructor",
+          "dialogue": "lab-debug",
+          "auto": true
+        }
+      ]
+    },
+    {
+      "id": "submit-assignment",
+      "title": "Submit an assignment",
+      "category": "learning",
+      "description": "Hand in your assignment at the Academic Office (F block, 1st floor).",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "from": "09:00",
+        "to": "16:00"
+      },
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Academic Office (F block, 1st floor)",
+          "at": { "space": "F-1-ACADEMICOFFICE" }
+        },
+        {
+          "id": "submit",
+          "kind": "use",
+          "text": "Submit it at the counter",
+          "at": { "space": "F-1-ACADEMICOFFICE" },
+          "fixture": "counter",
+          "dialogue": "academic-office"
+        }
+      ]
+    },
+    {
+      "id": "faculty-office",
+      "title": "Visit a faculty office",
+      "category": "learning",
+      "description": "Ask a question during office hours in the Faculty Offices (F block, 1st floor).",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "from": "10:00",
+        "to": "16:00"
+      },
+      "actors": [
+        {
+          "id": "professor",
+          "role": "faculty",
+          "name": "Dr. Saima (office hours)",
+          "body": "female",
+          "at": { "space": "F-1-FACULTYOFFICES" },
+          "fixture": "desk"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Faculty Offices (F block, 1st floor)",
+          "at": { "space": "F-1-FACULTYOFFICES" }
+        },
+        {
+          "id": "ask",
+          "kind": "talk",
+          "text": "Talk to the professor at her desk",
+          "actor": "professor",
+          "dialogue": "office-hours"
+        }
+      ]
+    },
+    {
+      "id": "photocopy",
+      "title": "Print or photocopy notes",
+      "category": "daily",
+      "description": "Get your notes photocopied at the Book PhotoCopy shop.",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "from": "08:00",
+        "to": "20:00"
+      },
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Book PhotoCopy shop",
+          "at": { "area": "book-photocopy" }
+        },
+        {
+          "id": "copy",
+          "kind": "use",
+          "text": "Ask at the counter",
+          "at": { "area": "book-photocopy" },
+          "fixture": "counter",
+          "dialogue": "photocopy"
+        }
+      ]
+    },
+    {
+      "id": "medical-visit",
+      "title": "Medical Centre visit",
+      "category": "daily",
+      "description": "Feeling unwell: check in at the Medical Centre (C block, ground floor) and see the doctor.",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "from": "08:00",
+        "to": "17:00"
+      },
+      "actors": [
+        {
+          "id": "doctor",
+          "role": "medical",
+          "name": "Doctor",
+          "body": "male",
+          "at": { "space": "C-G-MEDICAL" },
+          "fixture": "desk"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Medical Centre (C block, ground floor)",
+          "at": { "space": "C-G-MEDICAL" }
+        },
+        {
+          "id": "checkin",
+          "kind": "use",
+          "text": "Check in at reception",
+          "at": { "space": "C-G-MEDICAL" },
+          "fixture": "counter",
+          "dialogue": "medical-reception"
+        },
+        {
+          "id": "doctor",
+          "kind": "talk",
+          "text": "See the doctor",
+          "actor": "doctor",
+          "dialogue": "medical-doctor"
+        }
+      ]
+    },
+    {
+      "id": "auditorium-event",
+      "title": "Society talk in the Auditorium",
+      "category": "learning",
+      "description": "A student society hosts a talk in the Auditorium (C block, ground floor).",
+      "window": { "days": ["Tue", "Thu"], "from": "14:00", "to": "16:00" },
+      "actors": [
+        {
+          "id": "speaker",
+          "role": "student",
+          "name": "Society speaker",
+          "body": "female",
+          "at": { "space": "C-G-AUDITORIUM" },
+          "fixture": "lectern"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Auditorium (C block, ground floor)",
+          "at": { "space": "C-G-AUDITORIUM" }
+        },
+        {
+          "id": "sit",
+          "kind": "sit",
+          "text": "Find a seat",
+          "at": { "space": "C-G-AUDITORIUM" },
+          "fixture": "seat"
+        },
+        {
+          "id": "talk",
+          "kind": "talk",
+          "text": "Listen to the talk",
+          "actor": "speaker",
+          "dialogue": "society-talk",
+          "auto": true
+        }
+      ]
+    },
+    {
+      "id": "seminar",
+      "title": "Seminar hall session",
+      "category": "learning",
+      "description": "Attend a guest seminar in the Seminar Hall (C block, 2nd floor).",
+      "window": { "days": ["Wed"], "from": "11:00", "to": "13:00" },
+      "actors": [
+        {
+          "id": "guest",
+          "role": "faculty",
+          "name": "Guest speaker",
+          "body": "male",
+          "at": { "space": "C-2-SEMINARHALL" },
+          "fixture": "lectern"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Seminar Hall (C block, 2nd floor)",
+          "at": { "space": "C-2-SEMINARHALL" }
+        },
+        {
+          "id": "sit",
+          "kind": "sit",
+          "text": "Take a seat",
+          "at": { "space": "C-2-SEMINARHALL" },
+          "fixture": "seat"
+        },
+        {
+          "id": "talk",
+          "kind": "talk",
+          "text": "Follow the seminar",
+          "actor": "guest",
+          "dialogue": "seminar",
+          "auto": true
+        }
+      ]
+    },
+    {
+      "id": "meet-friend",
+      "title": "Meet a friend",
+      "category": "social",
+      "description": "A friend messaged you a time and place. Show up and chat.",
+      "viaMessages": true,
+      "actors": [
+        {
+          "id": "friend",
+          "role": "student",
+          "name": "{friend}",
+          "body": "male",
+          "at": { "param": "meet" },
+          "fixture": "bench"
+        }
+      ],
+      "steps": [
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Meet {friend} at {place} ({time})",
+          "at": { "param": "meet" }
+        },
+        {
+          "id": "chat",
+          "kind": "talk",
+          "text": "Talk to {friend}",
+          "actor": "friend",
+          "dialogue": "friend-ali",
+          "branches": {
+            "bench": [
+              {
+                "id": "hangout",
+                "kind": "sit",
+                "text": "Sit with {friend} for a while",
+                "at": { "param": "meet" },
+                "fixture": "bench",
+                "minutes": 5
+              }
+            ],
+            "drink": [
+              {
+                "id": "drink",
+                "kind": "use",
+                "text": "Grab a drink with {friend} at a cafe counter",
+                "at": [{ "space": "F-G-CAFE" }, { "area": "new-cafe" }],
+                "fixture": "counter",
+                "dialogue": "order"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "eat",
+      "title": "Eat or drink",
+      "category": "daily",
+      "description": "Order at the F block cafe or the New (open) Cafe, then sit and eat.",
+      "window": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "from": "08:00",
+        "to": "20:00"
+      },
+      "steps": [
+        {
+          "id": "order",
+          "kind": "use",
+          "text": "Order at the F block cafe or the New Cafe",
+          "at": [{ "space": "F-G-CAFE" }, { "area": "new-cafe" }],
+          "fixture": "counter",
+          "dialogue": "order"
+        },
+        {
+          "id": "eat",
+          "kind": "sit",
+          "text": "Sit down and eat",
+          "at": { "param": "here" },
+          "fixture": ["seat", "bench"],
+          "minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "jummah",
+      "title": "Jummah at the Masjid",
+      "category": "faith",
+      "description": "On Fridays the Masjid-side gate opens for Jummah. Walk to the Masjid and join the prayer.",
+      "window": { "days": ["Fri"], "from": "12:45", "to": "14:00" },
+      "steps": [
+        {
+          "id": "gate",
+          "kind": "go",
+          "text": "Leave through the Masjid-side gate",
+          "at": { "gate": "G-MASJID" }
+        },
+        {
+          "id": "go",
+          "kind": "go",
+          "text": "Go to the Masjid",
+          "at": { "area": "masjid" }
+        },
+        {
+          "id": "pray",
+          "kind": "sit",
+          "text": "Join the prayer",
+          "at": { "area": "masjid" },
+          "fixture": "prayer",
+          "minutes": 15
+        }
+      ]
+    },
+    {
+      "id": "relax",
+      "title": "Relax and people-watch",
+      "category": "daily",
+      "description": "Wander along the Highway, then sit on a bench and watch campus life go by.",
+      "steps": [
+        {
+          "id": "walk",
+          "kind": "go",
+          "text": "Walk along the Highway",
+          "at": { "area": "highway" }
+        },
+        {
+          "id": "sit",
+          "kind": "sit",
+          "text": "Sit on a lawn bench and people-watch",
+          "at": [{ "areaKind": "lawn" }, { "space": "D-G-BENCHES" }],
+          "fixture": "bench",
+          "minutes": 5
+        }
+      ]
+    },
+    {
+      "id": "park",
+      "title": "Arrive by car or bike",
+      "category": "daily",
+      "description": "Come in through Gate-3 and park in the Basement-2 student car parking or the bike parking.",
+      "steps": [
+        {
+          "id": "gate",
+          "kind": "go",
+          "text": "Come in through Gate-3",
+          "at": { "gate": "G3" }
+        },
+        {
+          "id": "park",
+          "kind": "use",
+          "text": "Park in Basement-2 (F block) or the bike parking",
+          "at": [{ "space": "F-B2-STUDENTPARK" }, { "area": "bike-parking" }],
+          "fixture": ["bay", "rack"]
+        }
+      ]
+    },
+    {
+      "id": "explorer",
+      "title": "Campus explorer",
+      "category": "explore",
+      "description": "Visit the named landmarks. Just a checklist: no rewards.",
+      "steps": [
+        {
+          "id": "visit",
+          "kind": "visit",
+          "text": "Visit campus landmarks",
+          "places": [
+            { "building": "A" },
+            { "building": "B" },
+            { "building": "C" },
+            { "building": "D" },
+            { "building": "E" },
+            { "building": "F" },
+            { "area": "highway" },
+            { "area": "lawns-central" },
+            { "area": "new-cafe" },
+            { "area": "cricket-ground" },
+            { "area": "futsal" },
+            { "area": "basketball" },
+            { "area": "badminton" }
+          ]
+        }
+      ]
+    }
+  ],
+  "friends": [
+    {
+      "id": "ali",
+      "name": "Ali",
+      "body": "male",
+      "departmentId": "cs",
+      "dialogue": "friend-ali",
+      "spots": [{ "area": "lawns-central" }, { "area": "new-cafe" }],
+      "times": ["10:00", "13:00", "15:30"]
+    },
+    {
+      "id": "hira",
+      "name": "Hira",
+      "body": "female",
+      "departmentId": "cs",
+      "dialogue": "friend-hira",
+      "spots": [{ "space": "D-G-BENCHES" }, { "area": "lawns-south" }],
+      "times": ["11:20", "13:10", "16:00"]
+    },
+    {
+      "id": "usman",
+      "name": "Usman",
+      "body": "male",
+      "departmentId": "civil",
+      "dialogue": "friend-usman",
+      "spots": [{ "area": "lawns-south" }, { "area": "lawns-central" }],
+      "times": ["09:50", "13:00", "17:00"]
+    },
+    {
+      "id": "ayesha",
+      "name": "Ayesha",
+      "body": "female",
+      "departmentId": "mgmt",
+      "dialogue": "friend-ayesha",
+      "spots": [{ "area": "new-cafe" }, { "space": "D-G-BENCHES" }],
+      "times": ["10:30", "12:50", "15:20"]
+    },
+    {
+      "id": "bilal",
+      "name": "Bilal",
+      "body": "male",
+      "departmentId": "ee",
+      "dialogue": "friend-bilal",
+      "spots": [{ "area": "lawns-central" }, { "area": "new-cafe" }],
+      "times": ["11:00", "14:00", "16:30"]
+    }
+  ]
+}

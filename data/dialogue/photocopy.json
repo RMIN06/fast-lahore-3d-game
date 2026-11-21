@@ -1,0 +1,30 @@
+{
+  "id": "photocopy",
+  "start": "counter",
+  "nodes": {
+    "counter": {
+      "speaker": "Shopkeeper",
+      "text": "Photocopy or print?",
+      "options": [
+        {
+          "text": "Photocopy these notes, please.",
+          "next": "copied"
+        },
+        {
+          "text": "Print from my USB, please.",
+          "next": "copied"
+        }
+      ]
+    },
+    "copied": {
+      "speaker": "Shopkeeper",
+      "text": "Here you are, all done.",
+      "options": [
+        {
+          "text": "Thanks!",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

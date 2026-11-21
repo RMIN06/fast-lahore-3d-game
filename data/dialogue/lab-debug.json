@@ -1,0 +1,44 @@
+{
+  "id": "lab-debug",
+  "start": "task",
+  "nodes": {
+    "task": {
+      "speaker": "{actor}",
+      "text": "Today's exercise. This loop should add up the n numbers in array a, but it crashes:   for (int i = 0; i <= n; i++) sum += a[i];   What is the bug?",
+      "options": [
+        {
+          "text": "sum is never initialised",
+          "next": "wrong"
+        },
+        {
+          "text": "The loop runs one step too far: it should be i < n",
+          "next": "right"
+        },
+        {
+          "text": "i should start at 1",
+          "next": "wrong"
+        }
+      ]
+    },
+    "wrong": {
+      "speaker": "{actor}",
+      "text": "Look at the last value of i. An array of n items goes from index 0 to n − 1.",
+      "options": [
+        {
+          "text": "(Look again)",
+          "next": "task"
+        }
+      ]
+    },
+    "right": {
+      "speaker": "{actor}",
+      "text": "Exactly: an off-by-one error. Fix it and run the tests… all green. Good work.",
+      "options": [
+        {
+          "text": "Log off",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "seminar",
+  "start": "intro",
+  "nodes": {
+    "intro": {
+      "speaker": "{actor}",
+      "text": "Thank you for having me. My seminar is about how growing cities can plan for heat and water.",
+      "options": [
+        {
+          "text": "(Listen)",
+          "next": "body"
+        }
+      ]
+    },
+    "body": {
+      "speaker": "{actor}",
+      "text": "…so many small planning decisions add up. I have time for one question.",
+      "options": [
+        {
+          "text": "What can students do?",
+          "next": "answer"
+        },
+        {
+          "text": "(Applaud)",
+          "end": "done"
+        }
+      ]
+    },
+    "answer": {
+      "speaker": "{actor}",
+      "text": "Start with your own campus: measure, propose, and work with the administration. Thank you!",
+      "options": [
+        {
+          "text": "(Applaud)",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

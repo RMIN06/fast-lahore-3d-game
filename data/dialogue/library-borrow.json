@@ -1,0 +1,30 @@
+{
+  "id": "library-borrow",
+  "start": "desk",
+  "nodes": {
+    "desk": {
+      "speaker": "Librarian",
+      "text": "Assalam-o-Alaikum. Borrowing {book}? Your student card, please.",
+      "options": [
+        {
+          "text": "Here you go.",
+          "next": "issued"
+        },
+        {
+          "text": "Sorry, I'll come back later.",
+          "end": "leave"
+        }
+      ]
+    },
+    "issued": {
+      "speaker": "Librarian",
+      "text": "Issued for two weeks. The study desks are just over there. Please keep your voice down; this is a quiet zone.",
+      "options": [
+        {
+          "text": "Thank you.",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

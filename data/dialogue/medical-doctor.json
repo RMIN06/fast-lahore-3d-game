@@ -1,0 +1,30 @@
+{
+  "id": "medical-doctor",
+  "start": "check",
+  "nodes": {
+    "check": {
+      "speaker": "{actor}",
+      "text": "Let me take a look… Your temperature is normal. Have you been drinking enough water and sleeping properly?",
+      "options": [
+        {
+          "text": "Not really, with exams coming up…",
+          "next": "advice"
+        },
+        {
+          "text": "Mostly, yes.",
+          "next": "advice"
+        }
+      ]
+    },
+    "advice": {
+      "speaker": "{actor}",
+      "text": "Rest, drink plenty of water, and come back if it gets worse. Take care of yourself.",
+      "options": [
+        {
+          "text": "Thank you, doctor.",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

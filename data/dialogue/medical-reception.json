@@ -1,0 +1,30 @@
+{
+  "id": "medical-reception",
+  "start": "desk",
+  "nodes": {
+    "desk": {
+      "speaker": "Receptionist",
+      "text": "Medical Centre. What seems to be the problem?",
+      "options": [
+        {
+          "text": "I have had a headache since this morning.",
+          "next": "wait"
+        },
+        {
+          "text": "I feel a bit feverish.",
+          "next": "wait"
+        }
+      ]
+    },
+    "wait": {
+      "speaker": "Receptionist",
+      "text": "I have noted it down. The doctor will see you now, at the desk inside.",
+      "options": [
+        {
+          "text": "Okay, thank you.",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

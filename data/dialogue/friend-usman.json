@@ -1,0 +1,56 @@
+{
+  "id": "friend-usman",
+  "start": "hello",
+  "nodes": {
+    "hello": {
+      "speaker": "{friend}",
+      "text": "Oye, finally! The surveying practical took forever.",
+      "options": [
+        {
+          "text": "How was your day?",
+          "next": "day"
+        },
+        {
+          "text": "Any plans for the weekend?",
+          "next": "ask"
+        }
+      ]
+    },
+    "day": {
+      "speaker": "{friend}",
+      "text": "Hot. We were measuring the ground all morning.",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    },
+    "ask": {
+      "speaker": "{friend}",
+      "text": "Cricket, if it does not rain. You should come. So, now?",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

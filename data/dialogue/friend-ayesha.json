@@ -1,0 +1,56 @@
+{
+  "id": "friend-ayesha",
+  "start": "hello",
+  "nodes": {
+    "hello": {
+      "speaker": "{friend}",
+      "text": "Hi! Perfect timing, I just got out of class.",
+      "options": [
+        {
+          "text": "How was your day?",
+          "next": "day"
+        },
+        {
+          "text": "Did you see the notice about the career fair?",
+          "next": "ask"
+        }
+      ]
+    },
+    "day": {
+      "speaker": "{friend}",
+      "text": "Busy. Presentations all week, but this one went fine.",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    },
+    "ask": {
+      "speaker": "{friend}",
+      "text": "Yes! I am updating my CV tonight. Now, what do you feel like?",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

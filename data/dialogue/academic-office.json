@@ -1,0 +1,44 @@
+{
+  "id": "academic-office",
+  "start": "counter",
+  "nodes": {
+    "counter": {
+      "speaker": "Academic Office",
+      "text": "Next, please. How can I help you?",
+      "options": [
+        {
+          "text": "I'd like to submit my assignment.",
+          "next": "submit"
+        },
+        {
+          "text": "When is the submission deadline?",
+          "next": "deadline"
+        }
+      ]
+    },
+    "deadline": {
+      "speaker": "Academic Office",
+      "text": "Submissions close at the end of office hours on the due date. Anything else?",
+      "options": [
+        {
+          "text": "Then I will submit it now.",
+          "next": "submit"
+        },
+        {
+          "text": "No, thank you.",
+          "end": "leave"
+        }
+      ]
+    },
+    "submit": {
+      "speaker": "Academic Office",
+      "text": "Name and roll number on the cover page? Good. It is stamped and received.",
+      "options": [
+        {
+          "text": "Thank you.",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

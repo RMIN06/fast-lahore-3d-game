@@ -1,0 +1,38 @@
+{
+  "id": "order",
+  "start": "counter",
+  "nodes": {
+    "counter": {
+      "speaker": "Cafe staff",
+      "text": "Assalam-o-Alaikum! What would you like?",
+      "options": [
+        {
+          "text": "Chai, please.",
+          "next": "served"
+        },
+        {
+          "text": "A fresh juice.",
+          "next": "served"
+        },
+        {
+          "text": "A sandwich and a cold drink.",
+          "next": "served"
+        },
+        {
+          "text": "Nothing, thanks.",
+          "end": "leave"
+        }
+      ]
+    },
+    "served": {
+      "speaker": "Cafe staff",
+      "text": "Here you go. Enjoy!",
+      "options": [
+        {
+          "text": "Thanks!",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

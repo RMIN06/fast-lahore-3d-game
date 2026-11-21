@@ -1,0 +1,56 @@
+{
+  "id": "friend-ali",
+  "start": "hello",
+  "nodes": {
+    "hello": {
+      "speaker": "{friend}",
+      "text": "Hey! You made it. I saved you a spot.",
+      "options": [
+        {
+          "text": "How was your day?",
+          "next": "day"
+        },
+        {
+          "text": "Did you finish the assignment?",
+          "next": "ask"
+        }
+      ]
+    },
+    "day": {
+      "speaker": "{friend}",
+      "text": "Long! Back-to-back classes, and the lab ran late. I need a break.",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    },
+    "ask": {
+      "speaker": "{friend}",
+      "text": "Almost. I'll finish it tonight, inshallah. So, what now?",
+      "options": [
+        {
+          "text": "Let's sit on the bench for a bit.",
+          "end": "bench"
+        },
+        {
+          "text": "Let's grab a drink.",
+          "end": "drink"
+        },
+        {
+          "text": "I can't stay long. See you later!",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

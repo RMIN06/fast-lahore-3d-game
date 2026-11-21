@@ -1,0 +1,54 @@
+{
+  "id": "lecture",
+  "start": "intro",
+  "nodes": {
+    "intro": {
+      "speaker": "{actor}",
+      "text": "Good morning, everyone. Today in {course} we continue from where we stopped last week. Please follow along on the board.",
+      "options": [
+        {
+          "text": "(Take notes)",
+          "next": "body"
+        }
+      ]
+    },
+    "body": {
+      "speaker": "{actor}",
+      "text": "…and that is the key idea for today. A quick check before we finish: if a class starts at 08:30 and runs for 80 minutes, when does it end?",
+      "options": [
+        {
+          "text": "09:30",
+          "next": "wrong"
+        },
+        {
+          "text": "09:50",
+          "next": "right"
+        },
+        {
+          "text": "10:10",
+          "next": "wrong"
+        }
+      ]
+    },
+    "wrong": {
+      "speaker": "{actor}",
+      "text": "Not quite. Eighty minutes is one hour and twenty minutes. Try again.",
+      "options": [
+        {
+          "text": "(Think again)",
+          "next": "body"
+        }
+      ]
+    },
+    "right": {
+      "speaker": "{actor}",
+      "text": "Correct, well done. That's all for today. Please revise this before the next class.",
+      "options": [
+        {
+          "text": "Thank you.",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

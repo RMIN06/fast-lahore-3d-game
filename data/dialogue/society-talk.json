@@ -1,0 +1,40 @@
+{
+  "id": "society-talk",
+  "start": "intro",
+  "nodes": {
+    "intro": {
+      "speaker": "{actor}",
+      "text": "Welcome to this week's society talk! Today: getting started with open-source projects as a student.",
+      "options": [
+        {
+          "text": "(Listen)",
+          "next": "body"
+        }
+      ]
+    },
+    "body": {
+      "speaker": "{actor}",
+      "text": "Start small: fix documentation, read the open issues, ask questions. Any questions from the audience?",
+      "options": [
+        {
+          "text": "How do I find a first issue?",
+          "next": "answer"
+        },
+        {
+          "text": "(Applaud)",
+          "end": "done"
+        }
+      ]
+    },
+    "answer": {
+      "speaker": "{actor}",
+      "text": "Look for issues labelled for newcomers, and don't be shy to ask the maintainers. Thank you all for coming!",
+      "options": [
+        {
+          "text": "(Applaud)",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}

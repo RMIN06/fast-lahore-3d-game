@@ -1,0 +1,40 @@
+{
+  "id": "office-hours",
+  "start": "door",
+  "nodes": {
+    "door": {
+      "speaker": "{actor}",
+      "text": "Come in, come in. Office hours are for questions. What is on your mind?",
+      "options": [
+        {
+          "text": "I didn't follow the main topic of the last lecture.",
+          "next": "explain"
+        },
+        {
+          "text": "How should I prepare for the midterm?",
+          "next": "prepare"
+        }
+      ]
+    },
+    "explain": {
+      "speaker": "{actor}",
+      "text": "Let's go through it again with a small example, step by step… Does it make more sense now?",
+      "options": [
+        {
+          "text": "Yes, it does. Thank you!",
+          "end": "done"
+        }
+      ]
+    },
+    "prepare": {
+      "speaker": "{actor}",
+      "text": "Redo the assignments first, then try past exercises without your notes. Come back if you get stuck.",
+      "options": [
+        {
+          "text": "I will. Thank you.",
+          "end": "done"
+        }
+      ]
+    }
+  }
+}
